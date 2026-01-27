@@ -17,6 +17,7 @@ export function Technologies() {
           className="flex gap-12 animate-marquee whitespace-nowrap py-4"
           animate={{ x: [0, -1000] }}
           transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+          style={{ willChange: "transform" }}
         >
           {[...technologies, ...technologies, ...technologies].map((tech, index) => (
             <div 
@@ -35,6 +36,7 @@ export function Technologies() {
           className="flex gap-12 animate-marquee whitespace-nowrap py-4"
           animate={{ x: [-1000, 0] }}
           transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+          style={{ willChange: "transform" }}
         >
           {[...technologies, ...technologies, ...technologies].map((tech, index) => (
             <div 

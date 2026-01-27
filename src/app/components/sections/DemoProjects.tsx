@@ -22,7 +22,7 @@ export function DemoProjects() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
@@ -39,7 +39,7 @@ export function DemoProjects() {
               key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.15 }}
               className="group relative rounded-2xl overflow-hidden border border-[#DC00D3]/20 bg-[#150530] shadow-xl hover:shadow-[#DC00D3]/20 transition-all duration-300"
             >
@@ -52,6 +52,7 @@ export function DemoProjects() {
                   loop
                   playsInline
                   className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 scale-105 group-hover:scale-110"
+                  style={{ willChange: "transform" }}
                 />
                 
                 {/* Overlay Gradient */}

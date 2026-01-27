@@ -10,7 +10,7 @@ export function Map() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
@@ -25,7 +25,7 @@ export function Map() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6 }}
           className="relative max-w-5xl mx-auto"
         >
@@ -82,7 +82,7 @@ export function Map() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ delay: 0.3 }}
           className="text-center mt-12"
         >

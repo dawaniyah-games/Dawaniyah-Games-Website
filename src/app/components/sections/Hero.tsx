@@ -10,14 +10,15 @@ export function Hero() {
       {/* Shared Background Elements */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden h-full">
         {/* Gradient Blob - Positioned centrally but fixed/sticky-like feel relative to the container */}
-        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] rounded-full bg-gradient-to-br from-[#DC00D3] to-[#D4AF37] opacity-10 blur-[100px] animate-pulse" />
+        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] rounded-full bg-gradient-to-br from-[#DC00D3] to-[#D4AF37] opacity-10 blur-[60px] md:blur-[100px] animate-pulse" />
         
         {/* Pattern Grid */}
         <div className="absolute inset-0 opacity-20" 
              style={{ 
                backgroundImage: `linear-gradient(rgba(212, 175, 55, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(220, 0, 211, 0.2) 1px, transparent 1px)`,
                backgroundSize: '100px 100px',
-               maskImage: 'linear-gradient(to bottom, black 0%, black 80%, transparent 100%)'
+               maskImage: 'linear-gradient(to bottom, black 0%, black 80%, transparent 100%)',
+               WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 80%, transparent 100%)'
              }} 
         />
       </div>
@@ -37,19 +38,14 @@ export function Hero() {
             <motion.img 
               src={logoIcon} 
               alt="Dawaniyah Games Icon" 
-              className="h-36 md:h-52 lg:h-60 w-auto object-contain mb-8" 
+              className="h-36 md:h-52 lg:h-60 w-auto object-contain mb-8 drop-shadow-[0_0_25px_rgba(212,175,55,0.3)]" 
               animate={{ 
-                y: [0, -20, 0],
-                filter: [
-                  "drop-shadow(0 0 25px rgba(212,175,55,0.3))", 
-                  "drop-shadow(0 0 50px rgba(212,175,55,0.6))", 
-                  "drop-shadow(0 0 25px rgba(212,175,55,0.3))"
-                ]
+                y: [0, -20, 0]
               }}
               transition={{ 
-                y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-                filter: { duration: 4, repeat: Infinity, ease: "easeInOut" } 
+                y: { duration: 6, repeat: Infinity, ease: "easeInOut" }
               }}
+              style={{ willChange: "transform" }}
             />
           </motion.div>
 
@@ -69,7 +65,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-['Josefin_Sans'] leading-tight mb-8">
@@ -83,7 +79,7 @@ export function Hero() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-[19px] md:text-[21px] text-gray-300 max-w-3xl mx-auto mb-12 font-light leading-relaxed"
         >
@@ -95,7 +91,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-6"
         >

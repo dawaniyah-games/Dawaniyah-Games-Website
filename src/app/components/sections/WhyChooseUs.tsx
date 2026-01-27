@@ -20,7 +20,7 @@ export function WhyChooseUs() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold font-['Josefin_Sans'] text-white">
@@ -34,7 +34,7 @@ export function WhyChooseUs() {
               key={index}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
               className="flex gap-4 items-start p-6 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-[#DC00D3]/50 transition-all duration-300"
             >

@@ -36,7 +36,7 @@ export function Testimonials() {
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
               className="bg-white/5 border border-white/5 p-8 rounded-2xl relative"
             >

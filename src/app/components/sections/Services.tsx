@@ -53,7 +53,7 @@ export function Services() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
@@ -70,7 +70,7 @@ export function Services() {
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -10 }}
               className="group relative p-8 rounded-2xl bg-[#150630] border border-white/5 hover:border-white/20 transition-all duration-300"

@@ -20,7 +20,7 @@ export function About() {
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8 }}
             className="w-full md:w-1/2 flex justify-center"
           >
@@ -42,7 +42,7 @@ export function About() {
           <motion.div 
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8 }}
             className="w-full md:w-1/2"
           >

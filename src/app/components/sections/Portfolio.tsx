@@ -21,7 +21,7 @@ export function Portfolio() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-50px" }}
           >
             <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
               FEATURED <span className="text-[#D4AF37]">PROJECTS</span>
@@ -32,7 +32,7 @@ export function Portfolio() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-50px" }}
             className="mt-6 md:mt-0"
           >
             <Button variant="outline" className="border-[#DC00D3] text-[#DC00D3] hover:bg-[#DC00D3] hover:text-white" onClick={() => document.getElementById('gameplay-demos')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>
@@ -47,7 +47,7 @@ export function Portfolio() {
               key={index}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
               className="group relative h-80 rounded-2xl overflow-hidden cursor-pointer"
             >
