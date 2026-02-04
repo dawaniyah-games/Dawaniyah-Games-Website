@@ -1,10 +1,9 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
 import { BadgeCheck, Globe, Zap, Lightbulb, Linkedin } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import profileImg from "../../../assets/profile.jpg";
 import { EASE_SMOOTH, fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
-import { useSection3DScroll } from './useSection3DScroll';
 import { useTranslation } from 'react-i18next';
 
 const founderImageAnim = {
@@ -20,12 +19,6 @@ const founderTextAnim = {
 
 export function About() {
   const { t } = useTranslation();
-  const sectionRef = useRef<HTMLElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLHeadingElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
-  useSection3DScroll({ section: sectionRef, image: imageRef, header: headerRef, text: textRef, stats: statsRef });
   const stats = [
     { label: t('about.stats.years'), value: "14+", icon: BadgeCheck },
     { label: t('about.stats.global'), value: t('about.stats.international'), icon: Globe },
@@ -34,12 +27,11 @@ export function About() {
   ];
 
   return (
-    <section id="about" ref={sectionRef} className="py-20 bg-[#100425] relative">
+    <section id="about" className="py-20 bg-[#100425] relative">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row md:[html[dir='rtl']_&]:flex-row-reverse items-center gap-12">
           {/* Image Side */}
           <motion.div 
-            ref={imageRef}
             variants={founderImageAnim}
             initial="hidden"
             whileInView="show"
@@ -65,7 +57,6 @@ export function About() {
 
           {/* Text Side */}
           <motion.div 
-            ref={textRef}
             variants={founderTextAnim}
             initial="hidden"
             whileInView="show"
@@ -73,7 +64,7 @@ export function About() {
             viewport={VIEWPORT_ONCE}
             className="w-full md:w-1/2 md:[html[dir='rtl']_&]:text-right"
           >
-            <h2 ref={headerRef} className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-6">
+            <h2 className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-6">
               <span className="text-[#DC00D3]">{t('about.heading')}</span>
             </h2>
             <h3 className="text-xl text-[#D4AF37] font-semibold mb-4">{t('about.name')}</h3>
@@ -85,7 +76,6 @@ export function About() {
             </p>
 
             <motion.div
-              ref={statsRef}
               variants={stagger(0.06, 0.02)}
               initial="hidden"
               whileInView="show"

@@ -4,7 +4,6 @@ import { motion } from 'motion/react';
 import { Button } from '../ui/Button';
 import logoIcon from "../../../assets/logo-icon.png";
 import { EASE_SMOOTH, fadeUp, VIEWPORT_ONCE } from '../../motion/presets';
-import { useHero3DScroll } from './useHero3DScroll';
 import { useTranslation } from 'react-i18next';
 
 const LOGO_TEXTS = import.meta.glob(
@@ -34,13 +33,7 @@ function getLogoTextSrc(language: string | undefined) {
 
 export function Hero() {
   const { t, i18n } = useTranslation();
-  const logoRef = useRef<HTMLImageElement | null>(null);
   const logoTextRef = useRef<HTMLImageElement | null>(null);
-  const titleRef = useRef<HTMLHeadingElement | null>(null);
-  const subtitleRef = useRef<HTMLSpanElement | null>(null);
-  const descRef = useRef<HTMLParagraphElement | null>(null);
-  const btnsRef = useRef<HTMLDivElement | null>(null);
-  useHero3DScroll(logoRef, logoTextRef, titleRef, subtitleRef, descRef, btnsRef);
   return (
     <div id="hero" className="relative w-full bg-[#100425]">
       {/* This empty div ensures the Navbar is always on top, video comes after */}
@@ -84,7 +77,6 @@ export function Hero() {
             style={{ perspective: 1000 }}
           >
             <motion.img 
-              ref={logoRef}
               src={logoIcon} 
               alt="Dawaniyah Games Icon" 
               className="h-42 md:h-59 lg:h-68 w-auto object-contain mb-8 drop-shadow-[0_0_32px_rgba(212,175,55,0.4)]"
@@ -118,16 +110,15 @@ export function Hero() {
           whileInView="show"
           viewport={VIEWPORT_ONCE}
         >
-          <h1 ref={titleRef} className="text-[2.35rem] md:text-[3.55rem] lg:text-[4.1rem] font-bold font-['Josefin_Sans'] leading-tight mb-8 -mt-2">
+          <h1 className="text-[2.35rem] md:text-[3.55rem] lg:text-[4.1rem] font-bold font-['Josefin_Sans'] leading-tight mb-8 -mt-2">
             <span className="block text-white mb-2 text-[0.95em]">{t('hero.titleTop')}</span>
-            <span ref={subtitleRef} className="bg-clip-text text-transparent bg-gradient-to-r from-[#D4AF37] via-[#F4E3B2] to-[#DC00D3] animate-gradient-x text-[0.95em]">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#D4AF37] via-[#F4E3B2] to-[#DC00D3] animate-gradient-x text-[0.95em]">
               {t('hero.titleBottom')}
             </span>
           </h1>
         </motion.div>
 
         <motion.p
-          ref={descRef}
           variants={fadeUp}
           initial="hidden"
           whileInView="show"
@@ -141,7 +132,6 @@ export function Hero() {
         </motion.p>
 
         <motion.div
-          ref={btnsRef}
           variants={fadeUp}
           initial="hidden"
           whileInView="show"
