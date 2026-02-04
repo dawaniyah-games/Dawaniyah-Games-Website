@@ -3,8 +3,19 @@ import { motion } from 'motion/react';
 import { BadgeCheck, Globe, Zap, Lightbulb, Linkedin } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import profileImg from "../../../assets/profile.jpg";
-import { fadeLeft, fadeRight, fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
+import { EASE_SMOOTH, fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 import { useSection3DScroll } from './useSection3DScroll';
+
+const founderImageAnim = {
+  hidden: { opacity: 0, x: -120 },
+  show: { opacity: 1, x: 0, transition: { duration: 1.1, ease: EASE_SMOOTH } },
+  exit: { opacity: 0, x: -120, transition: { duration: 0.7, ease: EASE_SMOOTH } }
+} as const;
+const founderTextAnim = {
+  hidden: { opacity: 0, x: 120 },
+  show: { opacity: 1, x: 0, transition: { duration: 1.1, ease: EASE_SMOOTH } },
+  exit: { opacity: 0, x: 120, transition: { duration: 0.7, ease: EASE_SMOOTH } }
+} as const;
 
 export function About() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -27,9 +38,10 @@ export function About() {
           {/* Image Side */}
           <motion.div 
             ref={imageRef}
-            variants={fadeLeft}
+            variants={founderImageAnim}
             initial="hidden"
             whileInView="show"
+            exit="exit"
             viewport={VIEWPORT_ONCE}
             className="w-full md:w-1/2 flex justify-center"
           >
@@ -52,9 +64,10 @@ export function About() {
           {/* Text Side */}
           <motion.div 
             ref={textRef}
-            variants={fadeRight}
+            variants={founderTextAnim}
             initial="hidden"
             whileInView="show"
+            exit="exit"
             viewport={VIEWPORT_ONCE}
             className="w-full md:w-1/2"
           >

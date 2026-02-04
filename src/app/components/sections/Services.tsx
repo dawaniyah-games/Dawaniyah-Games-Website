@@ -44,7 +44,15 @@ const services = [
 
 export function Services() {
   return (
-    <section id="services" className="py-24 bg-[#0B021C] relative overflow-hidden">
+    <motion.section
+      id="services"
+      className="py-24 bg-[#0B021C] relative overflow-hidden"
+      initial={{ opacity: 0, y: 64 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 64 }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
+      viewport={{ once: false, amount: 0.3 }}
+    >
       {/* Background noise/grid */}
       <div className="absolute inset-0 opacity-5" 
            style={{ backgroundImage: 'radial-gradient(#444 1px, transparent 1px)', backgroundSize: '30px 30px' }} 
@@ -103,6 +111,6 @@ export function Services() {
           ))}
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

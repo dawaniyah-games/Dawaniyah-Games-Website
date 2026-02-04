@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, type RefObject } from "react";
 
-export function useSection3DScroll(refs: Record<string, React.RefObject<HTMLElement>>) {
+export function useSection3DScroll(refs: Record<string, RefObject<HTMLElement | null> | undefined>) {
   useEffect(() => {
     function handleScroll() {
       const section = refs.section?.current;
