@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import Vector from '../../../imports/Vector';
+import { EASE_SMOOTH, fadeScale, fadeUp, VIEWPORT_ONCE } from '../../motion/presets';
 
 export function Map() {
   return (
@@ -8,9 +9,10 @@ export function Map() {
       <div className="container mx-auto px-6">
         {/* Section Header */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
@@ -23,10 +25,10 @@ export function Map() {
 
         {/* Map Container */}
         <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6 }}
+          variants={fadeScale}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
           className="relative max-w-5xl mx-auto"
         >
           {/* Glow effect behind map */}
@@ -41,10 +43,10 @@ export function Map() {
 
           {/* Riyadh Location Pin (Middle East - right side) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0 }}
+            initial={{ opacity: 0, scale: 0.85 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5, type: "spring" }}
+            viewport={VIEWPORT_ONCE}
+            transition={{ delay: 0.35, duration: 0.5, ease: EASE_SMOOTH, type: 'tween' }}
             className="absolute top-[48.5%] left-[60.3%] -translate-x-1/2 -translate-y-1/2 group"
           >
             <div className="relative">
@@ -60,10 +62,10 @@ export function Map() {
 
           {/* Cologne Location Pin (Germany - left side) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0 }}
+            initial={{ opacity: 0, scale: 0.85 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.7, type: "spring" }}
+            viewport={VIEWPORT_ONCE}
+            transition={{ delay: 0.5, duration: 0.5, ease: EASE_SMOOTH, type: 'tween' }}
             className="absolute top-[30.5%] left-[50%] -translate-x-1/2 -translate-y-1/2 group"
           >
             <div className="relative">
@@ -80,10 +82,10 @@ export function Map() {
 
         {/* Optional stats or text below map */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ delay: 0.3 }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
           className="text-center mt-12"
         >
           <p className="text-gray-500 text-sm tracking-wider uppercase">

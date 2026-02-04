@@ -1,7 +1,7 @@
 import React from 'react';
 import { Github, Twitter, Linkedin } from 'lucide-react';
-import logoText from "figma:asset/53719f767293946eb3436bd4f6d1f92f3c2f4306.png";
-import logoIcon from "figma:asset/70f06a910fc964d546e82ec2b62a58bc2b2b0877.png";
+import logoText from "../../../assets/logo-text.png";
+import logoIcon from "../../../assets/logo-icon.png";
 
 export function Footer() {
   return (

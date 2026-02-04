@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { ShieldCheck, Layers, Users, Clock, MonitorSmartphone, Trophy } from 'lucide-react';
+import { fadeScale, fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 
 const reasons = [
   { icon: Clock, title: "14+ Years Experience", text: "Deep industry knowledge delivering successful titles." },
@@ -18,9 +19,10 @@ export function WhyChooseUs() {
       
       <div className="container mx-auto px-6 relative z-10">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold font-['Josefin_Sans'] text-white">
@@ -28,14 +30,17 @@ export function WhyChooseUs() {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          variants={stagger(0.1, 0.05)}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           {reasons.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: index * 0.1 }}
+              variants={fadeScale}
               className="flex gap-4 items-start p-6 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-[#DC00D3]/50 transition-all duration-300"
             >
               <div className="shrink-0 p-3 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#DC00D3] text-white">
@@ -47,7 +52,7 @@ export function WhyChooseUs() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { fadeUp, VIEWPORT_ONCE } from '../../motion/presets';
 
 const technologies = [
   "Unity", "Unreal Engine", "C#", "C++", "GitHub", "Firebase", "Photon", "Blender", "Maya", "React", "Node.js", "AWS"
@@ -8,13 +9,19 @@ const technologies = [
 export function Technologies() {
   return (
     <section className="py-20 bg-[#100425] overflow-hidden border-y border-white/5">
-      <div className="container mx-auto px-6 mb-10 text-center">
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="show"
+        viewport={VIEWPORT_ONCE}
+        className="container mx-auto px-6 mb-10 text-center"
+      >
         <h2 className="text-2xl font-['Josefin_Sans'] text-gray-400 uppercase tracking-[0.2em]">Powered By</h2>
-      </div>
+      </motion.div>
       
       <div className="relative flex overflow-x-hidden group">
         <motion.div 
-          className="flex gap-12 animate-marquee whitespace-nowrap py-4"
+          className="flex gap-12 whitespace-nowrap py-4"
           animate={{ x: [0, -1000] }}
           transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
           style={{ willChange: "transform" }}
@@ -33,7 +40,7 @@ export function Technologies() {
       {/* Reverse scroll for visual interest */}
       <div className="relative flex overflow-x-hidden group mt-4">
         <motion.div 
-          className="flex gap-12 animate-marquee whitespace-nowrap py-4"
+          className="flex gap-12 whitespace-nowrap py-4"
           animate={{ x: [-1000, 0] }}
           transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
           style={{ willChange: "transform" }}

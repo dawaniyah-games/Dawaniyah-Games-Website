@@ -1,17 +1,39 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import vid01 from '../../../assets/vid_01.mp4';
 import { motion } from 'motion/react';
 import { Button } from '../ui/Button';
-import logoText from "figma:asset/53719f767293946eb3436bd4f6d1f92f3c2f4306.png";
-import logoIcon from "figma:asset/70f06a910fc964d546e82ec2b62a58bc2b2b0877.png";
+import logoText from "../../../assets/logo-text.png";
+import logoIcon from "../../../assets/logo-icon.png";
+import { EASE_SMOOTH, fadeUp, VIEWPORT_ONCE } from '../../motion/presets';
+import { useHero3DScroll } from './useHero3DScroll';
 
 export function Hero() {
+  const logoRef = useRef<HTMLImageElement | null>(null);
+  const logoTextRef = useRef<HTMLImageElement | null>(null);
+  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const subtitleRef = useRef<HTMLSpanElement | null>(null);
+  const descRef = useRef<HTMLParagraphElement | null>(null);
+  const btnsRef = useRef<HTMLDivElement | null>(null);
+  useHero3DScroll(logoRef, logoTextRef, titleRef, subtitleRef, descRef, btnsRef);
   return (
     <div id="hero" className="relative w-full bg-[#100425]">
+      {/* This empty div ensures the Navbar is always on top, video comes after */}
+      <div className="h-0" />
+      {/* Background Video */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        src={vid01}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        style={{ pointerEvents: 'none' }}
+      />
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/80 z-0" />
       {/* Shared Background Elements */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden h-full">
-        {/* Gradient Blob - Positioned centrally but fixed/sticky-like feel relative to the container */}
-        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] rounded-full bg-gradient-to-br from-[#DC00D3] to-[#D4AF37] opacity-10 blur-[60px] md:blur-[100px] animate-pulse" />
-        
         {/* Pattern Grid */}
         <div className="absolute inset-0 opacity-20" 
              style={{ 
@@ -36,9 +58,10 @@ export function Hero() {
             style={{ perspective: 1000 }}
           >
             <motion.img 
+              ref={logoRef}
               src={logoIcon} 
               alt="Dawaniyah Games Icon" 
-              className="h-36 md:h-52 lg:h-60 w-auto object-contain mb-8 drop-shadow-[0_0_25px_rgba(212,175,55,0.3)]" 
+              className="h-42 md:h-59 lg:h-68 w-auto object-contain mb-8 drop-shadow-[0_0_32px_rgba(212,175,55,0.4)]"
               animate={{ 
                 y: [0, -20, 0]
               }}
@@ -50,12 +73,13 @@ export function Hero() {
           </motion.div>
 
           <motion.img 
+            ref={logoTextRef}
             src={logoText} 
             alt="Dawaniyah Games" 
             className="h-16 md:h-24 lg:h-28 w-auto object-contain"
             initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.9, delay: 0.45, ease: EASE_SMOOTH, type: 'tween' }}
           />
         </div>
       </section>
@@ -63,24 +87,26 @@ export function Hero() {
       {/* Section 2: Hero Content (Text & Buttons) */}
       <section className="relative z-10 min-h-[40vh] flex flex-col items-center justify-start pb-20 px-6 text-center pt-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.8 }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
         >
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-['Josefin_Sans'] leading-tight mb-8">
-            <span className="block text-white mb-2">CRAFTING WORLDS</span>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#D4AF37] via-[#F4E3B2] to-[#DC00D3] animate-gradient-x">
+          <h1 ref={titleRef} className="text-[2.35rem] md:text-[3.55rem] lg:text-[4.1rem] font-bold font-['Josefin_Sans'] leading-tight mb-8 -mt-2">
+            <span className="block text-white mb-2 text-[0.95em]">CRAFTING WORLDS</span>
+            <span ref={subtitleRef} className="bg-clip-text text-transparent bg-gradient-to-r from-[#D4AF37] via-[#F4E3B2] to-[#DC00D3] animate-gradient-x text-[0.95em]">
               POWERING EXPERIENCES
             </span>
           </h1>
         </motion.div>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          ref={descRef}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
+          transition={{ delay: 0.12 }}
           className="text-[19px] md:text-[21px] text-gray-300 max-w-3xl mx-auto mb-12 font-light leading-relaxed"
         >
           Multi-Platform Game Development, Done Right.
@@ -89,10 +115,12 @@ export function Hero() {
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          ref={btnsRef}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
+          transition={{ delay: 0.18 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-6"
         >
           <Button size="lg" className="bg-[#D4AF37] text-[#100425] hover:bg-[#C5A059] border-none font-bold px-8 py-6 text-lg" onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>

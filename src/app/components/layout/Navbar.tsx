@@ -2,8 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '../ui/Button';
-import logoText from "figma:asset/53719f767293946eb3436bd4f6d1f92f3c2f4306.png";
-import logoIcon from "figma:asset/70f06a910fc964d546e82ec2b62a58bc2b2b0877.png";
+import logoText from "../../../assets/logo-text.png";
+import logoIcon from "../../../assets/logo-icon.png";
+import { EASE_SMOOTH } from '../../motion/presets';
+
+const mobileMenuVariants = {
+  closed: {
+    opacity: 0,
+    scaleY: 0.98,
+    transition: { duration: 0.18, ease: EASE_SMOOTH },
+  },
+  open: {
+    opacity: 1,
+    scaleY: 1,
+    transition: { duration: 0.22, ease: EASE_SMOOTH },
+  },
+} as const;
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,21 +43,20 @@ export function Navbar() {
     e.preventDefault();
     setMobileMenuOpen(false);
 
-    // Small timeout to ensure menu closing doesn't interfere with scroll
-    setTimeout(() => {
-      if (href === '#hero') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        const element = document.querySelector(href);
-        if (element) {
-          const shouldCenter = href === '#services' || href === '#portfolio';
-          element.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: shouldCenter ? 'center' : 'start' 
-          });
-        }
+    // Immediate scroll to section for faster response
+    if (href === '#hero') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const element = document.querySelector(href);
+      if (element) {
+        // Always center About section for better containment
+        const shouldCenter = href === '#services' || href === '#portfolio' || href === '#about' || href === '#contact';
+        element.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: shouldCenter ? 'center' : 'start' 
+        });
       }
-    }, 300);
+    }
   };
 
   return (
@@ -53,9 +66,9 @@ export function Navbar() {
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <a href="#" className="block py-2 group">
-           <img src={logoIcon} alt="Dawaniyah Games Icon" className="h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-110" />
-        </a>
+          <a href="#" className="block py-2 group">
+            <img src={logoIcon} alt="Dawaniyah Games Icon" className="h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-110" />
+          </a>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8">
@@ -91,10 +104,13 @@ export function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#100425] border-t border-[#D4AF37]/20"
+            key="mobile-menu"
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={mobileMenuVariants}
+            style={{ transformOrigin: 'top' }}
+            className="md:hidden bg-[#100425] border-t border-[#D4AF37]/20 overflow-hidden"
           >
             <div className="flex flex-col p-6 gap-4">
               {links.map((link) => (

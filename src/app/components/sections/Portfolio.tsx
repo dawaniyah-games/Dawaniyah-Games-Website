@@ -2,7 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Button } from '../ui/Button';
 import { ExternalLink } from 'lucide-react';
-import imgNew1 from "figma:asset/a14baa953f5211eeec955d26e84ca1175a26d9c7.png";
+import imgNew1 from "../../../assets/project-dendon-games.png";
+import { fadeLeft, fadeRight, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 
 const projects = [
   {
@@ -19,9 +20,10 @@ export function Portfolio() {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
+            variants={fadeLeft}
+            initial="hidden"
+            whileInView="show"
+            viewport={VIEWPORT_ONCE}
           >
             <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
               FEATURED <span className="text-[#D4AF37]">PROJECTS</span>
@@ -30,9 +32,10 @@ export function Portfolio() {
           </motion.div>
           
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
+            variants={fadeRight}
+            initial="hidden"
+            whileInView="show"
+            viewport={VIEWPORT_ONCE}
             className="mt-6 md:mt-0"
           >
             <Button variant="outline" className="border-[#DC00D3] text-[#DC00D3] hover:bg-[#DC00D3] hover:text-white" onClick={() => document.getElementById('gameplay-demos')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>
@@ -41,14 +44,17 @@ export function Portfolio() {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <motion.div
+          variants={stagger(0.12, 0.05)}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
           {projects.map((project, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: index * 0.1 }}
+              variants={fadeScale}
               className="group relative h-80 rounded-2xl overflow-hidden cursor-pointer"
             >
               <img 
@@ -74,7 +80,7 @@ export function Portfolio() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

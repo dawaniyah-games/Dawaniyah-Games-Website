@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Quote } from 'lucide-react';
+import { fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 
 const testimonials = [
   {
@@ -24,20 +25,29 @@ export function Testimonials() {
   return (
     <section className="py-20 bg-[#100425] relative">
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-12">
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
+          className="text-center mb-12"
+        >
           <h2 className="text-3xl font-bold font-['Josefin_Sans'] text-white">
             CLIENT <span className="text-[#0CFAF5]">STORIES</span>
           </h2>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div
+          variants={stagger(0.1, 0.05)}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
           {testimonials.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: index * 0.1 }}
+              variants={fadeUp}
               className="bg-white/5 border border-white/5 p-8 rounded-2xl relative"
             >
               <div className="absolute -top-4 left-8 bg-[#100425] p-2 text-[#0CFAF5]">
@@ -52,7 +62,7 @@ export function Testimonials() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

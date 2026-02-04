@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Play, Volume2, VolumeX } from 'lucide-react';
+import { fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 
 const demos = [
   {
@@ -20,9 +21,10 @@ export function DemoProjects() {
 
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
@@ -33,14 +35,17 @@ export function DemoProjects() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <motion.div
+          variants={stagger(0.12, 0.05)}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+        >
           {demos.map((demo, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: index * 0.15 }}
+              variants={fadeUp}
               className="group relative rounded-2xl overflow-hidden border border-[#DC00D3]/20 bg-[#150530] shadow-xl hover:shadow-[#DC00D3]/20 transition-all duration-300"
             >
               {/* Video Container */}
@@ -87,7 +92,7 @@ export function DemoProjects() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

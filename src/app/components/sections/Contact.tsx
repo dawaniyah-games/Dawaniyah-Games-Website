@@ -1,4 +1,6 @@
 import React from 'react';
+import emailjs from 'emailjs-com';
+import { motion } from 'motion/react';
 import { Button } from '../ui/Button';
 import { Mail, Globe, Github, Linkedin } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -15,6 +17,7 @@ import {
 } from '../ui/form';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
+import { fadeLeft, fadeRight, VIEWPORT_ONCE } from '../../motion/presets';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -38,13 +41,37 @@ export function Contact() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast.success("Message received!", {
-      description: "We'll be in touch with you shortly via email.",
-      duration: 5000,
-    });
-    form.reset();
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const lastSent = localStorage.getItem('contact_last_sent');
+    const now = Date.now();
+    if (lastSent && now - parseInt(lastSent, 10) < 15 * 60 * 1000) {
+      const minutesLeft = Math.ceil((15 * 60 * 1000 - (now - parseInt(lastSent, 10))) / 60000);
+      toast.error(`Please wait ${minutesLeft} more minute${minutesLeft > 1 ? 's' : ''} before sending another message.`);
+      return;
+    }
+    try {
+      await emailjs.send(
+        'service_9yg0wzc',
+        'template_pjuy7bb',
+        {
+          from_name: values.name,
+          from_email: values.email,
+          message: values.message,
+        },
+        'o0rZN6LvG1VBSTwFi'
+      );
+      localStorage.setItem('contact_last_sent', now.toString());
+      toast.success("Message sent!", {
+        description: "We'll be in touch with you shortly via email.",
+        duration: 5000,
+      });
+      form.reset();
+    } catch (error) {
+      toast.error("Failed to send message.", {
+        description: "Please try again later or contact us directly by email.",
+        duration: 5000,
+      });
+    }
   }
 
   return (
@@ -52,7 +79,13 @@ export function Contact() {
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row gap-16">
           {/* Contact Info */}
-          <div className="lg:w-1/3">
+          <motion.div
+            variants={fadeLeft}
+            initial="hidden"
+            whileInView="show"
+            viewport={VIEWPORT_ONCE}
+            className="lg:w-1/3"
+          >
             <h2 className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-6">
               LET'S BUILD <br />
               <span className="text-[#D4AF37]">SOMETHING EPIC</span>
@@ -93,10 +126,16 @@ export function Contact() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Contact Form */}
-          <div className="lg:w-2/3">
+          <motion.div
+            variants={fadeRight}
+            initial="hidden"
+            whileInView="show"
+            viewport={VIEWPORT_ONCE}
+            className="lg:w-2/3"
+          >
             <div className="bg-white/5 p-8 rounded-2xl border border-white/5 backdrop-blur-sm">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -161,7 +200,7 @@ export function Contact() {
                 </form>
               </Form>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { MotionConfig } from 'motion/react';
 import { Navbar } from './components/layout/Navbar';
 import { Hero } from './components/sections/Hero';
 import { About } from './components/sections/About';
@@ -15,20 +16,22 @@ import { Toaster } from './components/ui/sonner';
 
 export default function App() {
   return (
-    <div className="bg-[#100425] min-h-screen text-white font-['Inter'] selection:bg-[#DC00D3] selection:text-white overflow-x-hidden">
-      <Navbar />
-      <Hero />
-      <Services />
-      <Portfolio />
-      <DemoProjects />
-      <WhyChooseUs />
-      <Technologies />
-      <Testimonials />
-      <About />
-      <Contact />
-      <Map />
-      <Footer />
-      <Toaster />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="bg-[#100425] min-h-screen text-white font-['Inter'] selection:bg-[#DC00D3] selection:text-white overflow-x-hidden">
+        <Navbar />
+        <Hero />
+        <Services />
+        <Portfolio />
+        <DemoProjects />
+        <WhyChooseUs />
+        <Technologies />
+        <Testimonials />
+        <About />
+        <Contact />
+        <Map />
+        <Footer />
+        <Toaster />
+      </div>
+    </MotionConfig>
   );
 }

@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'motion/react';
 import { BadgeCheck, Globe, Zap, Lightbulb, Linkedin } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
-import profileImg from "figma:asset/2e06796fda7c940cfe8654b5f77d0251299db755.png";
+import profileImg from "../../../assets/profile.jpg";
+import { fadeLeft, fadeRight, fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
+import { useSection3DScroll } from './useSection3DScroll';
 
 export function About() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLHeadingElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  useSection3DScroll({ section: sectionRef, image: imageRef, header: headerRef, text: textRef, stats: statsRef });
   const stats = [
     { label: "Years Experience", value: "14+", icon: BadgeCheck },
     { label: "Global Projects", value: "International", icon: Globe },
@@ -13,40 +21,44 @@ export function About() {
   ];
 
   return (
-    <section id="about" className="py-20 bg-[#100425] relative">
+    <section id="about" ref={sectionRef} className="py-20 bg-[#100425] relative">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center gap-12">
           {/* Image Side */}
           <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.8 }}
+            ref={imageRef}
+            variants={fadeLeft}
+            initial="hidden"
+            whileInView="show"
+            viewport={VIEWPORT_ONCE}
             className="w-full md:w-1/2 flex justify-center"
           >
             <div className="relative w-80 h-80 md:w-96 md:h-96">
               <div className="absolute -inset-4 rounded-2xl border-4 border-[#DC00D3] rotate-6 opacity-60 shadow-[0_0_20px_rgba(220,0,211,0.3)]"></div>
               <div className="absolute -inset-4 rounded-2xl border-4 border-[#D4AF37] -rotate-6 opacity-60 shadow-[0_0_20px_rgba(212,175,55,0.3)]"></div>
               <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(220,0,211,0.6)] border border-[#DC00D3]/30 bg-[#100425]">
-                 <img 
-                   src={profileImg} 
-                   alt="Mohamed Moghazi" 
-                   className="w-full h-full object-cover object-[50%_10%] scale-110 grayscale brightness-75 hover:grayscale-0 hover:brightness-100 transition-all duration-500"
-                 />
-                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#100425_100%)] opacity-80 pointer-events-none mix-blend-multiply"></div>
+                   <ImageWithFallback
+                     src={profileImg}
+                     alt="Mohamed Moghazi"
+                     loading="lazy"
+                     decoding="async"
+                     className="w-full h-full object-cover object-[50%_12%] scale-105 brightness-90 contrast-110 saturate-90 transition-all duration-700 group-hover:scale-110 hover:scale-110 hover:brightness-100 hover:saturate-100"
+                   />
+                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_35%,#100425_100%)] opacity-60 pointer-events-none"></div>
               </div>
             </div>
           </motion.div>
 
           {/* Text Side */}
           <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.8 }}
+            ref={textRef}
+            variants={fadeRight}
+            initial="hidden"
+            whileInView="show"
+            viewport={VIEWPORT_ONCE}
             className="w-full md:w-1/2"
           >
-            <h2 className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-6">
+            <h2 ref={headerRef} className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-6">
               MEET THE <span className="text-[#DC00D3]">FOUNDER</span>
             </h2>
             <h3 className="text-xl text-[#D4AF37] font-semibold mb-4">Mohamed Moghazi</h3>
@@ -57,9 +69,16 @@ export function About() {
               Dawaniyah Games represents the culmination of this journey—a studio dedicated to pushing the boundaries of what's possible in interactive entertainment, focusing on innovation, quality, and performance.
             </p>
 
-            <div className="grid grid-cols-2 gap-6 mb-8">
+            <motion.div
+              ref={statsRef}
+              variants={stagger(0.06, 0.02)}
+              initial="hidden"
+              whileInView="show"
+              viewport={VIEWPORT_ONCE}
+              className="grid grid-cols-2 gap-6 mb-8"
+            >
               {stats.map((stat, index) => (
-                <div key={index} className="flex items-center gap-3">
+                <motion.div key={index} variants={fadeUp} className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-[#DC00D3]/10 text-[#DC00D3]">
                     <stat.icon size={24} />
                   </div>
@@ -67,9 +86,9 @@ export function About() {
                     <div className="font-bold text-white text-lg">{stat.value}</div>
                     <div className="text-xs text-gray-400 uppercase tracking-wide">{stat.label}</div>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
             <div className="flex gap-4">
               <a 
