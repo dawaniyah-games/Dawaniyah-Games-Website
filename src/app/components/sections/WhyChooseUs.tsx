@@ -2,17 +2,44 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ShieldCheck, Layers, Users, Clock, MonitorSmartphone, Trophy } from 'lucide-react';
 import { fadeScale, fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
-
-const reasons = [
-  { icon: Clock, title: "14+ Years Experience", text: "Deep industry knowledge delivering successful titles." },
-  { icon: MonitorSmartphone, title: "Cross-Platform", text: "Seamless gameplay on PC, Console, iOS, and Android." },
-  { icon: Layers, title: "Scalable Architecture", text: "Robust backends built for millions of players." },
-  { icon: Users, title: "Player-Centric", text: "Design philosophies that prioritize user engagement." },
-  { icon: ShieldCheck, title: "Quality Assurance", text: "Rigorous testing for bug-free releases." },
-  { icon: Trophy, title: "International Reach", text: "Experience working with global studios and teams." },
-];
+import { useTranslation } from 'react-i18next';
 
 export function WhyChooseUs() {
+  const { t } = useTranslation();
+
+  const reasons = [
+    {
+      icon: Clock,
+      title: t('why.reasons.experience.title'),
+      text: t('why.reasons.experience.text'),
+    },
+    {
+      icon: MonitorSmartphone,
+      title: t('why.reasons.cross.title'),
+      text: t('why.reasons.cross.text'),
+    },
+    {
+      icon: Layers,
+      title: t('why.reasons.scalable.title'),
+      text: t('why.reasons.scalable.text'),
+    },
+    {
+      icon: Users,
+      title: t('why.reasons.player.title'),
+      text: t('why.reasons.player.text'),
+    },
+    {
+      icon: ShieldCheck,
+      title: t('why.reasons.qa.title'),
+      text: t('why.reasons.qa.text'),
+    },
+    {
+      icon: Trophy,
+      title: t('why.reasons.reach.title'),
+      text: t('why.reasons.reach.text'),
+    },
+  ];
+
   return (
     <motion.section
       className="py-24 bg-[#0B021C] relative"
@@ -32,7 +59,7 @@ export function WhyChooseUs() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold font-['Josefin_Sans'] text-white">
-            WHY <span className="text-[#DC00D3]">CHOOSE US</span>
+            <span className="text-[#DC00D3]">{t('why.heading')}</span>
           </h2>
         </motion.div>
 
@@ -47,12 +74,12 @@ export function WhyChooseUs() {
             <motion.div
               key={index}
               variants={fadeScale}
-              className="flex gap-4 items-start p-6 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-[#DC00D3]/50 transition-all duration-300"
+              className="flex gap-4 items-start p-6 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-[#DC00D3]/50 transition-all duration-300 [html[dir='rtl']_&]:flex-row-reverse"
             >
               <div className="shrink-0 p-3 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#DC00D3] text-white">
                 <item.icon size={24} />
               </div>
-              <div>
+              <div className="[html[dir='rtl']_&]:text-right">
                 <h3 className="text-lg font-bold text-white mb-2 font-['Josefin_Sans']">{item.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{item.text}</p>
               </div>

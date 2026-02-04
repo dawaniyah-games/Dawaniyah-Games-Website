@@ -2,8 +2,10 @@ import React from 'react';
 import { motion } from 'motion/react';
 import Vector from '../../../imports/Vector';
 import { EASE_SMOOTH, fadeScale, fadeUp, VIEWPORT_ONCE } from '../../motion/presets';
+import { useTranslation } from 'react-i18next';
 
 export function Map() {
+  const { t } = useTranslation();
   return (
     <section className="py-24 bg-[#100425] relative overflow-hidden">
       <div className="container mx-auto px-6">
@@ -16,10 +18,10 @@ export function Map() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
-            GLOBAL <span className="text-[#D4AF37]">REACH</span>
+            <span className="text-[#D4AF37]">{t('map.heading')}</span>
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Creating world-class gaming experiences from Riyadh and Cologne
+            {t('map.subheading')}
           </p>
         </motion.div>
 
@@ -55,7 +57,7 @@ export function Map() {
             </div>
             <div className="absolute top-8 left-1/2 -translate-x-1/2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
               <div className="bg-[#0B021C] border border-[#D4AF37]/30 px-3 py-2 rounded-lg">
-                <p className="text-[#D4AF37] font-semibold text-sm">Riyadh, KSA</p>
+                <p className="text-[#D4AF37] font-semibold text-sm">{t('map.riyadh')}</p>
               </div>
             </div>
           </motion.div>
@@ -74,7 +76,7 @@ export function Map() {
             </div>
             <div className="absolute top-8 left-1/2 -translate-x-1/2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
               <div className="bg-[#0B021C] border border-[#D4AF37]/30 px-3 py-2 rounded-lg">
-                <p className="text-[#D4AF37] font-semibold text-sm">Cologne, Germany</p>
+                <p className="text-[#D4AF37] font-semibold text-sm">{t('map.cologne')}</p>
               </div>
             </div>
           </motion.div>
@@ -89,7 +91,7 @@ export function Map() {
           className="text-center mt-12"
         >
           <p className="text-gray-500 text-sm tracking-wider uppercase">
-            Riyadh, KSA • Cologne, Germany
+            {t('map.locationsLine')}
           </p>
         </motion.div>
       </div>

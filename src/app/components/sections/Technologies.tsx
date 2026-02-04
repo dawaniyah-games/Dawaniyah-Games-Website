@@ -1,12 +1,14 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { fadeUp, VIEWPORT_ONCE } from '../../motion/presets';
+import { useTranslation } from 'react-i18next';
 
 const technologies = [
   "Unity", "Unreal Engine", "C#", "C++", "GitHub", "Firebase", "Photon", "Blender", "Maya", "React", "Node.js", "AWS"
 ];
 
 export function Technologies() {
+  const { t } = useTranslation();
   return (
     <section className="py-20 bg-[#100425] overflow-hidden border-y border-white/5">
       <motion.div
@@ -16,7 +18,7 @@ export function Technologies() {
         viewport={VIEWPORT_ONCE}
         className="container mx-auto px-6 mb-10 text-center"
       >
-        <h2 className="text-2xl font-['Josefin_Sans'] text-gray-400 uppercase tracking-[0.2em]">Powered By</h2>
+        <h2 className="text-2xl font-['Josefin_Sans'] text-gray-400 uppercase tracking-[0.2em]">{t('technologies.poweredBy')}</h2>
       </motion.div>
       
       <div className="relative flex overflow-x-hidden group">

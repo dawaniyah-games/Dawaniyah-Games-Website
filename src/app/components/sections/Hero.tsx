@@ -2,12 +2,38 @@ import React, { useRef } from 'react';
 import vid01 from '../../../assets/vid_01.mp4';
 import { motion } from 'motion/react';
 import { Button } from '../ui/Button';
-import logoText from "../../../assets/logo-text.png";
 import logoIcon from "../../../assets/logo-icon.png";
 import { EASE_SMOOTH, fadeUp, VIEWPORT_ONCE } from '../../motion/presets';
 import { useHero3DScroll } from './useHero3DScroll';
+import { useTranslation } from 'react-i18next';
+
+const LOGO_TEXTS = import.meta.glob(
+  [
+    '../../../assets/logo-text*.{png,PNG,webp,WEBP,jpg,JPG,jpeg,JPEG,svg,SVG}',
+    '../../../assets/Logo-text*.{png,PNG,webp,WEBP,jpg,JPG,jpeg,JPEG,svg,SVG}',
+  ],
+  {
+    eager: true,
+    import: 'default',
+  },
+) as Record<string, string>;
+
+function getLogoTextSrc(language: string | undefined) {
+  const isArabic = (language ?? '').toLowerCase().startsWith('ar');
+  const entries = Object.entries(LOGO_TEXTS);
+  const en = entries.find(([path]) => /\/logo-text\.[a-z0-9]+$/i.test(path))?.[1];
+  const ar = entries.find(([path]) => /\/logo-text-ar\.[a-z0-9]+$/i.test(path))?.[1];
+  if (import.meta.env.DEV && isArabic && !ar) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "Arabic is active but 'src/assets/logo-text-ar.*' was not found. Add 'logo-text-ar.png' (or .webp/.svg) to src/assets and restart the dev server.",
+    );
+  }
+  return (isArabic && ar) ? ar : (en ?? entries[0]?.[1]);
+}
 
 export function Hero() {
+  const { t, i18n } = useTranslation();
   const logoRef = useRef<HTMLImageElement | null>(null);
   const logoTextRef = useRef<HTMLImageElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
@@ -74,7 +100,7 @@ export function Hero() {
 
           <motion.img 
             ref={logoTextRef}
-            src={logoText} 
+            src={getLogoTextSrc(i18n.language)} 
             alt="Dawaniyah Games" 
             className="h-16 md:h-24 lg:h-28 w-auto object-contain"
             initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
@@ -93,9 +119,9 @@ export function Hero() {
           viewport={VIEWPORT_ONCE}
         >
           <h1 ref={titleRef} className="text-[2.35rem] md:text-[3.55rem] lg:text-[4.1rem] font-bold font-['Josefin_Sans'] leading-tight mb-8 -mt-2">
-            <span className="block text-white mb-2 text-[0.95em]">CRAFTING WORLDS</span>
+            <span className="block text-white mb-2 text-[0.95em]">{t('hero.titleTop')}</span>
             <span ref={subtitleRef} className="bg-clip-text text-transparent bg-gradient-to-r from-[#D4AF37] via-[#F4E3B2] to-[#DC00D3] animate-gradient-x text-[0.95em]">
-              POWERING EXPERIENCES
+              {t('hero.titleBottom')}
             </span>
           </h1>
         </motion.div>
@@ -109,9 +135,9 @@ export function Hero() {
           transition={{ delay: 0.12 }}
           className="text-[19px] md:text-[21px] text-gray-300 max-w-3xl mx-auto mb-12 font-light leading-relaxed"
         >
-          Multi-Platform Game Development, Done Right.
+          {t('hero.descriptionLine1')}
           <br className="hidden md:block" />
-          Renowned across Germany, our Cologne and Riyadh teams create exceptional games for mobile, PC, console, and VR. We fuse strong narrative design with advanced engineering to build immersive, memorable experiences for players.
+          {t('hero.descriptionLine2')}
         </motion.p>
 
         <motion.div
@@ -121,13 +147,13 @@ export function Hero() {
           whileInView="show"
           viewport={VIEWPORT_ONCE}
           transition={{ delay: 0.18 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-6"
+          className="flex flex-col sm:flex-row sm:[html[dir='rtl']_&]:flex-row-reverse items-center justify-center gap-6"
         >
           <Button size="lg" className="bg-[#D4AF37] text-[#100425] hover:bg-[#C5A059] border-none font-bold px-8 py-6 text-lg" onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>
-            Our Services
+            {t('hero.ctaServices')}
           </Button>
           <Button variant="outline" size="lg" className="border-[#DC00D3] text-[#DC00D3] hover:bg-[#DC00D3] hover:text-white font-bold px-8 py-6 text-lg" onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>
-            View Portfolio
+            {t('hero.ctaPortfolio')}
           </Button>
         </motion.div>
       </section>

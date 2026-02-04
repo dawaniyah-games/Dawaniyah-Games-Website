@@ -5,6 +5,7 @@ import { ImageWithFallback } from '../figma/ImageWithFallback';
 import profileImg from "../../../assets/profile.jpg";
 import { EASE_SMOOTH, fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 import { useSection3DScroll } from './useSection3DScroll';
+import { useTranslation } from 'react-i18next';
 
 const founderImageAnim = {
   hidden: { opacity: 0, x: -120 },
@@ -18,6 +19,7 @@ const founderTextAnim = {
 } as const;
 
 export function About() {
+  const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLHeadingElement>(null);
@@ -25,16 +27,16 @@ export function About() {
   const statsRef = useRef<HTMLDivElement>(null);
   useSection3DScroll({ section: sectionRef, image: imageRef, header: headerRef, text: textRef, stats: statsRef });
   const stats = [
-    { label: "Years Experience", value: "14+", icon: BadgeCheck },
-    { label: "Global Projects", value: "International", icon: Globe },
-    { label: "Systems Scaled", value: "High Perf", icon: Zap },
-    { label: "Creative Vision", value: "Innovative", icon: Lightbulb },
+    { label: t('about.stats.years'), value: "14+", icon: BadgeCheck },
+    { label: t('about.stats.global'), value: t('about.stats.international'), icon: Globe },
+    { label: t('about.stats.scaled'), value: t('about.stats.highPerf'), icon: Zap },
+    { label: t('about.stats.vision'), value: t('about.stats.innovative'), icon: Lightbulb },
   ];
 
   return (
     <section id="about" ref={sectionRef} className="py-20 bg-[#100425] relative">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center gap-12">
+        <div className="flex flex-col md:flex-row md:[html[dir='rtl']_&]:flex-row-reverse items-center gap-12">
           {/* Image Side */}
           <motion.div 
             ref={imageRef}
@@ -69,17 +71,17 @@ export function About() {
             whileInView="show"
             exit="exit"
             viewport={VIEWPORT_ONCE}
-            className="w-full md:w-1/2"
+            className="w-full md:w-1/2 md:[html[dir='rtl']_&]:text-right"
           >
             <h2 ref={headerRef} className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-6">
-              MEET THE <span className="text-[#DC00D3]">FOUNDER</span>
+              <span className="text-[#DC00D3]">{t('about.heading')}</span>
             </h2>
-            <h3 className="text-xl text-[#D4AF37] font-semibold mb-4">Mohamed Moghazi</h3>
+            <h3 className="text-xl text-[#D4AF37] font-semibold mb-4">{t('about.name')}</h3>
             <p className="text-gray-300 mb-6 leading-relaxed">
-              With over 14 years of experience in the game development industry, I specialize in crafting immersive gameplay mechanics, building scalable systems in Unity and Unreal, and leading international teams to success.
+              {t('about.p1')}
             </p>
             <p className="text-gray-300 mb-8 leading-relaxed">
-              Dawaniyah Games represents the culmination of this journey—a studio dedicated to pushing the boundaries of what's possible in interactive entertainment, focusing on innovation, quality, and performance.
+              {t('about.p2')}
             </p>
 
             <motion.div
@@ -91,7 +93,7 @@ export function About() {
               className="grid grid-cols-2 gap-6 mb-8"
             >
               {stats.map((stat, index) => (
-                <motion.div key={index} variants={fadeUp} className="flex items-center gap-3">
+                <motion.div key={index} variants={fadeUp} className="flex items-center gap-3 [html[dir='rtl']_&]:flex-row-reverse">
                   <div className="p-2 rounded-lg bg-[#DC00D3]/10 text-[#DC00D3]">
                     <stat.icon size={24} />
                   </div>
@@ -103,7 +105,7 @@ export function About() {
               ))}
             </motion.div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 [html[dir='rtl']_&]:flex-row-reverse">
               <a 
                 href="https://www.linkedin.com/in/mohamed-moghazi-9a729554/" 
                 target="_blank" 
@@ -111,7 +113,7 @@ export function About() {
                 className="inline-flex items-center gap-2 px-6 py-3 bg-transparent border border-[#0077b5] text-[#0077b5] hover:bg-[#0077b5] hover:text-white rounded-lg font-medium transition-colors"
               >
                 <Linkedin size={20} />
-                Connect on LinkedIn
+                {t('about.connect')}
               </a>
               <a 
                 href="https://dawaniyah-games.github.io/my-cv/" 
@@ -120,7 +122,7 @@ export function About() {
                 className="inline-flex items-center gap-2 px-6 py-3 bg-[#DC00D3]/10 hover:bg-[#DC00D3]/20 text-[#DC00D3] border border-[#DC00D3]/30 rounded-lg font-medium transition-colors"
               >
                 <BadgeCheck size={20} />
-                View Full CV
+                {t('about.viewCv')}
               </a>
             </div>
           </motion.div>

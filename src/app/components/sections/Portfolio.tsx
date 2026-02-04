@@ -5,24 +5,26 @@ import { ExternalLink } from 'lucide-react';
 import imgNew1 from "../../../assets/project-dendon-games.jpg";
 import imgNew2 from "../../../assets/project-khuzama-games.png";
 import { EASE_SMOOTH, fadeLeft, fadeRight, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
-
-const projects = [
-  {
-    title: "Dendon Games",
-    category: "Social Board Games",
-    image: imgNew1,
-    tools: ["Unity", "Voice Chat", "Multiplayer"],
-  },
-  {
-    title: "Khuzama Games",
-    category: "Puzzle & Strategy",
-    image: imgNew2,
-    tools: ["Unity", "Voice Chat", "Multiplayer"],
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 export function Portfolio() {
+  const { t } = useTranslation();
   const [hasPlayedFirstIntro, setHasPlayedFirstIntro] = React.useState(false);
+
+  const projects = [
+    {
+      title: t('portfolio.projects.dendon.title'),
+      category: t('portfolio.projects.dendon.category'),
+      image: imgNew1,
+      tools: [t('portfolio.tools.unity'), t('portfolio.tools.voiceChat'), t('portfolio.tools.multiplayer')],
+    },
+    {
+      title: t('portfolio.projects.khuzama.title'),
+      category: t('portfolio.projects.khuzama.category'),
+      image: imgNew2,
+      tools: [t('portfolio.tools.unity'), t('portfolio.tools.voiceChat'), t('portfolio.tools.multiplayer')],
+    },
+  ];
 
   return (
     <motion.section
@@ -42,17 +44,18 @@ export function Portfolio() {
       viewport={{ once: false, amount: 0.3 }}
     >
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+        <div className="flex flex-col items-center text-center mb-16">
           <motion.div
             variants={fadeLeft}
             initial="hidden"
             whileInView="show"
             viewport={VIEWPORT_ONCE}
+            className="text-center"
           >
             <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
-              FEATURED <span className="text-[#D4AF37]">PROJECTS</span>
+              <span className="text-[#D4AF37]">{t('portfolio.heading')}</span>
             </h2>
-            <p className="text-gray-400">A glimpse into the worlds we've built.</p>
+            <p className="text-gray-400 max-w-2xl mx-auto">{t('portfolio.subheading')}</p>
           </motion.div>
           
           {/* View Full Portfolio button removed as requested */}
@@ -80,14 +83,14 @@ export function Portfolio() {
                   />
                   <div className="absolute inset-0 bg-black pointer-events-none rounded-2xl opacity-30 group-hover:opacity-10 transition-opacity duration-300" />
                   {/* Coming Soon badge top-right */}
-                  <div className="absolute top-3 left-3 z-20">
+                  <div className="absolute top-3 left-3 z-20 [html[dir='rtl']_&]:left-auto [html[dir='rtl']_&]:right-3">
                     <span className="px-3 py-1 rounded-full bg-gradient-to-r from-[#DC00D3] via-[#D4AF37] to-[#DC00D3] text-white text-xs font-bold shadow-lg tracking-widest animate-pulse uppercase drop-shadow-lg border border-white/20">
-                      Coming Soon
+                      {t('portfolio.comingSoon')}
                     </span>
                   </div>
                 </div>
                 {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 [html[dir='rtl']_&]:text-right">
                   <h3 className="text-2xl font-bold text-white mb-2 font-['Josefin_Sans']">{project.title}</h3>
                   <p className="text-[#D4AF37] mb-4">{project.category}</p>
                   <div className="flex flex-wrap gap-2 mb-4">

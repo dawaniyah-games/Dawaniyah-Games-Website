@@ -1,0 +1,216 @@
+const ar = {
+  common: {
+    language: "اللغة",
+    english: "English",
+    arabic: "العربية",
+  },
+  nav: {
+    home: "الرئيسية",
+    services: "الخدمات",
+    portfolio: "أعمالنا",
+    about: "من نحن",
+    contact: "تواصل معنا",
+    getStarted: "ابدأ الآن",
+    openMenu: "فتح القائمة",
+    closeMenu: "إغلاق القائمة",
+  },
+  hero: {
+    titleTop: "نَصْنَعُ عَوَالِم",
+    titleBottom: "وَنُشَغِّلُ تَجَارِب",
+    descriptionLine1: "تطوير ألعاب متعددة المنصات… بالشكل الصحيح.",
+    descriptionLine2:
+      "بخبرة تمتد بين ألمانيا والسعودية، تعمل فرقنا في كولونيا والرياض على ابتكار ألعاب استثنائية للموبايل والكمبيوتر والكونسول والواقع الافتراضي. ندمج السرد القصصي القوي مع هندسة متقدمة لصناعة تجارب غامرة لا تُنسى.",
+    ctaServices: "خدماتنا",
+    ctaPortfolio: "شاهد أعمالنا",
+  },
+  services: {
+    heading: "خدماتنا",
+    subheading: "حلول تطوير ألعاب شاملة ومصممة حسب رؤيتك.",
+    items: {
+      fullCycle: {
+        title: "تطوير ألعاب متكامل",
+        description:
+          "من الفكرة إلى الإطلاق—نتولى جميع مراحل الإنتاج باستخدام Unity وUnreal Engine.",
+      },
+      mobile: {
+        title: "إنتاج ألعاب الموبايل",
+        description:
+          "تطوير iOS وAndroid مع التركيز على الأداء وتحقيق الدخل.",
+      },
+      art: {
+        title: "الفن والتحريك",
+        description:
+          "أصول 2D/3D عالية الجودة، تصميم شخصيات، وتحريكات سلسة تُحيي العوالم.",
+      },
+      uiux: {
+        title: "تصميم واجهات وتجربة المستخدم",
+        description:
+          "واجهات ممتعة وبديهية مُصممة خصيصًا لتجارب اللعب.",
+      },
+      liveops: {
+        title: "لايف أوبس ودعم مستمر",
+        description:
+          "تحديثات مستمرة، إدارة فعاليات، وتحليلات للحفاظ على تفاعل اللاعبين.",
+      },
+      perf: {
+        title: "تحسين الأداء",
+        description:
+          "ضمان سلاسة الإطارات وسرعة التحميل على جميع الأجهزة المستهدفة.",
+      },
+    },
+  },
+  portfolio: {
+    heading: "مشاريع مميزة",
+    subheading: "لمحة من العوالم التي صنعناها.",
+    comingSoon: "قريبًا",
+    tools: {
+      unity: "Unity",
+      voiceChat: "دردشة صوتية",
+      multiplayer: "متعدد اللاعبين",
+    },
+    projects: {
+      dendon: {
+        title: "Dendon Games",
+        category: "ألعاب لوحية اجتماعية",
+      },
+      khuzama: {
+        title: "Khuzama Games",
+        category: "ألغاز واستراتيجية",
+      },
+    },
+  },
+  why: {
+    heading: "لماذا نحن؟",
+    reasons: {
+      experience: {
+        title: "خبرة +14 سنة",
+        text: "معرفة عميقة بالصناعة ونتائج مثبتة.",
+      },
+      cross: {
+        title: "متعدد المنصات",
+        text: "تجربة لعب سلسة على الكمبيوتر والكونسول وiOS وAndroid.",
+      },
+      scalable: {
+        title: "بنية قابلة للتوسع",
+        text: "خوادم وأنظمة قوية جاهزة لملايين اللاعبين.",
+      },
+      player: {
+        title: "اللاعب أولاً",
+        text: "تصميم يركز على التفاعل والاحتفاظ والمتعة.",
+      },
+      qa: {
+        title: "ضمان الجودة",
+        text: "اختبارات دقيقة لإطلاقات خالية من المشاكل.",
+      },
+      reach: {
+        title: "وصول عالمي",
+        text: "خبرة في العمل مع استوديوهات وفرق دولية.",
+      },
+    },
+  },
+  xo: {
+    heading: "نصنع الألعاب",
+    headingTop: "نصنع",
+    headingAccent: "الألعاب",
+    cellAria: "خانة {{n}}",
+    status: {
+      win: "أنت فزت!",
+      lose: "لقد خسرت!",
+      draw: "تعادل!",
+      yourTurn: "دورك (X)",
+      aiThinking: "الذكاء الاصطناعي يفكر…",
+    },
+    tryAgain: "أعد المحاولة",
+  },
+  technologies: {
+    poweredBy: "مدعوم بـ",
+  },
+  testimonials: {
+    heading: "آراء العملاء",
+    subheading: "ماذا يقول شركاؤنا عن العمل معنا.",
+    items: [
+      {
+        quote: "قدّمت Dawaniyah Games مشروعنا قبل الموعد بجودة استثنائية.",
+        author: "Alex Johnson",
+        role: "CEO, TechStream",
+      },
+      {
+        quote: "خبرتهم في Unity وبناء الأنظمة القابلة للتوسع وفّرت علينا أشهرًا من التطوير.",
+        author: "Sarah Chen",
+        role: "Product Lead, MobileFirst",
+      },
+      {
+        quote: "شريك حقيقي في الإبداع—فهموا رؤيتنا بدقة.",
+        author: "Mike Ross",
+        role: "Director, IndieStudio",
+      },
+    ],
+  },
+  about: {
+    heading: "تعرف على المؤسس",
+    name: "Mohamed Moghazi",
+    p1:
+      "بخبرة تتجاوز 14 عامًا في مجال تطوير الألعاب، أركز على تصميم ميكانيكيات لعب غامرة، وبناء أنظمة قابلة للتوسع باستخدام Unity وUnreal، وقيادة فرق دولية نحو النجاح.",
+    p2:
+      "تمثل Dawaniyah Games خلاصة هذه الرحلة—استوديو يهدف لدفع حدود الممكن في الترفيه التفاعلي، مع التركيز على الابتكار والجودة والأداء.",
+    stats: {
+      years: "سنوات الخبرة",
+      global: "مشاريع عالمية",
+      scaled: "أنظمة موسّعة",
+      vision: "رؤية إبداعية",
+      international: "دولي",
+      highPerf: "أداء عالٍ",
+      innovative: "مبتكر",
+    },
+    connect: "تواصل عبر LinkedIn",
+    viewCv: "عرض السيرة الذاتية",
+  },
+  contact: {
+    headingTop: "لنصنع",
+    headingBottom: "شيئًا مذهلًا",
+    intro:
+      "هل لديك فكرة لعبة؟ أو تحتاج إلى توسيع مشروعك الحالي؟ تواصل معنا ولنحوّل رؤيتك إلى واقع.",
+    emailUs: "راسلنا",
+    linkedIn: "LinkedIn",
+    followUs: "تابعنا",
+    github: "GitHub",
+    viewRepos: "عرض المستودعات",
+    form: {
+      name: "الاسم",
+      email: "البريد الإلكتروني",
+      details: "تفاصيل المشروع",
+      namePlaceholder: "اسمك",
+      emailPlaceholder: "name@example.com",
+      detailsPlaceholder: "أخبرنا عن مشروعك...",
+      send: "إرسال الرسالة",
+      sending: "جارٍ الإرسال…",
+      sent: "تم الإرسال",
+    },
+    toast: {
+      sentTitle: "تم إرسال الرسالة!",
+      sentDesc: "سنعود إليك قريبًا عبر البريد الإلكتروني.",
+      failedTitle: "فشل إرسال الرسالة.",
+      failedDesc: "حاول مرة أخرى لاحقًا أو تواصل معنا عبر البريد مباشرة.",
+      rateLimit: "يرجى الانتظار {{minutes}} دقيقة قبل إرسال رسالة أخرى.",
+      rateLimit_plural: "يرجى الانتظار {{minutes}} دقائق قبل إرسال رسالة أخرى.",
+    },
+    validation: {
+      nameMin: "الاسم يجب أن يكون حرفين على الأقل.",
+      emailInvalid: "يرجى إدخال بريد إلكتروني صحيح.",
+      messageMin: "الرسالة يجب أن تكون 10 أحرف على الأقل.",
+    },
+  },
+  map: {
+    heading: "انتشار عالمي",
+    subheading: "نصنع تجارب ألعاب عالمية من الرياض وكولونيا",
+    riyadh: "الرياض، السعودية",
+    cologne: "كولونيا، ألمانيا",
+    locationsLine: "الرياض، السعودية • كولونيا، ألمانيا",
+  },
+  footer: {
+    tagline: "نصنع تجارب رقمية غامرة بلمسة من الفخامة والابتكار.",
+    rights: "© 2026 Dawaniyah Games. جميع الحقوق محفوظة.",
+  },
+};
+
+export default ar;

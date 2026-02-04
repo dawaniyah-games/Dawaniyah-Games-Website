@@ -2,47 +2,50 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Gamepad2, Smartphone, Palette, Activity, Code, Rocket } from 'lucide-react';
 import { EASE_SMOOTH, fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
-
-const services = [
-  {
-    title: "Full-Cycle Game Development",
-    description: "From concept to release, we handle every stage of production using Unity & Unreal Engine.",
-    icon: Gamepad2,
-    color: "#DC00D3"
-  },
-  {
-    title: "Mobile Game Production",
-    description: "Native iOS and Android development with a focus on performance and monetization.",
-    icon: Smartphone,
-    color: "#D4AF37"
-  },
-  {
-    title: "Art & Animation",
-    description: "High-quality 2D/3D assets, character design, and fluid animations that bring worlds to life.",
-    icon: Palette,
-    color: "#DC00D3"
-  },
-  {
-    title: "UI/UX Design",
-    description: "Intuitive and immersive interfaces designed specifically for gaming experiences.",
-    icon: Code, // Using Code as generic tech/design icon
-    color: "#D4AF37"
-  },
-  {
-    title: "LiveOps & Support",
-    description: "Continuous updates, event management, and analytics to keep players engaged.",
-    icon: Activity,
-    color: "#DC00D3"
-  },
-  {
-    title: "Performance Optimization",
-    description: "Ensuring smooth framerates and fast load times across all target devices.",
-    icon: Rocket,
-    color: "#D4AF37"
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 export function Services() {
+  const { t } = useTranslation();
+
+  const services = [
+    {
+      title: t('services.items.fullCycle.title'),
+      description: t('services.items.fullCycle.description'),
+      icon: Gamepad2,
+      color: "#DC00D3",
+    },
+    {
+      title: t('services.items.mobile.title'),
+      description: t('services.items.mobile.description'),
+      icon: Smartphone,
+      color: "#D4AF37",
+    },
+    {
+      title: t('services.items.art.title'),
+      description: t('services.items.art.description'),
+      icon: Palette,
+      color: "#DC00D3",
+    },
+    {
+      title: t('services.items.uiux.title'),
+      description: t('services.items.uiux.description'),
+      icon: Code,
+      color: "#D4AF37",
+    },
+    {
+      title: t('services.items.liveops.title'),
+      description: t('services.items.liveops.description'),
+      icon: Activity,
+      color: "#DC00D3",
+    },
+    {
+      title: t('services.items.perf.title'),
+      description: t('services.items.perf.description'),
+      icon: Rocket,
+      color: "#D4AF37",
+    },
+  ];
+
   return (
     <motion.section
       id="services"
@@ -67,10 +70,10 @@ export function Services() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
-            OUR <span className="text-[#D4AF37]">SERVICES</span>
+            <span className="text-[#D4AF37]">{t('services.heading')}</span>
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Comprehensive game development solutions tailored to your vision.
+            {t('services.subheading')}
           </p>
         </motion.div>
 

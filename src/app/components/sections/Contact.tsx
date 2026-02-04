@@ -18,20 +18,32 @@ import {
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { fadeLeft, fadeRight, VIEWPORT_ONCE } from '../../motion/presets';
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  message: z.string().min(10, {
-    message: "Message must be at least 10 characters.",
-  }),
-});
+import { useTranslation } from 'react-i18next';
 
 export function Contact() {
+  const { i18n } = useTranslation();
+  return <ContactInner key={i18n.language} />;
+}
+
+function ContactInner() {
+  const { t } = useTranslation();
+
+  const formSchema = React.useMemo(
+    () =>
+      z.object({
+        name: z.string().min(2, {
+          message: t('contact.validation.nameMin'),
+        }),
+        email: z.string().email({
+          message: t('contact.validation.emailInvalid'),
+        }),
+        message: z.string().min(10, {
+          message: t('contact.validation.messageMin'),
+        }),
+      }),
+    [t],
+  );
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,7 +60,7 @@ export function Contact() {
     const now = Date.now();
     if (lastSent && now - parseInt(lastSent, 10) < 15 * 60 * 1000) {
       const minutesLeft = Math.ceil((15 * 60 * 1000 - (now - parseInt(lastSent, 10))) / 60000);
-      toast.error(`Please wait ${minutesLeft} more minute${minutesLeft > 1 ? 's' : ''} before sending another message.`, { duration: 4000 });
+      toast.error(t('contact.toast.rateLimit', { count: minutesLeft, minutes: minutesLeft }), { duration: 4000 });
       return;
     }
     setSending(true);
@@ -66,14 +78,14 @@ export function Contact() {
       );
       localStorage.setItem('contact_last_sent', now.toString());
       setSent(true);
-      toast.success("Message sent!", {
-        description: "We'll be in touch with you shortly via email.",
+      toast.success(t('contact.toast.sentTitle'), {
+        description: t('contact.toast.sentDesc'),
         duration: 4000,
       });
       form.reset();
     } catch (error) {
-      toast.error("Failed to send message.", {
-        description: "Please try again later or contact us directly by email.",
+      toast.error(t('contact.toast.failedTitle'), {
+        description: t('contact.toast.failedDesc'),
         duration: 4000,
       });
     } finally {
@@ -84,52 +96,51 @@ export function Contact() {
   return (
     <section id="contact" className="py-24 bg-[#0B021C] relative">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col lg:flex-row gap-16">
+        <div className="flex flex-col lg:flex-row lg:[html[dir='rtl']_&]:flex-row-reverse gap-16">
           {/* Contact Info */}
           <motion.div
             variants={fadeLeft}
             initial="hidden"
             whileInView="show"
             viewport={VIEWPORT_ONCE}
-            className="lg:w-1/3"
+            className="lg:w-1/3 lg:[html[dir='rtl']_&]:text-right"
           >
             <h2 className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-6">
-              LET'S BUILD <br />
-              <span className="text-[#D4AF37]">SOMETHING EPIC</span>
+              {t('contact.headingTop')} <br />
+              <span className="text-[#D4AF37]">{t('contact.headingBottom')}</span>
             </h2>
             <p className="text-gray-400 mb-8 leading-relaxed">
-              Have a game idea? Need help scaling your current project? 
-              Reach out to us and let's turn your vision into reality.
+              {t('contact.intro')}
             </p>
 
             <div className="space-y-6">
-              <div className="flex items-center gap-4 text-white">
+              <div className="flex items-center gap-4 text-white [html[dir='rtl']_&]:flex-row-reverse">
                 <div className="p-3 rounded-full bg-white/5 border border-white/10 text-[#D4AF37]">
                   <Mail size={20} />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400">Email Us</div>
+                  <div className="text-sm text-gray-400">{t('contact.emailUs')}</div>
                   <div className="font-semibold">eng.moghazy@gmail.com</div>
                 </div>
               </div>
               
-              <div className="flex items-center gap-4 text-white">
+              <div className="flex items-center gap-4 text-white [html[dir='rtl']_&]:flex-row-reverse">
                 <div className="p-3 rounded-full bg-white/5 border border-white/10 text-[#0077b5]">
                   <Linkedin size={20} />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400">LinkedIn</div>
-                  <a href="https://www.linkedin.com/company/110097301/" target="_blank" rel="noreferrer" className="font-semibold hover:text-[#0077b5]">Follow Us</a>
+                  <div className="text-sm text-gray-400">{t('contact.linkedIn')}</div>
+                  <a href="https://www.linkedin.com/company/110097301/" target="_blank" rel="noreferrer" className="font-semibold hover:text-[#0077b5]">{t('contact.followUs')}</a>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 text-white">
+              <div className="flex items-center gap-4 text-white [html[dir='rtl']_&]:flex-row-reverse">
                 <div className="p-3 rounded-full bg-white/5 border border-white/10 text-white">
                   <Github size={20} />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400">GitHub</div>
-                  <a href="https://github.com/dawaniyah-games/" target="_blank" rel="noreferrer" className="font-semibold hover:text-white">View Repositories</a>
+                  <div className="text-sm text-gray-400">{t('contact.github')}</div>
+                  <a href="https://github.com/dawaniyah-games/" target="_blank" rel="noreferrer" className="font-semibold hover:text-white">{t('contact.viewRepos')}</a>
                 </div>
               </div>
             </div>
@@ -143,7 +154,7 @@ export function Contact() {
             viewport={VIEWPORT_ONCE}
             className="lg:w-2/3"
           >
-            <div className="bg-white/5 p-8 rounded-2xl border border-white/5 backdrop-blur-sm">
+            <div className="bg-white/5 p-8 rounded-2xl border border-white/5 backdrop-blur-sm [html[dir='rtl']_&]:text-right">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -152,11 +163,11 @@ export function Contact() {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-300">Name</FormLabel>
+                          <FormLabel className="text-gray-300">{t('contact.form.name')}</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="Your Name" 
-                              className="bg-[#100425] border-white/10 text-white focus:border-[#D4AF37] h-12" 
+                              placeholder={t('contact.form.namePlaceholder')}
+                              className="bg-[#100425] border-white/10 text-white focus:border-[#D4AF37] h-12 [html[dir='rtl']_&]:text-right" 
                               {...field} 
                             />
                           </FormControl>
@@ -169,11 +180,11 @@ export function Contact() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-300">Email</FormLabel>
+                          <FormLabel className="text-gray-300">{t('contact.form.email')}</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="your@email.com" 
-                              className="bg-[#100425] border-white/10 text-white focus:border-[#D4AF37] h-12" 
+                              placeholder={t('contact.form.emailPlaceholder')}
+                              className="bg-[#100425] border-white/10 text-white focus:border-[#D4AF37] h-12 [html[dir='rtl']_&]:text-right" 
                               {...field} 
                             />
                           </FormControl>
@@ -188,11 +199,11 @@ export function Contact() {
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-300">Project Details</FormLabel>
+                        <FormLabel className="text-gray-300">{t('contact.form.details')}</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Tell us about your project..." 
-                            className="bg-[#100425] border-white/10 text-white focus:border-[#D4AF37] min-h-[150px]" 
+                            placeholder={t('contact.form.detailsPlaceholder')}
+                            className="bg-[#100425] border-white/10 text-white focus:border-[#D4AF37] min-h-[150px] [html[dir='rtl']_&]:text-right" 
                             {...field} 
                           />
                         </FormControl>
@@ -209,12 +220,12 @@ export function Contact() {
                     {sending ? (
                       <span className="flex items-center gap-2">
                         <svg className="animate-spin h-5 w-5 text-[#100425]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
-                        Sending…
+                        {t('contact.form.sending')}
                       </span>
                     ) : sent ? (
-                      <span>Sent</span>
+                      <span>{t('contact.form.sent')}</span>
                     ) : (
-                      <span>Send Message</span>
+                      <span>{t('contact.form.send')}</span>
                     )}
                   </Button>
                 </form>

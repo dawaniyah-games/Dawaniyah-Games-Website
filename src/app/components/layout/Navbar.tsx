@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '../ui/Button';
-import logoText from "../../../assets/logo-text.png";
 import logoIcon from "../../../assets/logo-icon.png";
 import { EASE_SMOOTH } from '../../motion/presets';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 const mobileMenuVariants = {
   closed: {
@@ -20,6 +21,7 @@ const mobileMenuVariants = {
 } as const;
 
 export function Navbar() {
+  const { t } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -32,11 +34,11 @@ export function Navbar() {
   }, []);
 
   const links = [
-    { name: 'Home', href: '#hero' },
-    { name: 'Services', href: '#services' },
-    { name: 'Portfolio', href: '#portfolio' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' },
+    { name: t('nav.home'), href: '#hero' },
+    { name: t('nav.services'), href: '#services' },
+    { name: t('nav.portfolio'), href: '#portfolio' },
+    { name: t('nav.about'), href: '#about' },
+    { name: t('nav.contact'), href: '#contact' },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -65,39 +67,51 @@ export function Navbar() {
         isScrolled ? 'bg-[#100425]/90 backdrop-blur-md py-3 shadow-[0_4px_30px_rgba(0,0,0,0.5)] border-b border-[#D4AF37]/20' : 'bg-transparent py-6'
       }`}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between">
+      <div className="container mx-auto px-6 flex items-center justify-between [html[dir='rtl']_&]:flex-row-reverse">
           <a href="#" className="block py-2 group">
             <img src={logoIcon} alt="Dawaniyah Games Icon" className="h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-110" />
           </a>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          {links.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              className="text-sm font-bold text-gray-300 hover:text-[#D4AF37] transition-colors uppercase tracking-widest font-['Josefin_Sans']"
-            >
-              {link.name}
-            </a>
-          ))}
-          <Button 
-            className="bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#100425] transition-all duration-300 shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:shadow-[0_0_25px_rgba(212,175,55,0.6)]"
-            size="sm" 
-            onClick={() => document.getElementById('contact')?.scrollIntoView()}
-          >
-            Get Started
-          </Button>
+        <div className="hidden md:grid flex-1 grid-cols-3 items-center">
+          <div className="col-start-2 justify-self-center flex items-center gap-6 [html[dir='rtl']_&]:flex-row-reverse">
+            {links.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="text-sm font-bold text-gray-300 hover:text-[#D4AF37] transition-colors uppercase tracking-widest font-['Josefin_Sans']"
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
+
+          <div className="col-start-3 justify-self-end [html[dir='rtl']_&]:col-start-1 [html[dir='rtl']_&]:justify-self-start">
+            <div className="flex items-center gap-4 [html[dir='rtl']_&]:flex-row-reverse">
+              <LanguageSwitcher />
+              <Button
+                className="bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#100425] transition-all duration-300 shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:shadow-[0_0_25px_rgba(212,175,55,0.6)] min-w-[140px] whitespace-nowrap"
+                size="sm"
+                onClick={() => document.getElementById('contact')?.scrollIntoView()}
+              >
+                {t('nav.getStarted')}
+              </Button>
+            </div>
+          </div>
         </div>
 
-        {/* Mobile Toggle */}
-        <button
-          className="md:hidden text-[#D4AF37]"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X /> : <Menu />}
-        </button>
+        <div className="md:hidden flex items-center gap-3">
+          <LanguageSwitcher />
+          {/* Mobile Toggle */}
+          <button
+            className="text-[#D4AF37]"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? t('nav.closeMenu') : t('nav.openMenu')}
+          >
+            {mobileMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}

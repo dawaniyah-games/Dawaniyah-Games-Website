@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { EASE_SMOOTH } from "../../motion/presets";
+import { useTranslation } from 'react-i18next';
 
 const GRID_SIZE = 320;
 const LINE_PX = 4;
@@ -99,6 +100,7 @@ function calculateWinner(squares: string[]) {
 }
 
 export function XOGame() {
+  const { t } = useTranslation();
   const [squares, setSquares] = useState(Array(9).fill(""));
   const [xIsNext, setXIsNext] = useState(true); // X is user, O is AI
   const [gameOver, setGameOver] = useState(false);
@@ -154,11 +156,11 @@ export function XOGame() {
 
   let status = "";
   if (winner) {
-    status = winner === "X" ? "You win!" : "You lose!";
+    status = winner === "X" ? t('xo.status.win') : t('xo.status.lose');
   } else if (isDraw) {
-    status = "Draw!";
+    status = t('xo.status.draw');
   } else {
-    status = xIsNext ? "Your turn (X)" : "AI is thinking…";
+    status = xIsNext ? t('xo.status.yourTurn') : t('xo.status.aiThinking');
   }
 
   return (
@@ -185,7 +187,7 @@ export function XOGame() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-16 text-center"
       >
-        WE MAKE <span className="text-[#DC00D3] drop-shadow-[0_0_12px_#DC00D3]">GAMES</span>
+        {t('xo.headingTop')} <span className="text-[#DC00D3] drop-shadow-[0_0_12px_#DC00D3]">{t('xo.headingAccent')}</span>
       </motion.h2>
       <motion.div
         className="relative"
@@ -297,7 +299,7 @@ export function XOGame() {
               className="flex items-center justify-center bg-transparent select-none"
               onClick={() => handleClick(i)}
               disabled={!!val || !xIsNext || gameOver}
-              aria-label={`Cell ${i + 1}`}
+              aria-label={t('xo.cellAria', { n: i + 1 })}
               onMouseEnter={() => setHoveredCell(i)}
               onMouseLeave={() => setHoveredCell((prev) => (prev === i ? null : prev))}
               whileHover={!val && xIsNext && !gameOver ? { scale: 1.03 } : undefined}
@@ -346,7 +348,7 @@ export function XOGame() {
           whileTap={{ scale: 0.98 }}
           transition={{ type: "spring", stiffness: 520, damping: 30 }}
         >
-          Try Again
+          {t('xo.tryAgain')}
         </motion.button>
       )}
     </motion.section>
