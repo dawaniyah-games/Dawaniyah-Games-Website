@@ -4,7 +4,7 @@ import { Button } from '../ui/Button';
 import { ExternalLink } from 'lucide-react';
 import imgNew1 from "../../../assets/project-dendon-games.jpg";
 import imgNew2 from "../../../assets/project-khuzama-games.png";
-import { fadeLeft, fadeRight, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
+import { EASE_SMOOTH, fadeLeft, fadeRight, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 
 const projects = [
   {
@@ -22,6 +22,8 @@ const projects = [
 ];
 
 export function Portfolio() {
+  const [hasPlayedFirstIntro, setHasPlayedFirstIntro] = React.useState(false);
+
   return (
     <motion.section
       id="portfolio"
@@ -29,7 +31,14 @@ export function Portfolio() {
       initial={{ opacity: 0, y: 64 }}
       whileInView={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 64 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
+      onAnimationComplete={() => {
+        if (!hasPlayedFirstIntro) setHasPlayedFirstIntro(true);
+      }}
+      transition={{
+        duration: hasPlayedFirstIntro ? 0.8 : 1.15,
+        delay: hasPlayedFirstIntro ? 0 : 0.12,
+        ease: EASE_SMOOTH,
+      }}
       viewport={{ once: false, amount: 0.3 }}
     >
       <div className="container mx-auto px-6">

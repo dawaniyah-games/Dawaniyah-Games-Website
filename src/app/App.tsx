@@ -8,6 +8,7 @@ import { Portfolio } from './components/sections/Portfolio';
 import { WhyChooseUs } from './components/sections/WhyChooseUs';
 import { Technologies } from './components/sections/Technologies';
 import { Testimonials } from './components/sections/Testimonials';
+import { XOGame } from './components/sections/XOGame';
 import { Contact } from './components/sections/Contact';
 import { Map } from './components/sections/Map';
 import { Footer } from './components/layout/Footer';
@@ -22,6 +23,7 @@ export default function App() {
         <Services />
         <Portfolio />
         <WhyChooseUs />
+        <XOGame />
         <Technologies />
         <Testimonials />
         <About />

@@ -40,15 +40,18 @@ export function Contact() {
       message: "",
     },
   });
+  const [sending, setSending] = React.useState(false);
+  const [sent, setSent] = React.useState(false);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const lastSent = localStorage.getItem('contact_last_sent');
     const now = Date.now();
     if (lastSent && now - parseInt(lastSent, 10) < 15 * 60 * 1000) {
       const minutesLeft = Math.ceil((15 * 60 * 1000 - (now - parseInt(lastSent, 10))) / 60000);
-      toast.error(`Please wait ${minutesLeft} more minute${minutesLeft > 1 ? 's' : ''} before sending another message.`);
+      toast.error(`Please wait ${minutesLeft} more minute${minutesLeft > 1 ? 's' : ''} before sending another message.`, { duration: 4000 });
       return;
     }
+    setSending(true);
     try {
       await emailjs.send(
         'service_9yg0wzc',
@@ -57,20 +60,24 @@ export function Contact() {
           from_name: values.name,
           from_email: values.email,
           message: values.message,
+          to_email: 'eng.moghazy@gmail.com',
         },
         'o0rZN6LvG1VBSTwFi'
       );
       localStorage.setItem('contact_last_sent', now.toString());
+      setSent(true);
       toast.success("Message sent!", {
         description: "We'll be in touch with you shortly via email.",
-        duration: 5000,
+        duration: 4000,
       });
       form.reset();
     } catch (error) {
       toast.error("Failed to send message.", {
         description: "Please try again later or contact us directly by email.",
-        duration: 5000,
+        duration: 4000,
       });
+    } finally {
+      setSending(false);
     }
   }
 
@@ -194,8 +201,21 @@ export function Contact() {
                     )}
                   />
 
-                  <Button type="submit" className="w-full md:w-auto min-w-[200px] bg-[#D4AF37] text-[#100425] hover:bg-[#C5A059] border-none font-bold">
-                    Send Message
+                  <Button
+                    type="submit"
+                    className="w-full md:w-auto min-w-[200px] bg-[#D4AF37] text-[#100425] hover:bg-[#C5A059] border-none font-bold flex items-center justify-center"
+                    disabled={sending || sent}
+                  >
+                    {sending ? (
+                      <span className="flex items-center gap-2">
+                        <svg className="animate-spin h-5 w-5 text-[#100425]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
+                        Sending…
+                      </span>
+                    ) : sent ? (
+                      <span>Sent</span>
+                    ) : (
+                      <span>Send Message</span>
+                    )}
                   </Button>
                 </form>
               </Form>
