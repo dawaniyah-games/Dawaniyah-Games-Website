@@ -23,7 +23,7 @@ export function LanguageSwitcher() {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-bold text-gray-200 hover:text-white hover:border-[#D4AF37]/40 transition-colors font-['Josefin_Sans'] uppercase tracking-widest"
+          className="inline-flex h-9 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-4 text-xs font-bold text-gray-200 hover:text-white hover:border-[#D4AF37]/40 transition-colors font-['Josefin_Sans'] uppercase tracking-widest"
           aria-label={t("common.language")}
         >
           <span>{current.label}</span>

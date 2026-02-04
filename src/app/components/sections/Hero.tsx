@@ -75,7 +75,7 @@ export function Hero() {
       <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#100425]/50 via-transparent to-[#100425] pointer-events-none" />
 
       {/* Section 1: Branding (Logo) */}
-      <section className="relative z-10 min-h-[60vh] flex flex-col items-center justify-end pb-16 pt-20 -mt-[25px] mb-[20px]">
+      <section className="relative z-10 min-h-[60vh] flex flex-col items-center justify-end pb-16 pt-28 md:pt-32 lg:pt-36 mb-[20px]">
         <div className="flex flex-col items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8, rotateX: 45 }}

@@ -67,14 +67,13 @@ export function Navbar() {
         isScrolled ? 'bg-[#100425]/90 backdrop-blur-md py-3 shadow-[0_4px_30px_rgba(0,0,0,0.5)] border-b border-[#D4AF37]/20' : 'bg-transparent py-6'
       }`}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between [html[dir='rtl']_&]:flex-row-reverse">
-          <a href="#" className="block py-2 group">
-            <img src={logoIcon} alt="Dawaniyah Games Icon" className="h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-110" />
-          </a>
+      <div dir="ltr" className="container mx-auto px-6 flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+        <a href="#" className="block py-2 group md:justify-self-start">
+          <img src={logoIcon} alt="Dawaniyah Games Icon" className="h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-110" />
+        </a>
 
         {/* Desktop Menu */}
-        <div className="hidden md:grid flex-1 grid-cols-3 items-center">
-          <div className="col-start-2 justify-self-center flex items-center gap-6 [html[dir='rtl']_&]:flex-row-reverse">
+        <div className="hidden lg:flex items-center gap-6 justify-self-center">
             {links.map((link) => (
               <a
                 key={link.name}
@@ -85,23 +84,22 @@ export function Navbar() {
                 {link.name}
               </a>
             ))}
-          </div>
+        </div>
 
-          <div className="col-start-3 justify-self-end [html[dir='rtl']_&]:col-start-1 [html[dir='rtl']_&]:justify-self-start">
-            <div className="flex items-center gap-4 [html[dir='rtl']_&]:flex-row-reverse">
-              <LanguageSwitcher />
-              <Button
-                className="bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#100425] transition-all duration-300 shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:shadow-[0_0_25px_rgba(212,175,55,0.6)] min-w-[140px] whitespace-nowrap"
-                size="sm"
-                onClick={() => document.getElementById('contact')?.scrollIntoView()}
-              >
-                {t('nav.getStarted')}
-              </Button>
-            </div>
+        <div className="hidden lg:flex items-center justify-self-end">
+          <div className="flex flex-col items-end gap-3 lg:flex-row lg:items-center lg:gap-4">
+            <LanguageSwitcher />
+            <Button
+              className="bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#100425] transition-all duration-300 shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:shadow-[0_0_25px_rgba(212,175,55,0.6)] min-w-[120px] lg:min-w-[140px] whitespace-nowrap shrink-0"
+              size="sm"
+              onClick={() => document.getElementById('contact')?.scrollIntoView()}
+            >
+              {t('nav.getStarted')}
+            </Button>
           </div>
         </div>
 
-        <div className="md:hidden flex items-center gap-3">
+        <div className="lg:hidden flex items-center gap-3">
           <LanguageSwitcher />
           {/* Mobile Toggle */}
           <button
@@ -124,7 +122,7 @@ export function Navbar() {
             exit="closed"
             variants={mobileMenuVariants}
             style={{ transformOrigin: 'top' }}
-            className="md:hidden bg-[#100425] border-t border-[#D4AF37]/20 overflow-hidden"
+            className="lg:hidden bg-[#100425] border-t border-[#D4AF37]/20 overflow-hidden"
           >
             <div className="flex flex-col p-6 gap-4">
               {links.map((link) => (
