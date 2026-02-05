@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { ExternalLink } from 'lucide-react';
 import imgNew1 from "../../../assets/project-dendon-games.jpg";
 import imgNew2 from "../../../assets/project-khuzama-games.png";
+import imgUiFramework from "../../../assets/Uiframework_promo.png";
 import { EASE_SMOOTH, fadeLeft, fadeRight, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
 
@@ -23,6 +24,13 @@ export function Portfolio() {
       category: t('portfolio.projects.khuzama.category'),
       image: imgNew2,
       tools: [t('portfolio.tools.unity'), t('portfolio.tools.voiceChat'), t('portfolio.tools.multiplayer')],
+    },
+    {
+      title: "UiFramework Open Source",
+      category: "",
+      image: imgUiFramework,
+      githubUrl: "https://github.com/dawaniyah-games/UiFramework",
+      tools: ["Open Source"],
     },
   ];
 
@@ -70,39 +78,78 @@ export function Portfolio() {
         >
           {projects.map((project, index) => (
             <div className="flex flex-col items-center">
-              <motion.div
-                key={index}
-                variants={fadeScale}
-                className="group relative max-w-[340px] aspect-[1024/1379] rounded-2xl overflow-hidden cursor-pointer flex flex-col"
-              >
-                <div className="relative w-full h-full flex flex-col">
-                  <img 
-                    src={project.image} 
-                    alt={project.title} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black pointer-events-none rounded-2xl opacity-30 group-hover:opacity-10 transition-opacity duration-300" />
-                  {/* Coming Soon badge top-right */}
-                  <div className="absolute top-3 left-3 z-20 [html[dir='rtl']_&]:left-auto [html[dir='rtl']_&]:right-3">
-                    <span className="px-3 py-1 rounded-full bg-gradient-to-r from-[#DC00D3] via-[#D4AF37] to-[#DC00D3] text-white text-xs font-bold shadow-lg tracking-widest animate-pulse uppercase drop-shadow-lg border border-white/20">
-                      {t('portfolio.comingSoon')}
-                    </span>
-                  </div>
-                </div>
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 [html[dir='rtl']_&]:text-right">
-                  <h3 className="text-2xl font-bold text-white mb-2 font-['Josefin_Sans']">{project.title}</h3>
-                  <p className="text-[#D4AF37] mb-4">{project.category}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tools.map((tool) => (
-                      <span key={tool} className="text-xs px-3 py-1 rounded-full bg-white/10 text-white backdrop-blur-sm border border-white/10">
-                        {tool}
+              {project.githubUrl ? (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative max-w-[340px] aspect-[1024/1379] rounded-2xl overflow-hidden cursor-pointer flex flex-col"
+                  style={{ textDecoration: "none" }}
+                >
+                  <motion.div
+                    key={index}
+                    variants={fadeScale}
+                  >
+                    <div className="relative w-full h-full flex flex-col">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black pointer-events-none rounded-2xl opacity-30 group-hover:opacity-10 transition-opacity duration-300" />
+                    </div>
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 [html[dir='rtl']_&]:text-right">
+                      <h3 className="text-2xl font-bold text-white mb-2 font-['Josefin_Sans']">{project.title}</h3>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.tools.map((tool) => (
+                          <span key={tool} className="text-xs px-3 py-1 rounded-full bg-white/10 text-white backdrop-blur-sm border border-white/10">
+                            {tool}
+                          </span>
+                        ))}
+                      </div>
+                      <span className="inline-flex items-center gap-2 text-[#FFD700] text-sm font-bold mt-2">
+                        View on GitHub <ExternalLink size={16} />
                       </span>
-                    ))}
+                    </div>
+                  </motion.div>
+                </a>
+              ) : (
+                <motion.div
+                  key={index}
+                  variants={fadeScale}
+                  className="group relative max-w-[340px] aspect-[1024/1379] rounded-2xl overflow-hidden cursor-pointer flex flex-col"
+                >
+                  <div className="relative w-full h-full flex flex-col">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black pointer-events-none rounded-2xl opacity-30 group-hover:opacity-10 transition-opacity duration-300" />
+                    {/* Badge top-right */}
+                    <div className="absolute top-3 left-3 z-20 [html[dir='rtl']_&]:left-auto [html[dir='rtl']_&]:right-3">
+                      <span className="px-3 py-1 rounded-full bg-gradient-to-r from-[#DC00D3] via-[#D4AF37] to-[#DC00D3] text-white text-xs font-bold shadow-lg tracking-widest animate-pulse uppercase drop-shadow-lg border border-white/20">
+                        {t('portfolio.comingSoon')}
+                      </span>
+                    </div>
                   </div>
-                  {/* View Details removed as requested */}
-                </div>
-              </motion.div>
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 [html[dir='rtl']_&]:text-right">
+                    <h3 className="text-2xl font-bold text-white mb-2 font-['Josefin_Sans']">{project.title}</h3>
+                    {project.category && (
+                      <p className="text-[#D4AF37] mb-4">{project.category}</p>
+                    )}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.tools.map((tool) => (
+                        <span key={tool} className="text-xs px-3 py-1 rounded-full bg-white/10 text-white backdrop-blur-sm border border-white/10">
+                          {tool}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
           ))}
         </motion.div>

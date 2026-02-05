@@ -8,6 +8,14 @@ const demos = [
     title: "Dendon Games Gameplay",
     genre: "Social Board Game",
     videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cyberpunk-city-traffic-at-night-34444-large.mp4",
+    type: "video"
+  },
+  {
+    title: "UiFramework Open Source",
+    genre: "UI Framework Promo",
+    imageUrl: require('../../assets/Uiframework_promo.png'),
+    githubUrl: "https://github.com/dawaniyah-games/UiFramework",
+    type: "image"
   }
 ];
 
@@ -48,47 +56,68 @@ export function DemoProjects() {
               variants={fadeUp}
               className="group relative rounded-2xl overflow-hidden border border-[#DC00D3]/20 bg-[#150530] shadow-xl hover:shadow-[#DC00D3]/20 transition-all duration-300"
             >
-              {/* Video Container */}
-              <div className="relative aspect-video w-full overflow-hidden">
-                <video
-                  src={demo.videoUrl}
-                  autoPlay
-                  muted={muted}
-                  loop
-                  playsInline
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 scale-105 group-hover:scale-110"
-                  style={{ willChange: "transform" }}
-                />
-                
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0219] via-transparent to-transparent opacity-90" />
-
-                {/* Status Indicator */}
-                <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-                  <div className="w-2 h-2 rounded-full bg-[#00FF00] animate-pulse" />
-                  <span className="text-xs font-mono text-white/90 uppercase tracking-wider">Live Demo</span>
+              {demo.type === "video" ? (
+                <div className="relative aspect-video w-full overflow-hidden">
+                  <video
+                    src={demo.videoUrl}
+                    autoPlay
+                    muted={muted}
+                    loop
+                    playsInline
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 scale-105 group-hover:scale-110"
+                    style={{ willChange: "transform" }}
+                  />
+                  {/* Overlay Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0219] via-transparent to-transparent opacity-90" />
+                  {/* Status Indicator */}
+                  <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+                    <div className="w-2 h-2 rounded-full bg-[#00FF00] animate-pulse" />
+                    <span className="text-xs font-mono text-white/90 uppercase tracking-wider">Live Demo</span>
+                  </div>
+                  {/* Sound Control */}
+                  <button 
+                    onClick={() => setMuted(!muted)}
+                    className="absolute top-4 right-4 p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-white/80 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
+                  >
+                    {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                  </button>
                 </div>
-
-                 {/* Sound Control (Optional interactivity) */}
-                 <button 
-                  onClick={() => setMuted(!muted)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-white/80 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
-                >
-                  {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                </button>
-              </div>
-
+              ) : (
+                <a href={demo.githubUrl} target="_blank" rel="noopener noreferrer" className="block">
+                  <div className="relative aspect-video w-full overflow-hidden">
+                    <img
+                      src={demo.imageUrl}
+                      alt={demo.title}
+                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500 scale-105 group-hover:scale-110"
+                      style={{ willChange: "transform" }}
+                    />
+                    {/* Overlay Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0219] via-transparent to-transparent opacity-90" />
+                    {/* Status Indicator */}
+                    <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+                      <div className="w-2 h-2 rounded-full bg-[#FFD700] animate-pulse" />
+                      <span className="text-xs font-mono text-white/90 uppercase tracking-wider">Open Source</span>
+                    </div>
+                  </div>
+                </a>
+              )}
               {/* Content */}
               <div className="p-6 relative">
                 <h3 className="text-xl font-bold text-white mb-1 font-['Josefin_Sans'] group-hover:text-[#DC00D3] transition-colors">
                   {demo.title}
                 </h3>
                 <p className="text-[#D4AF37] text-sm font-medium mb-4">{demo.genre}</p>
-                
-                <div className="flex items-center gap-2 text-gray-400 text-sm group-hover:text-white transition-colors">
-                  <Play size={14} className="fill-current" />
-                  <span>Watch full gameplay</span>
-                </div>
+                {demo.type === "video" ? (
+                  <div className="flex items-center gap-2 text-gray-400 text-sm group-hover:text-white transition-colors">
+                    <Play size={14} className="fill-current" />
+                    <span>Watch full gameplay</span>
+                  </div>
+                ) : (
+                  <a href={demo.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-400 text-sm group-hover:text-white transition-colors">
+                    <Play size={14} className="fill-current" />
+                    <span>View source code on GitHub</span>
+                  </a>
+                )}
               </div>
             </motion.div>
           ))}

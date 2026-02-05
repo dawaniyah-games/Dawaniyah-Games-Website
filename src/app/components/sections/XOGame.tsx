@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { EASE_SMOOTH } from "../../motion/presets";
 import { useTranslation } from 'react-i18next';
 
+
 const GRID_SIZE = 320;
 const LINE_PX = 4;
 const GRID_YELLOW = "#D4AF37";
@@ -100,7 +101,7 @@ function calculateWinner(squares: string[]) {
 }
 
 export function XOGame() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [squares, setSquares] = useState(Array(9).fill(""));
   const [xIsNext, setXIsNext] = useState(true); // X is user, O is AI
   const [gameOver, setGameOver] = useState(false);
@@ -108,7 +109,17 @@ export function XOGame() {
   const [hasPlayedFirstIntro, setHasPlayedFirstIntro] = useState(false);
   const result = calculateWinner(squares);
   const winner = result?.winner ?? null;
-  const winLine = result?.line ?? null;
+  let winLine = result?.line ?? null;
+  // Flip cross and vertical win lines for Arabic
+  const isArabic = i18n.language?.startsWith('ar');
+  if (winLine && isArabic) {
+    // Flip diagonals
+    if (winLine.length === 3 && winLine[0] === 0 && winLine[1] === 4 && winLine[2] === 8) winLine = [2,4,6];
+    else if (winLine.length === 3 && winLine[0] === 2 && winLine[1] === 4 && winLine[2] === 6) winLine = [0,4,8];
+    // Flip verticals: [0,3,6] <-> [2,5,8]
+    else if (winLine.length === 3 && winLine[0] === 0 && winLine[1] === 3 && winLine[2] === 6) winLine = [2,5,8];
+    else if (winLine.length === 3 && winLine[0] === 2 && winLine[1] === 5 && winLine[2] === 8) winLine = [0,3,6];
+  }
   const isDraw = !winner && squares.every((sq) => sq);
   const winningCells = winLine ? new Set(winLine) : null;
 
@@ -121,13 +132,48 @@ export function XOGame() {
           ? "draw"
           : "idle";
 
+  // Minimax AI for harder gameplay
+  function minimax(board: string[], isMax: boolean): { score: number, move: number | null } {
+    const result = calculateWinner(board);
+    if (result?.winner === "O") return { score: 1, move: null };
+    if (result?.winner === "X") return { score: -1, move: null };
+    if (board.every((sq) => sq)) return { score: 0, move: null };
+
+    let bestMove: number | null = null;
+    let bestScore = isMax ? -Infinity : Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (board[i] === "") {
+        board[i] = isMax ? "O" : "X";
+        const { score } = minimax(board, !isMax);
+        board[i] = "";
+        if (isMax) {
+          if (score > bestScore) {
+            bestScore = score;
+            bestMove = i;
+          }
+        } else {
+          if (score < bestScore) {
+            bestScore = score;
+            bestMove = i;
+          }
+        }
+      }
+    }
+    return { score: bestScore, move: bestMove };
+  }
+
   React.useEffect(() => {
     if (!xIsNext && !winner && !isDraw && !gameOver) {
-      // AI move after short delay
       const timeout = setTimeout(() => {
-        const empty = squares.map((v, i) => v === "" ? i : null).filter((v) => v !== null) as number[];
-        if (empty.length > 0) {
-          const move = empty[Math.floor(Math.random() * empty.length)];
+        // 10% chance to play randomly, 90% minimax
+        let move: number | null = null;
+        if (Math.random() < 0.1) {
+          const empty = squares.map((v, i) => v === "" ? i : null).filter((v) => v !== null) as number[];
+          if (empty.length > 0) move = empty[Math.floor(Math.random() * empty.length)];
+        } else {
+          move = minimax([...squares], true).move;
+        }
+        if (move !== null && squares[move] === "") {
           const nextSquares = squares.slice();
           nextSquares[move] = "O";
           setSquares(nextSquares);
