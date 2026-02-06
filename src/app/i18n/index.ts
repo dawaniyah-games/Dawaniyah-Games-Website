@@ -7,10 +7,43 @@ import ar from "./locales/ar";
 export const SUPPORTED_LANGUAGES = ["en", "ar"] as const;
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
+function normalizeSupportedLanguage(value: string | null | undefined): SupportedLanguage | null {
+  if (!value) return null;
+  const lower = value.toLowerCase();
+  if (lower === "en" || lower.startsWith("en-")) return "en";
+  if (lower === "ar" || lower.startsWith("ar-")) return "ar";
+  return null;
+}
+
+function getLanguageFromUrl(): SupportedLanguage | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const url = new URL(window.location.href);
+    return normalizeSupportedLanguage(url.searchParams.get("lang"));
+  } catch {
+    return null;
+  }
+}
+
+function setLanguageInUrl(lang: SupportedLanguage) {
+  if (typeof window === "undefined") return;
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", lang);
+    window.history.replaceState({}, "", url.toString());
+  } catch {
+    // ignore
+  }
+}
+
 function getInitialLanguage(): SupportedLanguage {
+  const fromUrl = getLanguageFromUrl();
+  if (fromUrl) return fromUrl;
+
   try {
     const saved = localStorage.getItem("lang");
-    if (saved === "en" || saved === "ar") return saved;
+    const normalizedSaved = normalizeSupportedLanguage(saved);
+    if (normalizedSaved) return normalizedSaved;
   } catch {
     // ignore
   }
@@ -52,6 +85,8 @@ i18n.on("languageChanged", (lng) => {
   } catch {
     // ignore
   }
+  const normalized = normalizeSupportedLanguage(lng) ?? "en";
+  setLanguageInUrl(normalized);
   applyDocumentDirection(lng);
 });
 

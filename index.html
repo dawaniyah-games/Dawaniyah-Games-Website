@@ -1,15 +1,89 @@
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Dawaniyah Games Studio Website</title>
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
+    <title>Dawaniyah Games Studio</title>
+    <meta
+      name="description"
+      content="Dawaniyah Games Studio — multi-platform game development in Riyadh (KSA) and Cologne. Full-cycle development, mobile production, art & animation, UI/UX, LiveOps, and optimization."
+    />
+    <meta
+      name="keywords"
+      content="game studio, game developer, game development, game company, Riyadh, KSA, Saudi Arabia, Unity, Unreal Engine, مطور العاب, مطور العاب في السعودية, شركة العاب"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b051a" />
+
+    <link rel="canonical" href="%VITE_SITE_URL%%BASE_URL%" />
+
+    <!-- Icons (served from /public at build time) -->
+    <link rel="icon" type="image/png" href="%BASE_URL%favicon.png" />
+    <link rel="apple-touch-icon" href="%BASE_URL%favicon.png" />
+
+    <!-- Language/region alternates (SPA uses ?lang=) -->
+    <link rel="alternate" hreflang="en" href="%VITE_SITE_URL%%BASE_URL%?lang=en" />
+    <link rel="alternate" hreflang="ar" href="%VITE_SITE_URL%%BASE_URL%?lang=ar" />
+    <link rel="alternate" hreflang="x-default" href="%VITE_SITE_URL%%BASE_URL%" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Dawaniyah Games Studio" />
+    <meta
+      property="og:description"
+      content="Multi-platform game development in Riyadh (KSA) and Cologne — full-cycle production, mobile, art, UI/UX, LiveOps."
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%%BASE_URL%" />
+    <meta property="og:image" content="%VITE_SITE_URL%%BASE_URL%logo-icon.png" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_SA" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Dawaniyah Games Studio" />
+    <meta
+      name="twitter:description"
+      content="Multi-platform game development in Riyadh (KSA) and Cologne — full-cycle production, mobile, art, UI/UX, LiveOps."
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%%BASE_URL%logo-icon.png" />
+
+    <!-- Structured data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Dawaniyah Games Studio",
+        "url": "%VITE_SITE_URL%%BASE_URL%",
+        "logo": "%VITE_SITE_URL%%BASE_URL%logo-icon.png",
+        "knowsAbout": [
+          "Game development",
+          "Game studio",
+          "Unity development",
+          "Unreal Engine development",
+          "Mobile games",
+          "PC games",
+          "Console games",
+          "VR games"
+        ],
+        "areaServed": ["SA", "DE"]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Dawaniyah Games Studio",
+        "url": "%VITE_SITE_URL%%BASE_URL%",
+        "inLanguage": ["en", "ar"]
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
   
