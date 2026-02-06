@@ -17,7 +17,7 @@ const en = {
   hero: {
     titleTop: "CRAFTING WORLDS",
     titleBottom: "POWERING EXPERIENCES",
-    descriptionLine1: "Multi-Platform Game Development, Done Right.",
+    descriptionLine1: "Dawaniyah Games Studio — Multi-Platform Game Development, Done Right.",
     descriptionLine2:
       "Renowned across Germany, our Cologne and Riyadh teams create exceptional games for mobile, PC, console, and VR. We fuse strong narrative design with advanced engineering to build immersive, memorable experiences for players.",
     ctaServices: "Our Services",
