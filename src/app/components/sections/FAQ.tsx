@@ -1,0 +1,69 @@
+import React from "react";
+import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
+import { fadeUp, VIEWPORT_ONCE } from "../../motion/presets";
+
+export function FAQ() {
+  const { t } = useTranslation();
+
+  const items = [
+    {
+      q: t("faq.items.q1.question"),
+      a: t("faq.items.q1.answer"),
+    },
+    {
+      q: t("faq.items.q2.question"),
+      a: t("faq.items.q2.answer"),
+    },
+    {
+      q: t("faq.items.q3.question"),
+      a: t("faq.items.q3.answer"),
+    },
+    {
+      q: t("faq.items.q4.question"),
+      a: t("faq.items.q4.answer"),
+    },
+  ];
+
+  return (
+    <motion.section
+      id="faq"
+      className="py-24 bg-[#100425] relative"
+      initial={{ opacity: 0, y: 64 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 64 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      viewport={{ once: false, amount: 0.3 }}
+    >
+      <div className="container mx-auto px-6">
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT_ONCE}
+          className="text-center mb-10"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold font-['Josefin_Sans'] text-white mb-4">
+            <span className="text-[#D4AF37]">{t("faq.heading")}</span>
+          </h2>
+          <p className="text-gray-400 max-w-3xl mx-auto">{t("faq.subheading")}</p>
+        </motion.div>
+
+        <div className="max-w-3xl mx-auto rounded-2xl bg-white/5 border border-white/10 p-2 md:p-4 [html[dir='rtl']_&]:text-right">
+          <Accordion type="single" collapsible className="w-full">
+            {items.map((item, idx) => (
+              <AccordionItem key={idx} value={`item-${idx}`} className="border-white/10">
+                <AccordionTrigger className="px-4 text-white hover:no-underline">
+                  <span className="font-['Josefin_Sans'] font-bold tracking-wide">{item.q}</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-4 text-gray-300 leading-relaxed">{item.a}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </div>
+    </motion.section>
+  );
+}

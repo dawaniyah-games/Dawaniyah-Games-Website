@@ -211,6 +211,33 @@ const en = {
     cologne: "Cologne, Germany",
     locationsLine: "Riyadh, KSA • Cologne, Germany",
   },
+  faq: {
+    heading: "FAQ",
+    subheading:
+      "Quick answers for teams looking for a game developer or game studio in Saudi Arabia (KSA) — including Riyadh — and beyond.",
+    items: {
+      q1: {
+        question: "Are you a game studio in Saudi Arabia (KSA)?",
+        answer:
+          "Yes — we operate across Riyadh (KSA) and Cologne, Germany, and we build games for mobile, PC, console, and VR depending on your needs.",
+      },
+      q2: {
+        question: "Can I hire you as a game developer in Riyadh?",
+        answer:
+          "Absolutely. We support full-cycle development or dedicated team support (engineering, UI/UX, art, optimization). Tell us your scope and platform targets.",
+      },
+      q3: {
+        question: "What engines and tech do you use?",
+        answer:
+          "Unity and Unreal Engine are our core. We also work with modern web tooling for studio sites, backends, and live operations when required.",
+      },
+      q4: {
+        question: "What types of games do you build?",
+        answer:
+          "We build mobile games, multiplayer experiences, and production-ready game systems — from prototypes to launch-ready titles.",
+      },
+    },
+  },
   footer: {
     tagline:
       "Crafting immersive digital experiences with a touch of luxury and innovation.",
