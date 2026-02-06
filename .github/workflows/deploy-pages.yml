@@ -33,6 +33,7 @@ jobs:
       - name: Build
         env:
           VITE_BASE: ${{ secrets['VITE_BASE'] }}
+          VITE_SITE_URL: ${{ vars.VITE_SITE_URL }}
         run: npm run build
 
       - name: Configure Pages
