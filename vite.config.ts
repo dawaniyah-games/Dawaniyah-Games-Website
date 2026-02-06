@@ -90,7 +90,10 @@ function buildSeoFilesPlugin(env: Record<string, string>): Plugin {
 export default defineConfig(({ mode }) => {
   // Load env from .env files so plugins can access VITE_SITE_URL during build.
   // Use prefix '' to load all keys (we only consume VITE_* keys).
-  const env = loadEnv(mode, process.cwd(), '');
+  const fileEnv = loadEnv(mode, process.cwd(), '');
+  // Important: GitHub Actions provides env vars via process.env (not via .env files).
+  // Merge so VITE_SITE_URL works in CI even when no .env file exists.
+  const env = { ...(process.env as Record<string, string | undefined>), ...fileEnv } as Record<string, string>;
 
   // Set VITE_BASE (e.g. '/') when using a custom domain.
   // If not set, auto-derive GitHub Pages project base '/<repo>/' for Actions builds.
