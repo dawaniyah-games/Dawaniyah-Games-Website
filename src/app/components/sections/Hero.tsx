@@ -112,7 +112,7 @@ export function Hero() {
         >
           <h1 className="text-[2.35rem] md:text-[3.55rem] lg:text-[4.1rem] font-bold font-['Josefin_Sans'] leading-tight mb-8 -mt-2">
             <span className="sr-only">
-              Dawaniyah Games Studio (دَوَانِيَّة الألعاب) — game studio and game developer in Riyadh, Saudi Arabia (KSA).
+              Dawaniyah Games Studio (دَوَانِيَّة الألعاب) (game studio and game developer in Riyadh, Saudi Arabia (KSA)).
             </span>
             <span className="block text-white mb-2 text-[0.95em]">{t('hero.titleTop')}</span>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#D4AF37] via-[#F4E3B2] to-[#DC00D3] animate-gradient-x text-[0.75em] leading-normal pt-2">

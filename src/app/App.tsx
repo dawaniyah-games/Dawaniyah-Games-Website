@@ -20,12 +20,12 @@ const SEO_COPY = {
   en: {
     title: 'Dawaniyah Games Studio | Game Developer & Game Studio in KSA',
     description:
-      'Dawaniyah Games Studio — multi-platform game development in Riyadh (KSA) and Cologne. Full-cycle development, mobile production, art & animation, UI/UX, LiveOps, and optimization.',
+      'Dawaniyah Games Studio (multi-platform game development in Riyadh (KSA) and Cologne). Full-cycle development, mobile production, art & animation, UI/UX, LiveOps, and optimization.',
   },
   ar: {
     title: 'دَوَانِيَّة الألعاب | Dawaniyah Games Studio | مطور العاب وشركة العاب في السعودية',
     description:
-      'دَوَانِيَّة الألعاب (Dawaniyah Games Studio) — مطور العاب وشركة العاب في السعودية (الرياض) وكولونيا. تطوير ألعاب متكامل، ألعاب موبايل، تصميم UI/UX، فن وتحريك، LiveOps وتحسين الأداء.',
+      'دَوَانِيَّة الألعاب (Dawaniyah Games Studio) (مطور العاب وشركة العاب في السعودية (الرياض) وكولونيا). تطوير ألعاب متكامل، ألعاب موبايل، تصميم UI/UX، فن وتحريك، LiveOps وتحسين الأداء.',
   },
 } as const;
 

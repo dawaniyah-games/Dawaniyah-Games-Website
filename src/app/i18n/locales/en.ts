@@ -17,7 +17,7 @@ const en = {
   hero: {
     titleTop: "CRAFTING WORLDS",
     titleBottom: "POWERING EXPERIENCES",
-    descriptionLine1: "Dawaniyah Games Studio — Multi-Platform Game Development, Done Right.",
+    descriptionLine1: "Dawaniyah Games Studio (Multi-Platform Game Development, Done Right).",
     descriptionLine2:
       "Renowned across Germany, our Cologne and Riyadh teams create exceptional games for mobile, PC, console, and VR. We fuse strong narrative design with advanced engineering to build immersive, memorable experiences for players.",
     ctaServices: "Our Services",
@@ -150,12 +150,75 @@ const en = {
     ],
   },
   about: {
-    heading: "MEET THE FOUNDER",
+    heading: "MEET THE TEAM",
     name: "Mohamed Moghazi",
+    mohamedRole: "Founder & Tech Director",
+    mohamedLocation: "Cologne, Germany",
     p1:
       "With over 14 years of experience in the game development industry, I specialize in crafting immersive gameplay mechanics, building scalable systems in Unity and Unreal, and leading international teams to success.",
     p2:
-      "Dawaniyah Games represents the culmination of this journey—a studio dedicated to pushing the boundaries of what's possible in interactive entertainment, focusing on innovation, quality, and performance.",
+      "Dawaniyah Games represents the culmination of this journey, a studio dedicated to pushing the boundaries of what's possible in interactive entertainment, focusing on innovation, quality, and performance.",
+    ahmedName: "Ahmed Naguib",
+    ahmedRole: "Business Development & Relationship Manager",
+    ahmedLocation: "Riyadh, KSA",
+    ahmedStats: {
+      yearsValue: "20+",
+      yearsLabel: "Years Experience",
+      ksaValue: "1000+",
+      ksaLabel: "Successful Projects",
+      innovativeValue: "Innovative",
+      innovativeLabel: "Mindset",
+      highPerfValue: "High Perf",
+      highPerfLabel: "Execution",
+    },
+    ahmedP1:
+      "Ahmed leads our Business Development and Client Relations efforts from Riyadh, Saudi Arabia. With over 20 years of experience working in web and mobile app technologies, he brings both technical understanding and strong business insight to every client conversation.",
+    ahmedP2:
+      "He is responsible for building long-term partnerships, understanding client needs, and turning opportunities into successful collaborations. From the first discussion to closing the deal, Ahmed ensures clear communication, trust, and smooth execution.",
+
+    monaName: "Mona Farraj",
+    monaRole: "Senior Graphics Designer",
+    monaLocation: "Cairo, Egypt",
+    monaP1:
+      "Mona is a Senior Graphics Designer with a strong eye for detail and a passion for creating impactful visuals. She brings ideas to life through creative, clean, and engaging designs that strengthen brand identity and enhance user experience. Her work combines creativity with clarity, ensuring every project delivers both beauty and purpose.",
+    monaStats: {
+      yearsValue: "10+",
+      yearsLabel: "Years Experience",
+      innovativeValue: "Innovative",
+      innovativeLabel: "Style",
+      creativeValue: "Creative",
+      creativeLabel: "Design",
+    },
+
+    phillipName: "Phillip",
+    phillipRole: "Game Developer",
+    phillipLocation: "London, UK",
+    phillipP1:
+      "Phillip is a passionate Game Developer based in London, bringing creativity and technical expertise to every project he works on. With a strong background in gameplay systems and interactive experiences, he focuses on building engaging, polished, and scalable games.",
+    phillipP2:
+      "He combines strong problem-solving skills with a deep understanding of modern game technologies.",
+    phillipStats: {
+      gameplayValue: "Gameplay",
+      gameplayLabel: "Systems",
+      interactiveValue: "Interactive",
+      interactiveLabel: "Experiences",
+      scalableValue: "Scalable",
+      scalableLabel: "Games",
+    },
+
+    sabrinaName: "Sabrina",
+    sabrinaRole: "Game Designer",
+    sabrinaLocation: "Brazil, Brasília",
+    sabrinaP1:
+      "Sabrina is a talented game designer from Brazil, passionate about creating engaging and memorable player experiences. With a keen eye for detail and a love for innovative gameplay, she brings creativity and fun to every project she works on.",
+    sabrinaStats: {
+      innovativeValue: "Innovative",
+      innovativeLabel: "Gameplay",
+      detailValue: "Detail",
+      detailLabel: "Focused",
+      playerValue: "Player",
+      playerLabel: "Experience",
+    },
     stats: {
       years: "Years Experience",
       global: "Global Projects",
@@ -165,6 +228,7 @@ const en = {
       highPerf: "High Perf",
       innovative: "Innovative",
     },
+    showMore: "Show More",
     connect: "Connect on LinkedIn",
     viewCv: "View Full CV",
   },
@@ -214,17 +278,17 @@ const en = {
   faq: {
     heading: "FAQ",
     subheading:
-      "Quick answers for teams looking for a game developer or game studio in Saudi Arabia (KSA) — including Riyadh — and beyond.",
+      "Quick answers for teams looking for a game developer or game studio in Saudi Arabia (KSA), including Riyadh, and beyond.",
     items: {
       q1: {
         question: "Are you a game studio in Saudi Arabia (KSA)?",
         answer:
-          "Yes — we operate across Riyadh (KSA) and Cologne, Germany, and we build games for mobile, PC, console, and VR depending on your needs.",
+          "Yes, we operate across Riyadh (KSA) and Cologne, Germany, and we build games for mobile, PC, console, and VR depending on your needs.",
       },
       q2: {
         question: "Can I hire you as a game developer in Riyadh?",
         answer:
-          "Absolutely. We support full-cycle development or dedicated team support (engineering, UI/UX, art, optimization). Tell us your scope and platform targets.",
+          "We build mobile games, multiplayer experiences, and production-ready game systems, from prototypes to launch-ready titles.",
       },
       q3: {
         question: "What engines and tech do you use?",
@@ -234,7 +298,7 @@ const en = {
       q4: {
         question: "What types of games do you build?",
         answer:
-          "We build mobile games, multiplayer experiences, and production-ready game systems — from prototypes to launch-ready titles.",
+          "We build mobile games, multiplayer experiences, and production-ready game systems, from prototypes to launch-ready titles.",
       },
     },
   },
