@@ -29,6 +29,14 @@ export function About() {
   const TEAM_PREVIEW_COUNT = 3;
   const [isExpanded, setIsExpanded] = React.useState(false);
 
+  const viewportOnce = React.useMemo(
+    () => ({
+      ...VIEWPORT_ONCE,
+      amount: isMobile ? 0.12 : VIEWPORT_ONCE.amount,
+    }),
+    [isMobile],
+  );
+
   React.useEffect(() => {
     if (isMobile) setIsExpanded(false);
   }, [isMobile]);
@@ -102,7 +110,7 @@ export function About() {
                 variants={stagger(0.06, 0.02)}
                 initial="hidden"
                 whileInView="show"
-                viewport={VIEWPORT_ONCE}
+                viewport={viewportOnce}
                 className="grid grid-cols-2 gap-4 items-end mb-6"
               >
                 {stats.map((stat, index) => (
@@ -189,7 +197,7 @@ export function About() {
                 variants={stagger(0.06, 0.02)}
                 initial="hidden"
                 whileInView="show"
-                viewport={VIEWPORT_ONCE}
+                viewport={viewportOnce}
                 className="grid grid-cols-2 gap-4 items-end"
               >
                 {ahmedStats.map((stat, index) => (
@@ -266,7 +274,7 @@ export function About() {
                 variants={stagger(0.06, 0.02)}
                 initial="hidden"
                 whileInView="show"
-                viewport={VIEWPORT_ONCE}
+                viewport={viewportOnce}
                 className="grid grid-cols-2 gap-4 items-end"
               >
                 {monaStats.map((stat, index) => (
@@ -347,7 +355,7 @@ export function About() {
                 variants={stagger(0.06, 0.02)}
                 initial="hidden"
                 whileInView="show"
-                viewport={VIEWPORT_ONCE}
+                viewport={viewportOnce}
                 className="grid grid-cols-2 gap-4 items-end"
               >
                 {phillipStats.map((stat, index) => (
@@ -415,7 +423,7 @@ export function About() {
                 variants={stagger(0.06, 0.02)}
                 initial="hidden"
                 whileInView="show"
-                viewport={VIEWPORT_ONCE}
+                viewport={viewportOnce}
                 className="grid grid-cols-2 gap-4 items-end"
               >
                 {sabrinaStats.map((stat, index) => (
@@ -452,10 +460,12 @@ export function About() {
         </h2>
 
         <motion.div
-          variants={stagger(0.1, 0.04)}
-          initial="hidden"
-          whileInView="show"
-          viewport={VIEWPORT_ONCE}
+          key={isMobile ? (isExpanded ? 'team-mobile-expanded' : 'team-mobile-collapsed') : 'team-desktop'}
+          variants={stagger(isMobile ? 0.06 : 0.1, isMobile ? 0.02 : 0.04)}
+          initial={isMobile && isExpanded ? 'show' : 'hidden'}
+          animate={isMobile && isExpanded ? 'show' : undefined}
+          whileInView={isMobile && isExpanded ? undefined : 'show'}
+          viewport={isMobile && isExpanded ? undefined : viewportOnce}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
         >
           {(!isMobile || isExpanded) ? teamCards : teamCards.slice(0, TEAM_PREVIEW_COUNT)}
