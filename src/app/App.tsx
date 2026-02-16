@@ -21,11 +21,15 @@ const SEO_COPY = {
     title: 'Dawaniyah Games Studio | Game Developer & Game Studio in KSA',
     description:
       'Dawaniyah Games Studio (multi-platform game development in Riyadh (KSA) and Cologne). Full-cycle development, mobile production, art & animation, UI/UX, LiveOps, and optimization.',
+    keywords:
+      'game studio, game developer, game development, game company, Riyadh, KSA, Saudi Arabia, Unity, Unreal Engine, Dawaniyah Games',
   },
   ar: {
-    title: 'دَوَانِيَّة الألعاب | Dawaniyah Games Studio | مطور العاب وشركة العاب في السعودية',
+    title: 'دَوَانِيَّة الألعاب | مطور العاب في السعودية | شركة تصميم الالعاب الالكترونية',
     description:
-      'دَوَانِيَّة الألعاب (Dawaniyah Games Studio) (مطور العاب وشركة العاب في السعودية (الرياض) وكولونيا). تطوير ألعاب متكامل، ألعاب موبايل، تصميم UI/UX، فن وتحريك، LiveOps وتحسين الأداء.',
+      'دَوَانِيَّة الألعاب (Dawaniyah Games Studio) مطور العاب في السعوديه ومطور العاب في السعودية. شركة تصميم الالعاب الالكترونية تقدم تطوير ألعاب متكامل، ألعاب موبايل، تصميم UI/UX، فن وتحريك، LiveOps وتحسين الأداء. أفضل شركة تصميم الالعاب الالكترونية لعملاء يبحثون عن جودة وأداء وتجربة لعب قوية.',
+    keywords:
+      'دَوَانِيَّة الألعاب, Dawaniyah Games, مطور العاب, مطور العاب في السعودية, مطور العاب في السعوديه, مطور العاب في الرياض, شركة العاب, شركة تصميم الالعاب الالكترونية, أفضل شركة تصميم الالعاب الالكترونية, تصميم العاب, تطوير العاب, Unity, Unreal Engine, الرياض, السعودية',
   },
 } as const;
 
@@ -43,6 +47,7 @@ export default function App() {
 
     document.title = copy.title;
     setMetaContent('meta[name="description"]', copy.description);
+    setMetaContent('meta[name="keywords"]', copy.keywords);
     setMetaContent('meta[property="og:title"]', copy.title);
     setMetaContent('meta[property="og:description"]', copy.description);
     setMetaContent('meta[name="twitter:title"]', copy.title);
