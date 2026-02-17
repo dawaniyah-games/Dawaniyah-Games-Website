@@ -3,8 +3,8 @@ import { motion } from 'motion/react';
 import { Button } from '../ui/Button';
 import { ExternalLink } from 'lucide-react';
 import imgNew1 from "../../../assets/project-dendon-games.jpg";
-import imgNew2 from "../../../assets/project-khuzama-games.png";
-import imgUiFramework from "../../../assets/Uiframework_promo.png";
+import imgNew2 from "../../../assets/project-khuzama-games.jpg";
+import imgUiFramework from "../../../assets/Uiframework_promo.jpg";
 import { EASE_SMOOTH, fadeLeft, fadeRight, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
 
@@ -37,7 +37,7 @@ export function Portfolio() {
   return (
     <motion.section
       id="portfolio"
-      className="py-24 bg-[#100425] relative"
+      className="pt-8 pb-24 bg-[#100425] relative"
       initial={{ opacity: 0, y: 64 }}
       whileInView={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 64 }}

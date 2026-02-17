@@ -1,13 +1,14 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { BadgeCheck, Globe, Zap, Lightbulb, Linkedin } from 'lucide-react';
-import { SiBehance } from 'react-icons/si';
+import { SiBehance, SiArtstation } from 'react-icons/si';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import profileImg from "../../../assets/profile.jpg";
 import ahmedImg from "../../../assets/Ahmed.jpg";
 import monaImg from "../../../assets/Mona.jpg";
 import phillImg from "../../../assets/Phill_img.jpg";
 import sabrinaImg from "../../../assets/Sabrina_img.jpg";
+import sherifImg from "../../../assets/Sherif.jpg";
 import { EASE_SMOOTH, fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
 import { useIsMobile } from '../ui/use-mobile';
@@ -66,6 +67,11 @@ export function About() {
     { label: t('about.sabrinaStats.innovativeLabel'), value: t('about.sabrinaStats.innovativeValue'), icon: Lightbulb },
     { label: t('about.sabrinaStats.detailLabel'), value: t('about.sabrinaStats.detailValue'), icon: BadgeCheck },
     { label: t('about.sabrinaStats.playerLabel'), value: t('about.sabrinaStats.playerValue'), icon: Zap },
+  ];
+  const sherifStats = [
+    { label: t('about.sherifStats.experienceLabel'), value: t('about.sherifStats.experienceValue'), icon: BadgeCheck },
+    { label: t('about.sherifStats.aaaLabel'), value: t('about.sherifStats.aaaValue'), icon: Globe },
+    { label: t('about.sherifStats.creativityLabel'), value: t('about.sherifStats.creativityValue'), icon: Lightbulb },
   ];
 
   const teamCards = [
@@ -377,6 +383,95 @@ export function About() {
                   </motion.div>
                 ))}
               </motion.div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    ),
+
+    /* Sherif */
+    (
+      <motion.div
+        key="sherif"
+        variants={fadeUp}
+        className="h-full rounded-2xl border border-[#DC00D3]/20 bg-[#100425] overflow-hidden shadow-[0_0_40px_rgba(220,0,211,0.18)]"
+      >
+        <div className="px-6 pt-5 pb-6 h-full flex flex-col">
+          <div className="flex justify-center mt-8 mb-10">
+            <div className="relative w-56 h-56 md:w-64 md:h-64">
+              <div className="absolute -inset-2 rounded-2xl border-4 border-[#DC00D3] rotate-6 opacity-50"></div>
+              <div className="absolute -inset-2 rounded-2xl border-4 border-[#D4AF37] -rotate-6 opacity-50"></div>
+              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#DC00D3]/30">
+                <ImageWithFallback
+                  src={sherifImg}
+                  alt="Sherif Amer"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover object-center brightness-95 contrast-105 saturate-95 transition-all duration-700 hover:brightness-100 hover:saturate-100"
+                />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_35%,#100425_100%)] opacity-60 pointer-events-none"></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col [html[dir='rtl']_&]:text-right">
+            <div>
+              <h3 className="text-xl text-[#D4AF37] font-semibold mb-2">{t('about.sherifName')}</h3>
+              <h4 className="text-sm font-medium mb-4">
+                <span className="block text-[#DC00D3]">{t('about.sherifRole')}</span>
+                <span className="block text-[#D4AF37]">{t('about.sherifLocation')}</span>
+              </h4>
+              <p className="text-gray-300 mb-4 leading-relaxed">{t('about.sherifP1')}</p>
+              <p className="text-gray-300 leading-relaxed">{t('about.sherifP2')}</p>
+            </div>
+
+            <div className="mt-auto pt-6">
+              <motion.div
+                variants={stagger(0.06, 0.02)}
+                initial="hidden"
+                whileInView="show"
+                viewport={viewportOnce}
+                className="grid grid-cols-2 gap-4 items-end mb-6"
+              >
+                {sherifStats.map((stat, index) => (
+                  <motion.div
+                    key={index}
+                    variants={fadeUp}
+                    className={
+                      (index === sherifStats.length - 1 ? "col-span-2 justify-start " : '') +
+                      "flex items-center gap-3 justify-start"
+                    }
+                  >
+                    <div className="p-2 rounded-lg bg-[#DC00D3]/10 text-[#DC00D3]">
+                      <stat.icon size={22} />
+                    </div>
+                    <div>
+                      <div className="font-bold text-white text-lg">{stat.value}</div>
+                      <div className="text-xs text-gray-400 uppercase tracking-wide">{stat.label}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+              <div className="flex gap-3 flex-wrap [html[dir='rtl']_&]:flex-row-reverse">
+                <a
+                  href="https://www.linkedin.com/in/sherif-amer/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-transparent border border-[#0077b5] text-[#0077b5] hover:bg-[#0077b5] hover:text-white rounded-lg font-medium transition-colors"
+                >
+                  <Linkedin size={18} />
+                  {t('about.connect')}
+                </a>
+                <a
+                  href="https://sheko.artstation.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-[#DC00D3]/10 hover:bg-[#DC00D3]/20 text-[#DC00D3] border border-[#DC00D3]/30 rounded-lg font-medium transition-colors"
+                >
+                  <SiArtstation className="w-[18px] h-[18px]" />
+                  ArtStation
+                </a>
+              </div>
             </div>
           </div>
         </div>

@@ -59,6 +59,16 @@ const en = {
       },
     },
   },
+  assets: {
+    heading: "GAME ASSETS",
+    subheading:
+      "High-quality characters and production-ready art that elevate your game worlds.\n\nWe create high-quality game assets that are built for production: strong silhouettes, clean topology, and materials that hold up in real-time rendering. The work below showcases the level of character art quality we can deliver.\n\nAssets created by Sherif Amer.",
+    videos: {
+      midshot: "Character turntable (Mid Shot)",
+      b: "Character turntable",
+      marmoset: "Marmoset / real-time render preview",
+    },
+  },
   portfolio: {
     heading: "FEATURED PROJECTS",
     subheading: "A glimpse into the worlds we've built.",
@@ -218,6 +228,22 @@ const en = {
       detailLabel: "Focused",
       playerValue: "Player",
       playerLabel: "Experience",
+    },
+
+    sherifName: "Sherif Amer",
+    sherifRole: "Senior Character Artist",
+    sherifLocation: "London, UK",
+    sherifP1:
+      "Sherif is a Senior Character Artist with extensive experience in AAA game development. He previously worked at Creative Assembly, where he contributed to the creation of detailed and immersive characters for high-profile titles.",
+    sherifP2:
+      "With strong expertise in sculpting, modeling, and texturing, Sherif brings characters to life through precise craftsmanship and a deep understanding of form, anatomy, and design. His work combines artistic creativity with technical excellence to deliver visually compelling game experiences.",
+    sherifStats: {
+      experienceValue: "AAA",
+      experienceLabel: "Game Dev",
+      aaaValue: "Sculpt",
+      aaaLabel: "Modeling",
+      creativityValue: "Texture",
+      creativityLabel: "Detail",
     },
     stats: {
       years: "Years Experience",

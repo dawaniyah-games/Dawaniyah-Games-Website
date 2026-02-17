@@ -5,6 +5,7 @@ import { Navbar } from './components/layout/Navbar';
 import { Hero } from './components/sections/Hero';
 import { About } from './components/sections/About';
 import { Services } from './components/sections/Services';
+import { GameAssets } from './components/sections/GameAssets';
 import { FAQ } from './components/sections/FAQ';
 import { Portfolio } from './components/sections/Portfolio';
 import { WhyChooseUs } from './components/sections/WhyChooseUs';
@@ -60,7 +61,7 @@ export default function App() {
         <Navbar />
         <Hero />
         <Services />
-        <FAQ />
+        <GameAssets />
         <Portfolio />
         <WhyChooseUs />
         <XOGame />
@@ -68,6 +69,7 @@ export default function App() {
         <Testimonials />
         <About />
         <Contact />
+        <FAQ />
         <Map />
         <Footer />
         <Toaster />
