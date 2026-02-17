@@ -245,6 +245,13 @@ const en = {
       creativityValue: "Texture",
       creativityLabel: "Detail",
     },
+    abdulrahmanName: "Abdulrahman Alotaibi",
+    abdulrahmanRole: "Saudi Partner and Entrepreneur",
+    abdulrahmanLocation: "Riyadh, Saudi Arabia",
+    abdulrahmanP1:
+      "Abdulrahman Alotaibi is a Saudi partner and entrepreneur with extensive experience in business development and strategic growth. He leads our company’s growth initiatives and partnerships, turning opportunities into tangible successes through innovation and strategic planning.",
+    abdulrahmanP2:
+      "With his deep knowledge of the Saudi market and international networks, Abdulrahman helps expand the company’s reach and strengthen its presence in both local and global markets.",
     stats: {
       years: "Years Experience",
       global: "Global Projects",
