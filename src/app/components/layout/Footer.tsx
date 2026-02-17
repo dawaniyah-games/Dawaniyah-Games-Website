@@ -42,9 +42,15 @@ export function Footer() {
                <img src={logoIcon} alt="Dawaniyah Games Icon" className="h-16 w-auto object-contain" />
               <img src={getLogoTextSrc(i18n.language)} alt="Dawaniyah Games" className="h-10 w-auto object-contain" />
             </div>
-            <p className="text-gray-500 text-sm max-w-xs text-center md:text-left">
-              {t('footer.tagline')}
-            </p>
+              <p className="text-gray-500 text-sm max-w-xs text-center md:text-left">
+                {t('footer.tagline')}
+              </p>
+              <p className="text-gray-400 text-xs mt-2 max-w-xs text-center md:text-left">
+                {t('contact.address')}
+              </p>
+                <p className="text-gray-400 text-xs mt-1 max-w-xs text-center md:text-left">
+                  {t('contact.phone')}
+                </p>
           </div>
 
           <div className="flex gap-8">

@@ -275,7 +275,10 @@ const en = {
     followUs: "Follow Us",
     github: "GitHub",
     viewRepos: "View Repositories",
-    form: {
+      address: "Riyadh - Laban District - Intersection of Western Ring Road with Taif Street - Back Entrance - 2nd Floor - Office No. 44",
+      phone: "+966 0551194463",
+      phoneLabel: "Call Us",
+      form: {
       name: "Name",
       email: "Email",
       details: "Project Details",
