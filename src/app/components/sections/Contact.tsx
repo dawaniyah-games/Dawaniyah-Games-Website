@@ -94,7 +94,7 @@ function ContactInner() {
   }
 
   return (
-    <section id="contact" className="py-24 bg-[#0B021C] relative">
+    <section className="py-24 bg-[#0B021C] relative">
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row lg:[html[dir='rtl']_&]:flex-row-reverse gap-16">
           {/* Contact Info */}

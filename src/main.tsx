@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import "./app/i18n";
+import { i18nReady } from "./app/i18n";
 import App from "./app/App.tsx";
 import "./styles/index.css";
 
@@ -44,7 +44,14 @@ window.addEventListener("unhandledrejection", (event) => {
 try {
   const rootEl = document.getElementById("root");
   if (!rootEl) throw new Error("#root element not found");
-  createRoot(rootEl).render(<App />);
+
+  void i18nReady
+    .then(() => {
+      createRoot(rootEl).render(<App />);
+    })
+    .catch((error) => {
+      showBootError("App failed to start", error);
+    });
 } catch (error) {
   showBootError("App failed to start", error);
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
+import { ensureLanguageResources } from '../../i18n';
 
 import {
   DropdownMenu,
@@ -38,7 +39,9 @@ export function LanguageSwitcher() {
         {LANGS.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onSelect={() => void i18n.changeLanguage(lang.code)}
+            onSelect={() =>
+              void ensureLanguageResources(lang.code).then(() => i18n.changeLanguage(lang.code))
+            }
             className="cursor-pointer focus:bg-white/10"
           >
             <span className="font-['Josefin_Sans'] font-bold">{lang.label}</span>

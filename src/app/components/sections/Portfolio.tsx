@@ -36,7 +36,6 @@ export function Portfolio() {
 
   return (
     <motion.section
-      id="portfolio"
       className="pt-8 pb-24 bg-[#100425] relative"
       initial={{ opacity: 0, y: 64 }}
       whileInView={{ opacity: 1, y: 0 }}

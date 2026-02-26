@@ -5,6 +5,7 @@ import { Button } from '../ui/Button';
 import logoIcon from "../../../assets/logo-icon.png";
 import { EASE_SMOOTH, fadeUp, VIEWPORT_ONCE } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
+import { preloadSection } from '../../utils/sectionPreload';
 
 const LOGO_TEXTS = import.meta.glob(
   [
@@ -142,10 +143,25 @@ export function Hero() {
           transition={{ delay: 0.18 }}
           className="flex flex-col sm:flex-row sm:[html[dir='rtl']_&]:flex-row-reverse items-center justify-center gap-6"
         >
-          <Button size="lg" className="bg-[#D4AF37] text-[#100425] hover:bg-[#C5A059] border-none font-bold px-8 py-6 text-lg" onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>
+          <Button
+            size="lg"
+            className="bg-[#D4AF37] text-[#100425] hover:bg-[#C5A059] border-none font-bold px-8 py-6 text-lg"
+            onClick={() => {
+              preloadSection('services');
+              document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }}
+          >
             {t('hero.ctaServices')}
           </Button>
-          <Button variant="outline" size="lg" className="border-[#DC00D3] text-[#DC00D3] hover:bg-[#DC00D3] hover:text-white font-bold px-8 py-6 text-lg" onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>
+          <Button
+            variant="outline"
+            size="lg"
+            className="border-[#DC00D3] text-[#DC00D3] hover:bg-[#DC00D3] hover:text-white font-bold px-8 py-6 text-lg"
+            onClick={() => {
+              preloadSection('portfolio');
+              document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }}
+          >
             {t('hero.ctaPortfolio')}
           </Button>
         </motion.div>

@@ -48,7 +48,6 @@ export function Services() {
 
   return (
     <motion.section
-      id="services"
       className="py-24 bg-[#0B021C] relative overflow-hidden"
       initial={{ opacity: 0, y: 64 }}
       whileInView={{ opacity: 1, y: 0 }}

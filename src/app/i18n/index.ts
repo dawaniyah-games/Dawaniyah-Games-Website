@@ -1,11 +1,21 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-import en from "./locales/en";
-import ar from "./locales/ar";
-
 export const SUPPORTED_LANGUAGES = ["en", "ar"] as const;
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
+
+async function loadTranslation(lang: SupportedLanguage) {
+  switch (lang) {
+    case 'en': {
+      const mod = await import('./locales/en');
+      return mod.default;
+    }
+    case 'ar': {
+      const mod = await import('./locales/ar');
+      return mod.default;
+    }
+  }
+}
 
 function normalizeSupportedLanguage(value: string | null | undefined): SupportedLanguage | null {
   if (!value) return null;
@@ -61,19 +71,36 @@ export function applyDocumentDirection(lang: string) {
 
 const initialLang = getInitialLanguage();
 
-void i18n
-  .use(initReactI18next)
-  .init({
-    resources: {
-      en: { translation: en },
-      ar: { translation: ar },
-    },
-    lng: initialLang,
-    fallbackLng: "en",
-    interpolation: { escapeValue: false },
-    returnNull: false,
-    pluralSeparator: "_",
-  });
+export async function ensureLanguageResources(lang: string) {
+  const normalized = normalizeSupportedLanguage(lang) ?? 'en';
+  if (i18n.hasResourceBundle(normalized, 'translation')) return;
+
+  const translation = await loadTranslation(normalized);
+  i18n.addResourceBundle(normalized, 'translation', translation, true, true);
+}
+
+export const i18nReady = (async () => {
+  // Always load English (fallback), then the initial language if it differs.
+  const en = await loadTranslation('en');
+  const resources: Record<string, { translation: any }> = {
+    en: { translation: en },
+  };
+  if (initialLang === 'ar') {
+    const ar = await loadTranslation('ar');
+    resources.ar = { translation: ar };
+  }
+
+  await i18n
+    .use(initReactI18next)
+    .init({
+      resources,
+      lng: initialLang,
+      fallbackLng: 'en',
+      interpolation: { escapeValue: false },
+      returnNull: false,
+      pluralSeparator: '_',
+    });
+})();
 
 if (typeof document !== "undefined") {
   applyDocumentDirection(initialLang);

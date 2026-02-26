@@ -6,6 +6,7 @@ import logoIcon from "../../../assets/logo-icon.png";
 import { EASE_SMOOTH } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { preloadSection } from '../../utils/sectionPreload';
 
 const mobileMenuVariants = {
   closed: {
@@ -44,6 +45,9 @@ export function Navbar() {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setMobileMenuOpen(false);
+
+    // If the target section is code-split, start downloading its chunk immediately.
+    preloadSection(href);
 
     // Immediate scroll to section for faster response
     if (href === '#hero') {

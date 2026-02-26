@@ -631,7 +631,7 @@ export function About() {
   ];
 
   return (
-    <section id="about" className="py-20 bg-[#100425] relative">
+    <section className="py-20 bg-[#100425] relative">
       <div className="container mx-auto px-6">
         <h2 className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-12 text-center">
           <span className="text-[#DC00D3]">{t('about.heading')}</span>
