@@ -70,6 +70,36 @@ function setLinkHref(selector: string, value: string) {
   if (el) el.setAttribute('href', value);
 }
 
+function getPreferredSiteBaseUrl(): URL | null {
+  const raw = (import.meta.env.VITE_SITE_URL as string | undefined)?.trim();
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    if (!url.pathname.endsWith('/')) url.pathname += '/';
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+function buildCanonicalUrl(isArabic: boolean): string {
+  const preferred = getPreferredSiteBaseUrl();
+
+  if (preferred) {
+    const basePath = (import.meta.env.BASE_URL as string | undefined) || '/';
+    const url = new URL(basePath.replace(/^\//, ''), preferred);
+    if (isArabic) url.searchParams.set('lang', 'ar');
+    else url.searchParams.delete('lang');
+    return url.toString();
+  }
+
+  const url = new URL(window.location.href);
+  url.hash = '';
+  if (isArabic) url.searchParams.set('lang', 'ar');
+  else url.searchParams.delete('lang');
+  return url.toString();
+}
+
 export default function App() {
   const { i18n } = useTranslation();
 
@@ -86,13 +116,17 @@ export default function App() {
     setMetaContent('meta[name="twitter:title"]', copy.title);
     setMetaContent('meta[name="twitter:description"]', copy.description);
 
-    try {
-      const url = new URL(window.location.href);
-      if (isArabic) url.searchParams.set('lang', 'ar');
-      else url.searchParams.delete('lang');
-      setLinkHref('link[rel="canonical"]', url.toString());
-    } catch {
-      // ignore
+    const canonical = buildCanonicalUrl(isArabic);
+    setLinkHref('link[rel="canonical"]', canonical);
+    setMetaContent('meta[property="og:url"]', canonical);
+
+    const preferred = getPreferredSiteBaseUrl();
+    if (preferred) {
+      const basePath = (import.meta.env.BASE_URL as string | undefined) || '/';
+      const base = new URL(basePath.replace(/^\//, ''), preferred).toString();
+      setLinkHref('link[rel="alternate"][hreflang="x-default"]', base);
+      setLinkHref('link[rel="alternate"][hreflang="en"]', `${base}?lang=en`);
+      setLinkHref('link[rel="alternate"][hreflang="ar"]', `${base}?lang=ar`);
     }
   }, [i18n.language]);
 

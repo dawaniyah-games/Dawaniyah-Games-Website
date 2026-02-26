@@ -1,1 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Josefin+Sans:wght@300;400;600;700&display=swap');
+/*
+	Fonts are loaded via <link> tags in index.html to avoid render-blocking CSS @import.
+	Keep this file for local font overrides if needed.
+*/

@@ -4,6 +4,7 @@ import fs from 'node:fs'
 import fsp from 'node:fs/promises'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { imagetools } from 'vite-imagetools'
 
 function normalizeSiteUrl(value: string | undefined): string {
   const raw = (value || '').trim();
@@ -51,27 +52,23 @@ function buildSeoFilesPlugin(env: Record<string, string>): Plugin {
       const baseLoc = siteBaseUrl || base || '/';
       const enLoc = siteBaseUrl ? `${siteBaseUrl}?lang=en` : `${base}?lang=en`;
       const arLoc = siteBaseUrl ? `${siteBaseUrl}?lang=ar` : `${base}?lang=ar`;
+
+      const alternatesXml = () =>
+        `    <xhtml:link rel="alternate" hreflang="x-default" href="${baseLoc}" />\n` +
+        `    <xhtml:link rel="alternate" hreflang="en" href="${enLoc}" />\n` +
+        `    <xhtml:link rel="alternate" hreflang="ar-SA" href="${arLoc}" />\n`;
+
+      const urlXml = (loc: string, priority: string) => `  <url>\n` +
+        `    <loc>${loc}</loc>\n` +
+        alternatesXml() +
+        `    <lastmod>${now}</lastmod>\n` +
+        `    <changefreq>weekly</changefreq>\n` +
+        `    <priority>${priority}</priority>\n` +
+        `  </url>\n`;
+
       const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${baseLoc}</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>${enLoc}</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>${arLoc}</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-</urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${urlXml(baseLoc, '1.0')}${urlXml(enLoc, '0.9')}${urlXml(arLoc, '0.9')}</urlset>
 `;
       await fsp.writeFile(path.join(outDir, 'sitemap.xml'), sitemapXml, 'utf8');
 
@@ -114,6 +111,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
     // The React and Tailwind plugins are both required for Make, even if
     // Tailwind is not being actively used – do not remove them
+    imagetools(),
     react(),
     tailwindcss(),
     buildSeoFilesPlugin(env),

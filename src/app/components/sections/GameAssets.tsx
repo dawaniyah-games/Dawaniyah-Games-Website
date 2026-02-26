@@ -6,15 +6,19 @@ import char01Img from '../../../assets/Char_01.png';
 import char03Img from '../../../assets/Char_03.png';
 import gun01Img from '../../../assets/Gun_01.png';
 
+import char01WebpSrcSet from '../../../assets/Char_01.png?w=480;768;1024;1280&format=webp&as=srcset';
+import char03WebpSrcSet from '../../../assets/Char_03.png?w=480;768;1024;1280&format=webp&as=srcset';
+import gun01WebpSrcSet from '../../../assets/Gun_01.png?w=640;1024;1440&format=webp&as=srcset';
+
 export function GameAssets() {
   const { t } = useTranslation();
 
   const characterImages = [
-    { src: char01Img, alt: 'Character 01', kind: 'char' as const },
-    { src: char03Img, alt: 'Character 03', kind: 'char' as const },
+    { src: char01Img, webpSrcSet: char01WebpSrcSet, alt: 'Character 01', kind: 'char' as const },
+    { src: char03Img, webpSrcSet: char03WebpSrcSet, alt: 'Character 03', kind: 'char' as const },
   ];
 
-  const gunImage = { src: gun01Img, alt: 'Gun 01', kind: 'gun' as const };
+  const gunImage = { src: gun01Img, webpSrcSet: gun01WebpSrcSet, alt: 'Gun 01', kind: 'gun' as const };
 
   const videos = [
     {
@@ -105,13 +109,20 @@ export function GameAssets() {
                     'absolute left-1/2 -translate-x-1/2 -top-28 sm:-top-32 md:-top-36 lg:-top-40 w-[96%] z-10'
                   }
                 >
-                  <img
-                    src={img.src}
-                    alt={img.alt}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-[460px] sm:h-[500px] md:h-[580px] lg:h-[620px] object-contain object-bottom drop-shadow-2xl"
-                  />
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcSet={img.webpSrcSet}
+                      sizes="(max-width: 640px) 96vw, (max-width: 1024px) 48vw, 46vw"
+                    />
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-[460px] sm:h-[500px] md:h-[580px] lg:h-[620px] object-contain object-bottom drop-shadow-2xl"
+                    />
+                  </picture>
 
                   <div
                     className="absolute inset-x-0 bottom-0 h-24 sm:h-28 md:h-32 flex items-end justify-center pb-2 sm:pb-3 text-xs text-gray-300 tracking-wide"
@@ -191,13 +202,20 @@ export function GameAssets() {
             </div>
 
             <div className="absolute left-1/2 -translate-x-1/2 -top-6 sm:-top-8 md:-top-10 lg:-top-12 w-[98%]">
-              <img
-                src={gunImage.src}
-                alt={gunImage.alt}
-                loading="lazy"
-                decoding="async"
-                className="w-full h-[260px] sm:h-[280px] md:h-[320px] lg:h-[340px] object-contain"
-              />
+              <picture>
+                <source
+                  type="image/webp"
+                  srcSet={gunImage.webpSrcSet}
+                  sizes="(max-width: 768px) 98vw, (max-width: 1280px) 92vw, 80vw"
+                />
+                <img
+                  src={gunImage.src}
+                  alt={gunImage.alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-[260px] sm:h-[280px] md:h-[320px] lg:h-[340px] object-contain"
+                />
+              </picture>
             </div>
 
             <div className="h-[96px] sm:h-[110px] md:h-[140px] lg:h-[160px]" />

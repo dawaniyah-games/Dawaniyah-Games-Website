@@ -47,7 +47,7 @@ export function Hero() {
         loop
         muted
         playsInline
-        preload="auto"
+        preload="metadata"
         style={{ pointerEvents: 'none' }}
       />
       {/* Dark overlay for readability */}
@@ -80,6 +80,9 @@ export function Hero() {
             <motion.img 
               src={logoIcon} 
               alt="Dawaniyah Games Icon" 
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
               className="h-42 md:h-59 lg:h-68 w-auto object-contain mb-8 drop-shadow-[0_0_32px_rgba(212,175,55,0.4)]"
               animate={{ 
                 y: [0, -20, 0]
@@ -95,6 +98,9 @@ export function Hero() {
             ref={logoTextRef}
             src={getLogoTextSrc(i18n.language)} 
             alt="Dawaniyah Games" 
+            fetchPriority="high"
+            loading="eager"
+            decoding="async"
             className="h-16 md:h-24 lg:h-28 w-auto object-contain"
             initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}

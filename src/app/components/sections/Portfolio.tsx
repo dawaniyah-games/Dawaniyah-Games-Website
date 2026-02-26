@@ -1,11 +1,13 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Button } from '../ui/Button';
 import { ExternalLink } from 'lucide-react';
 import imgNew1 from "../../../assets/project-dendon-games.jpg";
 import imgNew2 from "../../../assets/project-khuzama-games.jpg";
 import imgUiFramework from "../../../assets/Uiframework_promo.jpg";
-import { EASE_SMOOTH, fadeLeft, fadeRight, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
+import imgNew1WebpSrcSet from "../../../assets/project-dendon-games.jpg?w=320;480;640;768&format=webp&as=srcset";
+import imgNew2WebpSrcSet from "../../../assets/project-khuzama-games.jpg?w=320;480;640;768&format=webp&as=srcset";
+import imgUiFrameworkWebpSrcSet from "../../../assets/Uiframework_promo.jpg?w=320;480;640;768&format=webp&as=srcset";
+import { EASE_SMOOTH, fadeLeft, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
 
 export function Portfolio() {
@@ -17,18 +19,21 @@ export function Portfolio() {
       title: t('portfolio.projects.dendon.title'),
       category: t('portfolio.projects.dendon.category'),
       image: imgNew1,
+      webpSrcSet: imgNew1WebpSrcSet,
       tools: [t('portfolio.tools.unity'), t('portfolio.tools.voiceChat'), t('portfolio.tools.multiplayer')],
     },
     {
       title: t('portfolio.projects.khuzama.title'),
       category: t('portfolio.projects.khuzama.category'),
       image: imgNew2,
+      webpSrcSet: imgNew2WebpSrcSet,
       tools: [t('portfolio.tools.unity'), t('portfolio.tools.voiceChat'), t('portfolio.tools.multiplayer')],
     },
     {
       title: "UiFramework Open Source",
       category: "",
       image: imgUiFramework,
+      webpSrcSet: imgUiFrameworkWebpSrcSet,
       githubUrl: "https://github.com/dawaniyah-games/UiFramework",
       tools: ["Open Source"],
     },
@@ -90,11 +95,20 @@ export function Portfolio() {
                     variants={fadeScale}
                   >
                     <div className="relative w-full h-full flex flex-col">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
+                      <picture>
+                        <source
+                          type="image/webp"
+                          srcSet={project.webpSrcSet}
+                          sizes="(max-width: 420px) 90vw, 340px"
+                        />
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </picture>
                       <div className="absolute inset-0 bg-black pointer-events-none rounded-2xl opacity-30 group-hover:opacity-10 transition-opacity duration-300" />
                     </div>
                     {/* Overlay */}
@@ -120,11 +134,20 @@ export function Portfolio() {
                   className="group relative max-w-[340px] aspect-[1024/1379] rounded-2xl overflow-hidden cursor-pointer flex flex-col"
                 >
                   <div className="relative w-full h-full flex flex-col">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcSet={project.webpSrcSet}
+                        sizes="(max-width: 420px) 90vw, 340px"
+                      />
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </picture>
                     <div className="absolute inset-0 bg-black pointer-events-none rounded-2xl opacity-30 group-hover:opacity-10 transition-opacity duration-300" />
                     {/* Badge top-right */}
                     <div className="absolute top-3 left-3 z-20 [html[dir='rtl']_&]:left-auto [html[dir='rtl']_&]:right-3">
