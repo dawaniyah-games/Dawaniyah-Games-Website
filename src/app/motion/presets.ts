@@ -2,7 +2,10 @@ export const EASE_SMOOTH: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 export const VIEWPORT_ONCE = {
   once: true,
-  amount: 0.25,
+  // Use 0 threshold so the animation fires as soon as *any* part of the
+  // element enters the viewport — this reliably handles the case where a
+  // section mounts while already in view (e.g. after a navbar navigation).
+  amount: 0,
 } as const;
 
 export const fadeUp = {

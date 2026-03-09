@@ -41,13 +41,8 @@ export function WhyChooseUs() {
   ];
 
   return (
-    <motion.section
+    <section
       className="py-24 bg-[#0B021C] relative"
-      initial={{ opacity: 0, y: 64 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 64 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-      viewport={{ once: false, amount: 0.3 }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[#100425] to-[#0B021C] pointer-events-none" />
       <div className="container mx-auto px-6 relative z-10">
@@ -87,6 +82,6 @@ export function WhyChooseUs() {
           ))}
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

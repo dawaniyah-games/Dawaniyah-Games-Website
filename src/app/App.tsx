@@ -103,6 +103,27 @@ function buildCanonicalUrl(isArabic: boolean): string {
 export default function App() {
   const { i18n } = useTranslation();
 
+  // Eagerly preload all sections directly reachable from the navbar so they
+  // are ready before the user clicks a nav link (avoids empty-page-on-scroll).
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      Services.preload?.();
+      Portfolio.preload?.();
+      About.preload?.();
+      Contact.preload?.();
+      // Load the rest of the page content soon after.
+      GameAssets.preload?.();
+      WhyChooseUs.preload?.();
+      XOGame.preload?.();
+      Technologies.preload?.();
+      Testimonials.preload?.();
+      FAQ.preload?.();
+      Map.preload?.();
+      Footer.preload?.();
+    }, 1500);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     const isArabic = i18n.language?.toLowerCase().startsWith('ar');
     const copy = isArabic ? SEO_COPY.ar : SEO_COPY.en;

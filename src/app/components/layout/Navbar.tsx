@@ -46,23 +46,34 @@ export function Navbar() {
     e.preventDefault();
     setMobileMenuOpen(false);
 
-    // If the target section is code-split, start downloading its chunk immediately.
-    preloadSection(href);
-
-    // Immediate scroll to section for faster response
     if (href === '#hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      const element = document.querySelector(href);
-      if (element) {
-        // Always center About section for better containment
-        const shouldCenter = href === '#services' || href === '#portfolio' || href === '#about' || href === '#contact';
-        element.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: shouldCenter ? 'center' : 'start' 
-        });
-      }
+      return;
     }
+
+    // Start downloading the code-split chunk immediately so it's ready.
+    preloadSection(href);
+
+    const doScroll = () => {
+      const el = document.querySelector(href);
+      if (!el) return false;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return true;
+    };
+
+    // First attempt — section may already be in the DOM.
+    doScroll();
+
+    // Retry after a short delay in case the lazy chunk hasn't mounted yet.
+    // Two retries cover typical network variance without feeling jumpy.
+    const t1 = window.setTimeout(doScroll, 200);
+    const t2 = window.setTimeout(doScroll, 600);
+
+    // Clean up if the component unmounts before the timeouts fire.
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
   };
 
   return (
@@ -96,7 +107,7 @@ export function Navbar() {
             <Button
               className="bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#100425] transition-all duration-300 shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:shadow-[0_0_25px_rgba(212,175,55,0.6)] min-w-[120px] lg:min-w-[140px] whitespace-nowrap shrink-0"
               size="sm"
-              onClick={() => document.getElementById('contact')?.scrollIntoView()}
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             >
               {t('nav.getStarted')}
             </Button>

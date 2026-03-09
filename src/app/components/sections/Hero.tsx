@@ -154,7 +154,7 @@ export function Hero() {
             className="bg-[#D4AF37] text-[#100425] hover:bg-[#C5A059] border-none font-bold px-8 py-6 text-lg"
             onClick={() => {
               preloadSection('services');
-              document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
           >
             {t('hero.ctaServices')}
@@ -165,7 +165,7 @@ export function Hero() {
             className="border-[#DC00D3] text-[#DC00D3] hover:bg-[#DC00D3] hover:text-white font-bold px-8 py-6 text-lg"
             onClick={() => {
               preloadSection('portfolio');
-              document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
           >
             {t('hero.ctaPortfolio')}

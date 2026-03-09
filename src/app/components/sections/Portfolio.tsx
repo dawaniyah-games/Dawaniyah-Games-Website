@@ -7,12 +7,11 @@ import imgUiFramework from "../../../assets/Uiframework_promo.jpg";
 import imgNew1WebpSrcSet from "../../../assets/project-dendon-games.jpg?w=320;480;640;768&format=webp&as=srcset";
 import imgNew2WebpSrcSet from "../../../assets/project-khuzama-games.jpg?w=320;480;640;768&format=webp&as=srcset";
 import imgUiFrameworkWebpSrcSet from "../../../assets/Uiframework_promo.jpg?w=320;480;640;768&format=webp&as=srcset";
-import { EASE_SMOOTH, fadeLeft, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
+import { fadeLeft, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
 
 export function Portfolio() {
   const { t } = useTranslation();
-  const [hasPlayedFirstIntro, setHasPlayedFirstIntro] = React.useState(false);
 
   const projects = [
     {
@@ -40,20 +39,8 @@ export function Portfolio() {
   ];
 
   return (
-    <motion.section
+    <section
       className="pt-8 pb-24 bg-[#100425] relative"
-      initial={{ opacity: 0, y: 64 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 64 }}
-      onAnimationComplete={() => {
-        if (!hasPlayedFirstIntro) setHasPlayedFirstIntro(true);
-      }}
-      transition={{
-        duration: hasPlayedFirstIntro ? 0.8 : 1.15,
-        delay: hasPlayedFirstIntro ? 0 : 0.12,
-        ease: EASE_SMOOTH,
-      }}
-      viewport={{ once: false, amount: 0.3 }}
     >
       <div className="container mx-auto px-6">
         <div className="flex flex-col items-center text-center mb-16">
@@ -176,6 +163,6 @@ export function Portfolio() {
           ))}
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

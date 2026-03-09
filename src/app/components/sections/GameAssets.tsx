@@ -36,14 +36,9 @@ export function GameAssets() {
   ];
 
   return (
-    <motion.section
+    <section
       id="game-assets"
       className="pt-24 pb-0 bg-[#100425] relative"
-      initial={{ opacity: 0, y: 64 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 64 }}
-      transition={{ duration: 0.8, ease: EASE_SMOOTH }}
-      viewport={{ once: false, amount: 0.25 }}
     >
       <div className="container mx-auto px-6">
         <motion.div
@@ -222,6 +217,6 @@ export function GameAssets() {
           </div>
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

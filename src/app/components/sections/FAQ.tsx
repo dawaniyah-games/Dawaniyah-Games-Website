@@ -28,14 +28,9 @@ export function FAQ() {
   ];
 
   return (
-    <motion.section
+    <section
       id="faq"
       className="py-24 bg-[#100425] relative"
-      initial={{ opacity: 0, y: 64 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 64 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      viewport={{ once: false, amount: 0.3 }}
     >
       <div className="container mx-auto px-6">
         <motion.div
@@ -64,6 +59,6 @@ export function FAQ() {
           </Accordion>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

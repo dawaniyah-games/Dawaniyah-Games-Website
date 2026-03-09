@@ -10,20 +10,9 @@ import monaImg from "../../../assets/Mona.jpg";
 import phillImg from "../../../assets/Phill_img.jpg";
 import sabrinaImg from "../../../assets/Sabrina_img.jpg";
 import sherifImg from "../../../assets/Sherif.jpg";
-import { EASE_SMOOTH, fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
+import { fadeUp, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
 import { useIsMobile } from '../ui/use-mobile';
-
-const founderImageAnim = {
-  hidden: { opacity: 0, x: -120 },
-  show: { opacity: 1, x: 0, transition: { duration: 1.1, ease: EASE_SMOOTH } },
-  exit: { opacity: 0, x: -120, transition: { duration: 0.7, ease: EASE_SMOOTH } }
-} as const;
-const founderTextAnim = {
-  hidden: { opacity: 0, x: 120 },
-  show: { opacity: 1, x: 0, transition: { duration: 1.1, ease: EASE_SMOOTH } },
-  exit: { opacity: 0, x: 120, transition: { duration: 0.7, ease: EASE_SMOOTH } }
-} as const;
 
 export function About() {
   const { t } = useTranslation();

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { EASE_SMOOTH } from "../../motion/presets";
 import { useTranslation } from 'react-i18next';
 
 
@@ -106,7 +105,6 @@ export function XOGame() {
   const [xIsNext, setXIsNext] = useState(true); // X is user, O is AI
   const [gameOver, setGameOver] = useState(false);
   const [hoveredCell, setHoveredCell] = useState<number | null>(null);
-  const [hasPlayedFirstIntro, setHasPlayedFirstIntro] = useState(false);
   const result = calculateWinner(squares);
   const winner = result?.winner ?? null;
   let winLine = result?.line ?? null;
@@ -210,26 +208,14 @@ export function XOGame() {
   }
 
   return (
-    <motion.section
+    <section
       id="xo-game"
       className="py-24 bg-[#0B021C] relative flex flex-col items-center"
-      initial={{ opacity: 0, scale: 0.85 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.85 }}
-      onAnimationComplete={() => {
-        if (!hasPlayedFirstIntro) setHasPlayedFirstIntro(true);
-      }}
-      transition={{
-        duration: hasPlayedFirstIntro ? 0.7 : 1.05,
-        delay: hasPlayedFirstIntro ? 0 : 0.12,
-        ease: EASE_SMOOTH,
-      }}
-      viewport={{ once: false, amount: 0.3 }}
     >
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
+        viewport={{ once: true, amount: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-16 text-center"
       >
@@ -397,6 +383,6 @@ export function XOGame() {
           {t('xo.tryAgain')}
         </motion.button>
       )}
-    </motion.section>
+    </section>
   );
 }
