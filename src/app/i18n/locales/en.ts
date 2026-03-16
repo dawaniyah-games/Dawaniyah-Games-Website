@@ -165,7 +165,7 @@ const en = {
     mohamedRole: "Founder & Tech Director",
     mohamedLocation: "Cologne, Germany",
     p1:
-      "With over 14 years of experience in the game development industry, I specialize in crafting immersive gameplay mechanics, building scalable systems in Unity and Unreal, and leading international teams to success.",
+      "With over 14 years of experience in the game development industry, I specialize in crafting immersive gameplay mechanics and building scalable systems in Unity3D.",
     p2:
       "Dawaniyah Games represents the culmination of this journey, a studio dedicated to pushing the boundaries of what's possible in interactive entertainment, focusing on innovation, quality, and performance.",
     ahmedName: "Ahmed Naguib",
