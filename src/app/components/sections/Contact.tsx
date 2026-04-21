@@ -72,7 +72,7 @@ function ContactInner() {
           from_name: values.name,
           from_email: values.email,
           message: values.message,
-          to_email: 'eng.moghazy@gmail.com',
+          to_email: 'info@dawaniyahgames.com',
         },
         'o0rZN6LvG1VBSTwFi'
       );
@@ -120,7 +120,7 @@ function ContactInner() {
                 </div>
                 <div>
                   <div className="text-sm text-gray-400">{t('contact.emailUs')}</div>
-                  <div className="font-semibold">eng.moghazy@gmail.com</div>
+                  <div className="font-semibold">info@dawaniyahgames.com</div>
                 </div>
               </div>
               {/* Phone Number */}
