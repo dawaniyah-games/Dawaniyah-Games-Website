@@ -319,22 +319,52 @@ const en = {
       q1: {
         question: "Are you a game studio in Saudi Arabia (KSA)?",
         answer:
-          "Yes, we operate across Riyadh (KSA) and Cologne, Germany, and we build games for mobile, PC, console, and VR depending on your needs.",
+          "Yes, we are one of the leading game development studios in Saudi Arabia, offering professional Game Development services from Riyadh with international experience extending to Europe.",
       },
       q2: {
         question: "Can I hire you as a game developer in Riyadh?",
         answer:
-          "We build mobile games, multiplayer experiences, and production-ready game systems, from prototypes to launch-ready titles.",
+          "Yes, you can hire us as a game developer in Riyadh to execute your full project, from concept to launch.",
       },
       q3: {
         question: "What engines and tech do you use?",
         answer:
-          "Unity and Unreal Engine are our core. We also work with modern web tooling for studio sites, backends, and live operations when required.",
+          "We rely on the latest game development technologies, with strong expertise in Unity and Unreal Engine to ensure the best performance and quality.",
       },
       q4: {
         question: "What types of games do you build?",
         answer:
-          "We build mobile games, multiplayer experiences, and production-ready game systems, from prototypes to launch-ready titles.",
+          "We build a wide variety of games including mobile games (Android & iOS), multiplayer experiences, 3D games, as well as educational and entertainment titles.",
+      },
+      q5: {
+        question: "Do you offer cartoon character design?",
+        answer:
+          "Yes, we provide cartoon character design and professional art asset creation to enhance your game's experience and elevate the quality of its worlds.",
+      },
+      q6: {
+        question: "How much does game development cost?",
+        answer:
+          "Game development costs vary depending on the concept and project scope. Contact us now to get a custom quote.",
+      },
+      q7: {
+        question: "How long does it take to develop a game?",
+        answer:
+          "Development time depends on project complexity, ranging from weeks for prototypes to several months for full-scale projects.",
+      },
+      q8: {
+        question: "Can you develop a custom game based on my idea?",
+        answer:
+          "Absolutely, we offer tailored game development solutions in Saudi Arabia to turn your idea into a launch-ready game.",
+      },
+      q9: {
+        question: "Do you offer post-launch support?",
+        answer:
+          "Yes, we provide ongoing support and LiveOps updates to ensure your game's success and boost user engagement.",
+      },
+      q10: {
+        question: "How do you start a project with Dawaniyah Games?",
+        answer:
+          "Start your Game Development journey in simple steps: contact our team, share your idea, and we'll develop your game through to launch.",
       },
     },
   },
