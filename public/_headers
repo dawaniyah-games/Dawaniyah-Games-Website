@@ -1,0 +1,7 @@
+# Hashed assets → cache forever (immutable)
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML, sitemap, robots — always revalidate
+/*
+  Cache-Control: public, max-age=0, must-revalidate

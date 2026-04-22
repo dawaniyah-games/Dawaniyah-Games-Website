@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import vid01 from '../../../assets/vid_01.mp4';
 import { motion } from 'motion/react';
 import { Button } from '../ui/Button';
-import logoIcon from "../../../assets/logo-icon.png";
+import logoIcon from "../../../assets/logo-icon.webp";
 import { EASE_SMOOTH, fadeUp, VIEWPORT_ONCE } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
 import { preloadSection } from '../../utils/sectionPreload';
@@ -21,8 +21,13 @@ const LOGO_TEXTS = import.meta.glob(
 function getLogoTextSrc(language: string | undefined) {
   const isArabic = (language ?? '').toLowerCase().startsWith('ar');
   const entries = Object.entries(LOGO_TEXTS);
-  const en = entries.find(([path]) => /\/logo-text\.[a-z0-9]+$/i.test(path))?.[1];
-  const ar = entries.find(([path]) => /\/logo-text-ar\.[a-z0-9]+$/i.test(path))?.[1];
+  // Prefer WebP over other formats for better compression
+  const findSrc = (pattern: RegExp) => {
+    const webp = entries.find(([p]) => pattern.test(p) && p.toLowerCase().endsWith('.webp'))?.[1];
+    return webp ?? entries.find(([p]) => pattern.test(p))?.[1];
+  };
+  const en = findSrc(/\/logo-text\.[a-z0-9]+$/i);
+  const ar = findSrc(/\/logo-text-ar\.[a-z0-9]+$/i);
   if (import.meta.env.DEV && isArabic && !ar) {
     // eslint-disable-next-line no-console
     console.warn(
