@@ -45,18 +45,18 @@ const Footer = lazyWithPreload(() =>
 
 const SEO_COPY = {
   en: {
-    title: 'Dawaniyah Games Studio | Game Developer & Game Studio in KSA',
+    title: 'Game Design Company in Saudi Arabia | Dawaniyah Games Studio',
     description:
-      'Dawaniyah Games Studio (multi-platform game development in Riyadh (KSA) and Cologne). Full-cycle development, mobile production, art & animation, UI/UX, LiveOps, and optimization.',
+      'Dawaniyah Games is a game design company in Riyadh and a Saudi game developer offering mobile game development, UI/UX design, and professional art and animation for a high-quality gaming experience. Start your project with us today.',
     keywords:
-      'game studio, game developer, game development, game company, Riyadh, KSA, Saudi Arabia, Unity, Unreal Engine, Dawaniyah Games',
+      'Dawaniyah Games, Saudi Game Developer, Game Developer, Game Developer in Saudi Arabia, Game Developer in Riyadh, Electronic Game Programming Company, Game Design and Development Company, Game Development Company, Game Development Company in Saudi Arabia, Game Design Company in Saudi Arabia, Game Company, Game Studio, Game Design, Game Development, Unity, Unreal Engine, Unity 3d game engine Studio',
   },
   ar: {
-    title: 'دَوَانِيَّة الألعاب | مطور ألعاب سعودي | شركة تطوير ألعاب في السعودية',
+    title: 'شركة تصميم ألعاب في السعودية | دَوَانِيَّة الألعاب',
     description:
-      'دَوَانِيَّة الألعاب (Dawaniyah Games Studio) مطور ألعاب سعودي وشركة تطوير ألعاب في السعودية (الرياض). نقدم تطوير ألعاب متكامل (Full‑Cycle)، وألعاب موبايل، وتصميم واجهات وتجربة المستخدم (UI/UX)، وفن وتحريك، وLiveOps، وتحسين الأداء — لألعاب عالية الجودة وتجربة لعب قوية.',
+      'دَوَانِيَّة الألعاب شركة تصميم ألعاب في الرياض، مطور ألعاب سعودي يقدم تطوير ألعاب الموبايل وUI/UX وفن وتحريك احترافي لتجربة لعب عالية الجودة. ابدأ الآن معنا.',
     keywords:
-      'دَوَانِيَّة الألعاب, Dawaniyah Games, مطور ألعاب سعودي, مطور العاب, مطور العاب في السعودية, مطور العاب في السعوديه, مطور العاب في الرياض, شركة تطوير ألعاب, شركة تطوير ألعاب في السعودية, شركة تصميم ألعاب في السعودية, شركة العاب, استوديو ألعاب, تصميم العاب, تطوير العاب, Unity, Unreal Engine, الرياض, السعودية, KSA',
+      'دَوَانِيَّة الألعاب, Dawaniyah Games, مطور ألعاب سعودي, مطور العاب, مطور العاب في السعودية, مطور العاب في السعوديه, مطور العاب في الرياض, شركة برمجة ألعاب الكترونية, شركة تصميم و برمجة الالعاب, شركة تطوير ألعاب, شركة تطوير ألعاب في السعودية, شركة تصميم ألعاب في السعودية, شركة العاب, استوديو ألعاب, تصميم العاب, تطوير العاب, Unity, Unreal Engine, Unity 3d game engine Studio',
   },
 } as const;
 
