@@ -73,6 +73,10 @@ const en = {
     heading: "FEATURED PROJECTS",
     subheading: "A glimpse into the worlds we've built.",
     comingSoon: "Coming Soon",
+    actions: {
+      viewGithub: "View on GitHub",
+      visitWebsite: "Visit Website",
+    },
     tools: {
       unity: "Unity",
       voiceChat: "Voice Chat",
@@ -86,6 +90,10 @@ const en = {
       khuzama: {
         title: "Khuzama Games",
         category: "Puzzle & Strategy",
+      },
+      wallary: {
+        title: "WALLARY",
+        category: "AR Wall Art Visualization",
       },
     },
   },

@@ -4,9 +4,11 @@ import { ExternalLink } from 'lucide-react';
 import imgNew1 from "../../../assets/project-dendon-games.jpg";
 import imgNew2 from "../../../assets/project-khuzama-games.jpg";
 import imgUiFramework from "../../../assets/Uiframework_promo.jpg";
+import imgWallary from "../../../assets/wallary.png";
 import imgNew1WebpSrcSet from "../../../assets/project-dendon-games.jpg?w=320;480;640;768&format=webp&as=srcset";
 import imgNew2WebpSrcSet from "../../../assets/project-khuzama-games.jpg?w=320;480;640;768&format=webp&as=srcset";
 import imgUiFrameworkWebpSrcSet from "../../../assets/Uiframework_promo.jpg?w=320;480;640;768&format=webp&as=srcset";
+import imgWallaryWebpSrcSet from "../../../assets/wallary.png?w=320;480;640;768&format=webp&as=srcset";
 import { fadeLeft, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
 
@@ -29,11 +31,21 @@ export function Portfolio() {
       tools: [t('portfolio.tools.unity'), t('portfolio.tools.voiceChat'), t('portfolio.tools.multiplayer')],
     },
     {
+      title: t('portfolio.projects.wallary.title'),
+      category: t('portfolio.projects.wallary.category'),
+      image: imgWallary,
+      webpSrcSet: imgWallaryWebpSrcSet,
+      linkUrl: 'https://www.wallary.app/',
+      linkLabel: t('portfolio.actions.visitWebsite'),
+      tools: ['ARKit', 'iOS', 'Interior Design'],
+    },
+    {
       title: "UiFramework Open Source",
       category: "",
       image: imgUiFramework,
       webpSrcSet: imgUiFrameworkWebpSrcSet,
-      githubUrl: "https://github.com/dawaniyah-games/UiFramework",
+      linkUrl: "https://github.com/dawaniyah-games/UiFramework",
+      linkLabel: t('portfolio.actions.viewGithub'),
       tools: ["Open Source"],
     },
   ];
@@ -68,26 +80,27 @@ export function Portfolio() {
           className="flex flex-wrap justify-center gap-16"
         >
           {projects.map((project, index) => (
-            <div className="flex flex-col items-center">
-              {project.githubUrl ? (
+            <div key={project.title} className="flex flex-col items-center">
+              {project.linkUrl ? (
                 <a
-                  href={project.githubUrl}
+                  href={project.linkUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group relative max-w-[340px] aspect-[1024/1379] rounded-2xl overflow-hidden cursor-pointer flex flex-col"
                   style={{ textDecoration: "none" }}
                 >
                   <motion.div
-                    key={index}
                     variants={fadeScale}
                   >
                     <div className="relative w-full h-full flex flex-col">
                       <picture>
-                        <source
-                          type="image/webp"
-                          srcSet={project.webpSrcSet}
-                          sizes="(max-width: 420px) 90vw, 340px"
-                        />
+                        {project.webpSrcSet && (
+                          <source
+                            type="image/webp"
+                            srcSet={project.webpSrcSet}
+                            sizes="(max-width: 420px) 90vw, 340px"
+                          />
+                        )}
                         <img
                           src={project.image}
                           alt={project.title}
@@ -109,24 +122,25 @@ export function Portfolio() {
                         ))}
                       </div>
                       <span className="inline-flex items-center gap-2 text-[#FFD700] text-sm font-bold mt-2">
-                        View on GitHub <ExternalLink size={16} />
+                        {project.linkLabel} <ExternalLink size={16} />
                       </span>
                     </div>
                   </motion.div>
                 </a>
               ) : (
                 <motion.div
-                  key={index}
                   variants={fadeScale}
                   className="group relative max-w-[340px] aspect-[1024/1379] rounded-2xl overflow-hidden cursor-pointer flex flex-col"
                 >
                   <div className="relative w-full h-full flex flex-col">
                     <picture>
-                      <source
-                        type="image/webp"
-                        srcSet={project.webpSrcSet}
-                        sizes="(max-width: 420px) 90vw, 340px"
-                      />
+                      {project.webpSrcSet && (
+                        <source
+                          type="image/webp"
+                          srcSet={project.webpSrcSet}
+                          sizes="(max-width: 420px) 90vw, 340px"
+                        />
+                      )}
                       <img
                         src={project.image}
                         alt={project.title}

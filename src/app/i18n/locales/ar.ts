@@ -73,6 +73,10 @@ const ar = {
     heading: "مشاريع مميزة",
     subheading: "نماذج من مشاريعنا التي تعكس خبرتنا في تطوير الألعاب.",
     comingSoon: "قريبًا",
+    actions: {
+      viewGithub: "عرض على GitHub",
+      visitWebsite: "زيارة الموقع",
+    },
     tools: {
       unity: "Unity",
       voiceChat: "دردشة صوتية",
@@ -86,6 +90,10 @@ const ar = {
       khuzama: {
         title: "Khuzama Games",
         category: "ألغاز واستراتيجية",
+      },
+      wallary: {
+        title: "WALLARY",
+        category: "تطبيق واقع معزز لمعاينة الصور على الجدار",
       },
     },
   },
