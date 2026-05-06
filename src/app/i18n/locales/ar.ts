@@ -91,10 +91,10 @@ const ar = {
         title: "Khuzama Games",
         category: "ألغاز واستراتيجية",
       },
-      wallary: {
-        title: "WALLARY",
-        category: "تطبيق واقع معزز لمعاينة الصور على الجدار",
-      },
+      // wallary: {
+      //   title: "WALLARY",
+      //   category: "تطبيق واقع معزز لمعاينة الصور على الجدار",
+      // },
     },
   },
   why: {
@@ -281,8 +281,10 @@ const ar = {
     github: "GitHub",
     viewRepos: "عرض المستودعات",
       address: "الرياض - حي لبن - تقاطع الدائري الغربي مع شارع الطائف - المدخل الخلفي - الدور رقم ٢ - مكتب رقم ٤٤",
-      phone: "+966 0551194463",
-      phoneLabel: "اتصل بنا",
+      phoneKSA: "+966 0551194463",
+      phoneLabelKSA: "اتصل بنا (السعودية)",
+      phoneDE: "+49 15229018095",
+      phoneLabelDE: "اتصل بنا (ألمانيا)",
       form: {
       name: "الاسم",
       email: "البريد الإلكتروني",
@@ -375,6 +377,13 @@ const ar = {
   footer: {
     tagline: "نصنع تجارب رقمية غامرة بلمسة من الفخامة والابتكار.",
     rights: "© 2026 Dawaniyah Games. جميع الحقوق محفوظة.",
+  },
+  whatsapp: {
+    ariaLabel: "تحدث معنا عبر واتسآب",
+    defaultMessage: "مرحباً! أنا مهتم بخدمات تطوير الألعاب لديكم. هل يمكننا التحدث؟",
+    supportTeam: "فريق الدعم",
+    greeting: "مرحباً! 👋 كيف يمكننا مساعدتك اليوم؟",
+    dismiss: "إغلاق المحادثة",
   },
 };
 

@@ -4,11 +4,11 @@ import { ExternalLink } from 'lucide-react';
 import imgNew1 from "../../../assets/project-dendon-games.jpg";
 import imgNew2 from "../../../assets/project-khuzama-games.jpg";
 import imgUiFramework from "../../../assets/Uiframework_promo.jpg";
-import imgWallary from "../../../assets/wallary.png";
 import imgNew1WebpSrcSet from "../../../assets/project-dendon-games.jpg?w=320;480;640;768&format=webp&as=srcset";
 import imgNew2WebpSrcSet from "../../../assets/project-khuzama-games.jpg?w=320;480;640;768&format=webp&as=srcset";
 import imgUiFrameworkWebpSrcSet from "../../../assets/Uiframework_promo.jpg?w=320;480;640;768&format=webp&as=srcset";
-import imgWallaryWebpSrcSet from "../../../assets/wallary.png?w=320;480;640;768&format=webp&as=srcset";
+// import imgWallary from "../../../assets/wallary.png";
+// import imgWallaryWebpSrcSet from "../../../assets/wallary.png?w=320;480;640;768&format=webp&as=srcset";
 import { fadeLeft, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
 import { useTranslation } from 'react-i18next';
 
@@ -30,15 +30,15 @@ export function Portfolio() {
       webpSrcSet: imgNew2WebpSrcSet,
       tools: [t('portfolio.tools.unity'), t('portfolio.tools.voiceChat'), t('portfolio.tools.multiplayer')],
     },
-    {
-      title: t('portfolio.projects.wallary.title'),
-      category: t('portfolio.projects.wallary.category'),
-      image: imgWallary,
-      webpSrcSet: imgWallaryWebpSrcSet,
-      linkUrl: 'https://www.wallary.app/',
-      linkLabel: t('portfolio.actions.visitWebsite'),
-      tools: ['ARKit', 'iOS', 'Interior Design'],
-    },
+    // {
+    //   title: t('portfolio.projects.wallary.title'),
+    //   category: t('portfolio.projects.wallary.category'),
+    //   image: imgWallary,
+    //   webpSrcSet: imgWallaryWebpSrcSet,
+    //   linkUrl: 'https://www.wallary.app/',
+    //   linkLabel: t('portfolio.actions.visitWebsite'),
+    //   tools: ['ARKit', 'iOS', 'Interior Design'],
+    // },
     {
       title: "UiFramework Open Source",
       category: "",

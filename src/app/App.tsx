@@ -5,6 +5,7 @@ import { Navbar } from './components/layout/Navbar';
 import { Hero } from './components/sections/Hero';
 import { DeferredSection, lazyWithPreload } from './components/layout/DeferredSection';
 import { Toaster } from './components/ui/sonner';
+import { WhatsAppButton } from './components/ui/WhatsAppButton';
 
 const Services = lazyWithPreload(() =>
   import('./components/sections/Services').then((m) => ({ default: m.Services })),
@@ -168,6 +169,7 @@ export default function App() {
         <DeferredSection component={FAQ} rootMargin="3600px 0px" />
         <DeferredSection component={Map} rootMargin="3800px 0px" />
         <DeferredSection component={Footer} rootMargin="4200px 0px" />
+        <WhatsAppButton />
         <Toaster />
       </div>
     </MotionConfig>

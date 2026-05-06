@@ -91,10 +91,10 @@ const en = {
         title: "Khuzama Games",
         category: "Puzzle & Strategy",
       },
-      wallary: {
-        title: "WALLARY",
-        category: "AR Wall Art Visualization",
-      },
+      // wallary: {
+      //   title: "WALLARY",
+      //   category: "AR Wall Art Visualization",
+      // },
     },
   },
   why: {
@@ -284,8 +284,10 @@ const en = {
     github: "GitHub",
     viewRepos: "View Repositories",
       address: "Riyadh - Laban District - Intersection of Western Ring Road with Taif Street - Back Entrance - 2nd Floor - Office No. 44",
-      phone: "+966 0551194463",
-      phoneLabel: "Call Us",
+      phoneKSA: "+966 0551194463",
+      phoneLabelKSA: "Call Us (KSA)",
+      phoneDE: "+49 15229018095",
+      phoneLabelDE: "Call Us (Germany)",
       form: {
       name: "Name",
       email: "Email",
@@ -380,6 +382,13 @@ const en = {
     tagline:
       "Crafting immersive digital experiences with a touch of luxury and innovation.",
     rights: "© 2026 Dawaniyah Games. All rights reserved.",
+  },
+  whatsapp: {
+    ariaLabel: "Chat with us on WhatsApp",
+    defaultMessage: "Hello! I'm interested in your game development services. Can we talk?",
+    supportTeam: "Support Team",
+    greeting: "Hi there! 👋 How can we help you today?",
+    dismiss: "Close chat",
   },
 };
 
