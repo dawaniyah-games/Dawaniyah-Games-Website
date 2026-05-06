@@ -12,6 +12,27 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#039;");
 }
 
+function isChunkLoadError(error: unknown): boolean {
+  if (error instanceof Error) {
+    return (
+      error.name === "ChunkLoadError" ||
+      error.message.includes("Failed to fetch dynamically imported module") ||
+      error.message.includes("Importing a module script failed") ||
+      error.message.includes("error loading dynamically imported module")
+    );
+  }
+  return false;
+}
+
+function reloadOnceForChunkError(error: unknown): boolean {
+  if (!isChunkLoadError(error)) return false;
+  const KEY = "chunk-reload-attempted";
+  if (sessionStorage.getItem(KEY)) return false; // prevent infinite loop
+  sessionStorage.setItem(KEY, "1");
+  window.location.reload();
+  return true;
+}
+
 function showBootError(title: string, error: unknown) {
   const root = document.getElementById("root");
   if (!root) return;
@@ -38,6 +59,7 @@ window.addEventListener("error", (event) => {
 });
 
 window.addEventListener("unhandledrejection", (event) => {
+  if (reloadOnceForChunkError(event.reason)) return;
   showBootError("Unhandled promise rejection", event.reason);
 });
 
@@ -50,6 +72,7 @@ try {
       createRoot(rootEl).render(<App />);
     })
     .catch((error) => {
+      if (reloadOnceForChunkError(error)) return;
       showBootError("App failed to start", error);
     });
 } catch (error) {

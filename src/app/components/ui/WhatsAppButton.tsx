@@ -57,7 +57,7 @@ export function WhatsAppButton({ message }: WhatsAppButtonProps) {
         <div
           aria-live="polite"
           className={`
-            absolute bottom-[calc(100%+8px)] w-max
+            absolute bottom-[calc(100%+28px)] w-max
             ${isRtl ? 'left-0 origin-bottom-left' : 'right-0 origin-bottom-right'}
             transition-all duration-300
             ${bubbleVisible ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}
