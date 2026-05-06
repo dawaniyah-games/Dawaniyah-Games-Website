@@ -53,8 +53,10 @@
     <link rel="canonical" href="%VITE_SITE_URL%%BASE_URL%" />
 
     <!-- Icons (served from /public at build time) -->
-    <link rel="icon" type="image/png" href="%BASE_URL%favicon.png" />
-    <link rel="apple-touch-icon" href="%BASE_URL%favicon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="%BASE_URL%favicon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="%BASE_URL%favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="%BASE_URL%favicon-192.png" />
+    <link rel="manifest" href="%BASE_URL%site.webmanifest" />
 
     <!-- Language/region alternates (SPA uses ?lang=) -->
     <link rel="alternate" hreflang="en" href="%VITE_SITE_URL%%BASE_URL%?lang=en" />
