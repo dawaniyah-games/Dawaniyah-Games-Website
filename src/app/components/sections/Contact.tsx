@@ -123,18 +123,7 @@ function ContactInner() {
                   <a href="mailto:info@dawaniyahgames.com" className="font-semibold hover:text-[#D4AF37] transition-colors" dir="ltr">info@dawaniyahgames.com</a>
                 </div>
               </div>
-              {/* Phone Numbers */}
-              <div className="flex items-center gap-4 text-white">
-                <div className="p-3 rounded-full bg-white/5 border border-white/10 text-[#D4AF37] shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-phone"><path d="M22 16.92V19a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3 5.18 2 2 0 0 1 5 3h2.09a2 2 0 0 1 2 1.72c.13 1.01.36 2 .7 2.92a2 2 0 0 1-.45 2.11l-.27.27a16 16 0 0 0 6.11 6.11l.27-.27a2 2 0 0 1 2.11-.45c.92.34 1.91.57 2.92.7A2 2 0 0 1 22 16.92z"></path></svg>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-sm text-gray-400">{t('contact.phoneLabelKSA')}</div>
-                  <a href="tel:+9660551194463" className="font-semibold hover:text-[#D4AF37] transition-colors" dir="ltr">{t('contact.phoneKSA')}</a>
-                  <div className="text-sm text-gray-400 pt-1">{t('contact.phoneLabelDE')}</div>
-                  <a href="tel:+4915229018095" className="font-semibold hover:text-[#D4AF37] transition-colors" dir="ltr">{t('contact.phoneDE')}</a>
-                </div>
-              </div>
+              {/* Phone numbers temporarily disabled per request. */}
 
               <div className="flex items-center gap-4 text-white">
                 <div className="p-3 rounded-full bg-white/5 border border-white/10 text-[#0077b5] shrink-0">

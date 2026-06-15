@@ -620,36 +620,8 @@ export function About() {
   ];
 
   return (
-    <section className="py-20 bg-[#100425] relative">
-      <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-bold font-['Josefin_Sans'] text-white mb-12 text-center">
-          <span className="text-[#DC00D3]">{t('about.heading')}</span>
-        </h2>
-
-        <motion.div
-          key={isMobile ? (isExpanded ? 'team-mobile-expanded' : 'team-mobile-collapsed') : 'team-desktop'}
-          variants={stagger(isMobile ? 0.06 : 0.1, isMobile ? 0.02 : 0.04)}
-          initial={isMobile && isExpanded ? 'show' : 'hidden'}
-          animate={isMobile && isExpanded ? 'show' : undefined}
-          whileInView={isMobile && isExpanded ? undefined : 'show'}
-          viewport={isMobile && isExpanded ? undefined : viewportOnce}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
-        >
-          {(!isMobile || isExpanded) ? teamCards : teamCards.slice(0, TEAM_PREVIEW_COUNT)}
-        </motion.div>
-
-        {isMobile && !isExpanded && teamCards.length > TEAM_PREVIEW_COUNT && (
-          <div className="mt-10 flex justify-center">
-            <button
-              type="button"
-              onClick={() => setIsExpanded(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#DC00D3]/10 hover:bg-[#DC00D3]/20 text-[#DC00D3] border border-[#DC00D3]/30 rounded-lg font-medium transition-colors"
-            >
-              {t('about.showMore')}
-            </button>
-          </div>
-        )}
-      </div>
-    </section>
+    <>
+      {/* About/team section temporarily disabled per request. */}
+    </>
   );
 }
