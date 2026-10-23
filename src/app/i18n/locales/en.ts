@@ -75,6 +75,7 @@ const en = {
     comingSoon: "Coming Soon",
     actions: {
       viewGithub: "View on GitHub",
+      viewDocs: "View Docs",
       visitWebsite: "Visit Website",
     },
     tools: {

@@ -44,8 +44,8 @@ export function Portfolio() {
       category: "",
       image: imgUiFramework,
       webpSrcSet: imgUiFrameworkWebpSrcSet,
-      linkUrl: "https://github.com/dawaniyah-games/UiFramework",
-      linkLabel: t('portfolio.actions.viewGithub'),
+      linkUrl: `${import.meta.env.BASE_URL}uiframework/`,
+      linkLabel: t('portfolio.actions.viewDocs'),
       tools: ["Open Source"],
     },
   ];

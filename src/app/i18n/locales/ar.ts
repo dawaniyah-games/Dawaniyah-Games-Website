@@ -75,6 +75,7 @@ const ar = {
     comingSoon: "قريبًا",
     actions: {
       viewGithub: "عرض على GitHub",
+      viewDocs: "عرض التوثيق",
       visitWebsite: "زيارة الموقع",
     },
     tools: {
