@@ -45,12 +45,6 @@ export function Footer() {
               <p className="text-gray-500 text-sm max-w-xs text-center md:text-left">
                 {t('footer.tagline')}
               </p>
-              <p className="text-gray-400 text-xs mt-2 max-w-xs text-center md:text-left">
-                {t('contact.address')}
-              </p>
-                <p className="text-gray-400 text-xs mt-1 max-w-xs text-center md:text-left">
-                  {t('contact.phone')}
-                </p>
           </div>
 
           <div className="flex gap-8">
