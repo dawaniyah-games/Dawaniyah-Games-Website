@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "sync:uiframework-docs": "node scripts/sync-uiframework-docs.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

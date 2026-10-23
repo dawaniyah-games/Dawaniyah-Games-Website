@@ -47,7 +47,7 @@ function buildSeoFilesPlugin(env: Record<string, string>): Plugin {
       ];
       await fsp.writeFile(path.join(outDir, 'robots.txt'), robotsLines.join('\n'), 'utf8');
 
-      // sitemap.xml (homepage only; SPA)
+      // sitemap.xml (homepage + UI Framework docs)
       const now = new Date().toISOString();
       const baseLoc = siteBaseUrl || base || '/';
       const enLoc = siteBaseUrl ? `${siteBaseUrl}?lang=en` : `${base}?lang=en`;
@@ -66,9 +66,18 @@ function buildSeoFilesPlugin(env: Record<string, string>): Plugin {
         `    <priority>${priority}</priority>\n` +
         `  </url>\n`;
 
+      // UI Framework docs (static page copied from public/uiframework)
+      const docsLoc = siteBaseUrl ? new URL('uiframework/', siteBaseUrl).toString() : `${base}uiframework/`;
+      const docsUrlXml = `  <url>\n` +
+        `    <loc>${docsLoc}</loc>\n` +
+        `    <lastmod>${now}</lastmod>\n` +
+        `    <changefreq>weekly</changefreq>\n` +
+        `    <priority>0.8</priority>\n` +
+        `  </url>\n`;
+
       const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${urlXml(baseLoc, '1.0')}${urlXml(enLoc, '0.9')}${urlXml(arLoc, '0.9')}</urlset>
+${urlXml(baseLoc, '1.0')}${urlXml(enLoc, '0.9')}${urlXml(arLoc, '0.9')}${docsUrlXml}</urlset>
 `;
       await fsp.writeFile(path.join(outDir, 'sitemap.xml'), sitemapXml, 'utf8');
 
@@ -80,6 +89,31 @@ ${urlXml(baseLoc, '1.0')}${urlXml(enLoc, '0.9')}${urlXml(arLoc, '0.9')}</urlset>
         await fsp.copyFile(srcLogo, outLogo);
         await fsp.copyFile(srcLogo, outFavicon);
       }
+    },
+  };
+}
+
+// Dev only: serve public/uiframework/ like a static host does (GitHub Pages).
+// Without this, Vite's SPA fallback answers /uiframework and /uiframework/ with the main app.
+function uiFrameworkDocsDevPlugin(): Plugin {
+  return {
+    name: 'uiframework-docs-dev',
+    apply: 'serve',
+    configureServer(server) {
+      const docsPath = `${server.config.base}uiframework`;
+      server.middlewares.use((req, res, next) => {
+        const [pathname, query] = (req.url || '').split(/\?(.*)/s);
+        if (pathname === docsPath) {
+          res.statusCode = 301;
+          res.setHeader('Location', `${docsPath}/${query ? `?${query}` : ''}`);
+          res.end();
+          return;
+        }
+        if (pathname === `${docsPath}/`) {
+          req.url = `${docsPath}/index.html${query ? `?${query}` : ''}`;
+        }
+        next();
+      });
     },
   };
 }
@@ -115,6 +149,7 @@ export default defineConfig(({ mode }) => {
     react(),
     tailwindcss(),
     buildSeoFilesPlugin(env),
+    uiFrameworkDocsDevPlugin(),
     ],
     resolve: {
       alias: {

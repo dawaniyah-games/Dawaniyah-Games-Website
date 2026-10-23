@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+  # Fired by the UiFramework repo when its docs change on main.
+  repository_dispatch:
+    types: [ uiframework-docs-updated ]
 
 permissions:
   contents: read
@@ -29,6 +32,20 @@ jobs:
 
       - name: Install
         run: npm ci
+
+      # The UI Framework docs (served at /uiframework/) come straight from the UiFramework repo.
+      - name: Checkout UiFramework docs
+        uses: actions/checkout@v4
+        with:
+          repository: dawaniyah-games/UiFramework
+          ref: main
+          path: .uiframework
+          sparse-checkout: docs
+
+      - name: Sync UiFramework docs
+        env:
+          UIFRAMEWORK_DOCS_DIR: .uiframework/docs
+        run: npm run sync:uiframework-docs
 
       - name: Build
         env:
