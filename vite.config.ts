@@ -79,9 +79,19 @@ function buildSeoFilesPlugin(env: Record<string, string>): Plugin {
         `    <priority>${priority}</priority>\n` +
         `  </url>\n`;
 
+      // UI Framework docs sub-pages, one folder per tab (written by scripts/split-uiframework-docs.mjs).
+      const docsDir = path.join(outDir, 'uiframework');
+      const docsPageLocs = fs.existsSync(docsDir)
+        ? fs
+            .readdirSync(docsDir, { withFileTypes: true })
+            .filter((d) => d.isDirectory() && fs.existsSync(path.join(docsDir, d.name, 'index.html')))
+            .map((d) => new URL(`${d.name}/`, docsLoc).toString())
+            .sort()
+        : [];
+
       const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${urlXml(baseLoc, '1.0', true)}${urlXml(arLoc, '0.9', true)}${urlXml(docsLoc, '0.9', false)}</urlset>
+${urlXml(baseLoc, '1.0', true)}${urlXml(arLoc, '0.9', true)}${urlXml(docsLoc, '0.9', false)}${docsPageLocs.map((loc) => urlXml(loc, '0.8', false)).join('')}</urlset>
 `;
       await fsp.writeFile(path.join(outDir, 'sitemap.xml'), sitemapXml, 'utf8');
 
@@ -134,8 +144,9 @@ function uiFrameworkDocsDevPlugin(): Plugin {
           res.end();
           return;
         }
-        if (pathname === `${docsPath}/`) {
-          req.url = `${docsPath}/index.html${query ? `?${query}` : ''}`;
+        // /uiframework/ and every docs page folder (/uiframework/tutorial/ ...) serve their index.html.
+        if (pathname.startsWith(`${docsPath}/`) && pathname.endsWith('/')) {
+          req.url = `${pathname}index.html${query ? `?${query}` : ''}`;
         }
         next();
       });

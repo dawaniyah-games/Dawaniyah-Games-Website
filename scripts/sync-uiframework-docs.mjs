@@ -7,6 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { splitDocs } from './split-uiframework-docs.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const sourceDir = path.resolve(
@@ -51,7 +52,13 @@ html = html.replace(/(<meta name="viewport"[^>]*>)/, `$1\n${headInjection}`);
 
 fs.rmSync(targetDir, { recursive: true, force: true });
 fs.mkdirSync(path.join(targetDir, 'images'), { recursive: true });
-fs.writeFileSync(path.join(targetDir, 'index.html'), html, 'utf8');
+// One page per docs tab (see split-uiframework-docs.mjs).
+const pages = splitDocs(html, siteUrl);
+for (const page of pages) {
+  const dir = page.slug ? path.join(targetDir, page.slug) : targetDir;
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'index.html'), page.html, 'utf8');
+}
 
 // llms.txt: a plain-text summary for AI assistants, served at /uiframework/llms.txt.
 const llmsTxt = path.join(sourceDir, 'llms.txt');
@@ -70,4 +77,4 @@ if (fs.existsSync(imagesDir)) {
 }
 
 console.log(`Synced UI Framework docs from ${sourceDir}`);
-console.log(`  -> public/uiframework/index.html + ${imageCount} images`);
+console.log(`  -> public/uiframework/: ${pages.length} pages (${pages.map((p) => p.slug || 'overview').join(', ')}) + ${imageCount} images`);
