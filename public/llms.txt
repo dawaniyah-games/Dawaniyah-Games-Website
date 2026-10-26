@@ -9,7 +9,7 @@
 - Services: full-cycle game development, mobile game production (iOS and Android), game art and animation, game UI/UX design, LiveOps and support, performance optimization
 - Projects: Dendon Games (social board games), Khuzama Games (puzzle and strategy), UI Framework for Unity (open source)
 - Founder and tech director: Mohamed Moghazi, game engineer with 15+ years on large productions
-- Contact: info@dawaniyahgames.com, +966 0551194463 (Saudi Arabia), +49 15229018095 (Germany)
+- Contact: info@dawaniyahgames.com, +966 55 119 4463 (Saudi Arabia), +49 1522 9018095 (Germany)
 
 ## Unity tools
 

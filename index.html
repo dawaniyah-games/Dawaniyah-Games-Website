@@ -5,6 +5,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Browsers that run JavaScript go straight to the app; the crawlable copy in #root is only for
+         crawlers and readers without JavaScript (see scripts/static-seo-content.ts). -->
+    <script>document.documentElement.classList.add('js');</script>
+    <style>.js #seo-static { display: none; } body { background: #100425; }</style>
+
     <!-- Google Tag Manager -->
     <script>
       (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -105,7 +110,7 @@
         "alternateName": ["Dawaniyah Games", "دَوَانِيَّة الألعاب"],
         "url": "%VITE_SITE_URL%%BASE_URL%",
         "logo": "%VITE_SITE_URL%%BASE_URL%logo-icon.png",
-        "telephone": "+966 0551194463",
+        "telephone": "+966 55 119 4463",
         "email": "info@dawaniyahgames.com",
         "address": {
           "@type": "PostalAddress",
