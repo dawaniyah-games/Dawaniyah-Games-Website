@@ -53,9 +53,9 @@ const SEO_COPY = {
       'Dawaniyah Games, Saudi Game Developer, Game Developer, Game Developer in Saudi Arabia, Game Developer in Riyadh, Electronic Game Programming Company, Game Design and Development Company, Game Development Company, Game Development Company in Saudi Arabia, Game Design Company in Saudi Arabia, Game Company, Game Studio, Game Design, Game Development, Unity, Unreal Engine, Unity 3d game engine Studio',
   },
   ar: {
-    title: 'شركة تصميم ألعاب في السعودية | دَوَانِيَّة الألعاب',
+    title: 'شركة تطوير وتصميم ألعاب في السعودية | دَوَانِيَّة الألعاب',
     description:
-      'دَوَانِيَّة الألعاب شركة تصميم ألعاب في الرياض، مطور ألعاب سعودي يقدم تطوير ألعاب الموبايل وUI/UX وفن وتحريك احترافي لتجربة لعب عالية الجودة. ابدأ الآن معنا.',
+      'دَوَانِيَّة الألعاب شركة تطوير وتصميم ألعاب في الرياض: تطوير ألعاب الموبايل والكمبيوتر والكونسول بمحرك Unity وUnreal، وتصميم واجهات UI/UX، وفن وتحريك احترافي. ابدأ مشروعك معنا.',
     keywords:
       'دَوَانِيَّة الألعاب, Dawaniyah Games, مطور ألعاب سعودي, مطور العاب, مطور العاب في السعودية, مطور العاب في السعوديه, مطور العاب في الرياض, شركة برمجة ألعاب الكترونية, شركة تصميم و برمجة الالعاب, شركة تطوير ألعاب, شركة تطوير ألعاب في السعودية, شركة تصميم ألعاب في السعودية, شركة العاب, استوديو ألعاب, تصميم العاب, تطوير العاب, Unity, Unreal Engine, Unity 3d game engine Studio',
   },
@@ -88,17 +88,12 @@ function buildCanonicalUrl(isArabic: boolean): string {
 
   if (preferred) {
     const basePath = (import.meta.env.BASE_URL as string | undefined) || '/';
-    const url = new URL(basePath.replace(/^\//, ''), preferred);
-    if (isArabic) url.searchParams.set('lang', 'ar');
-    else url.searchParams.delete('lang');
+    const url = new URL(basePath.replace(/^\//, '') + (isArabic ? 'ar/' : ''), preferred);
     return url.toString();
   }
 
-  const url = new URL(window.location.href);
-  url.hash = '';
-  if (isArabic) url.searchParams.set('lang', 'ar');
-  else url.searchParams.delete('lang');
-  return url.toString();
+  const basePath = (import.meta.env.BASE_URL as string | undefined) || '/';
+  return new URL(basePath + (isArabic ? 'ar/' : ''), window.location.origin).toString();
 }
 
 export default function App() {
@@ -147,8 +142,8 @@ export default function App() {
       const basePath = (import.meta.env.BASE_URL as string | undefined) || '/';
       const base = new URL(basePath.replace(/^\//, ''), preferred).toString();
       setLinkHref('link[rel="alternate"][hreflang="x-default"]', base);
-      setLinkHref('link[rel="alternate"][hreflang="en"]', `${base}?lang=en`);
-      setLinkHref('link[rel="alternate"][hreflang="ar"]', `${base}?lang=ar`);
+      setLinkHref('link[rel="alternate"][hreflang="en"]', base);
+      setLinkHref('link[rel="alternate"][hreflang="ar"]', `${base}ar/`);
     }
   }, [i18n.language]);
 
