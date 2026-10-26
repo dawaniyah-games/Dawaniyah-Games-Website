@@ -61,6 +61,7 @@
     </noscript>
 
     <link rel="canonical" href="%VITE_SITE_URL%%BASE_URL%" />
+    <link rel="alternate" type="text/plain" title="LLM summary" href="%BASE_URL%llms.txt" />
 
     <!-- Icons (served from /public at build time) -->
     <link rel="icon" type="image/png" sizes="192x192" href="%BASE_URL%favicon-192.png" />
@@ -68,9 +69,9 @@
     <link rel="apple-touch-icon" sizes="192x192" href="%BASE_URL%favicon-192.png" />
     <link rel="manifest" href="%BASE_URL%site.webmanifest" />
 
-    <!-- Language/region alternates (SPA uses ?lang=) -->
-    <link rel="alternate" hreflang="en" href="%VITE_SITE_URL%%BASE_URL%?lang=en" />
-    <link rel="alternate" hreflang="ar" href="%VITE_SITE_URL%%BASE_URL%?lang=ar" />
+    <!-- Language alternates: English at /, Arabic at /ar/ (generated at build) -->
+    <link rel="alternate" hreflang="en" href="%VITE_SITE_URL%%BASE_URL%" />
+    <link rel="alternate" hreflang="ar" href="%VITE_SITE_URL%%BASE_URL%ar/" />
     <link rel="alternate" hreflang="x-default" href="%VITE_SITE_URL%%BASE_URL%" />
 
     <!-- Open Graph -->
@@ -87,7 +88,7 @@
     <meta property="og:locale:alternate" content="ar_SA" />
 
     <!-- Twitter -->
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Game Design Company in Saudi Arabia | Dawaniyah Games Studio" />
     <meta
       name="twitter:description"
@@ -123,9 +124,18 @@
           "VR games"
         ],
         "areaServed": ["SA", "DE"],
+        "subjectOf": {
+          "@type": "SoftwareApplication",
+          "name": "UI Framework for Unity",
+          "url": "%VITE_SITE_URL%%BASE_URL%uiframework/",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Unity Editor 2022.3 to Unity 6",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        },
         "sameAs": [
           "https://www.linkedin.com/company/110097301/",
           "https://github.com/dawaniyah-games/",
+          "https://github.com/dawaniyah-games/UiFramework",
           "https://www.linkedin.com/in/mohamed-moghazi-9a729554/"
         ],
         "contactPoint": [

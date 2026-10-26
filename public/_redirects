@@ -1,7 +1,8 @@
-# Enforce a single canonical host + https (supported by Netlify and Cloudflare Pages).
-http://www.dawaniyahgames.com/* https://dawaniyahgames.com/:splat 301!
-http://dawaniyahgames.com/* https://dawaniyahgames.com/:splat 301!
-https://www.dawaniyahgames.com/* https://dawaniyahgames.com/:splat 301!
+# Not used by GitHub Pages (the current host). Kept in sync with the live setup in case the
+# site moves to Netlify or Cloudflare Pages: one canonical host, https://www.dawaniyahgames.com.
+http://dawaniyahgames.com/* https://www.dawaniyahgames.com/:splat 301!
+https://dawaniyahgames.com/* https://www.dawaniyahgames.com/:splat 301!
+http://www.dawaniyahgames.com/* https://www.dawaniyahgames.com/:splat 301!
 
 # SPA fallback
 /* /index.html 200

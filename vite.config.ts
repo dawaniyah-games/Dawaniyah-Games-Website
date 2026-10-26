@@ -5,6 +5,15 @@ import fsp from 'node:fs/promises'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { imagetools } from 'vite-imagetools'
+import en from './src/app/i18n/locales/en'
+import ar from './src/app/i18n/locales/ar'
+import { buildStaticContent } from './scripts/static-seo-content'
+
+const AR_META = {
+  title: 'شركة تطوير وتصميم ألعاب في السعودية | دَوَانِيَّة الألعاب',
+  description:
+    'دَوَانِيَّة الألعاب شركة تطوير وتصميم ألعاب في الرياض: تطوير ألعاب الموبايل والكمبيوتر والكونسول بمحرك Unity وUnreal، وتصميم واجهات UI/UX، وفن وتحريك احترافي. ابدأ مشروعك معنا.',
+};
 
 function normalizeSiteUrl(value: string | undefined): string {
   const raw = (value || '').trim();
@@ -28,6 +37,10 @@ function buildSeoFilesPlugin(env: Record<string, string>): Plugin {
     configResolved(config) {
       resolved = config;
     },
+    transformIndexHtml(html) {
+      const base = resolved.base || '/';
+      return html.replace('<div id="root"></div>', `<div id="root">${buildStaticContent(en, 'en', base)}</div>`);
+    },
     async closeBundle() {
       const outDir = path.resolve(resolved.root, resolved.build.outDir);
       const base = resolved.base || '/';
@@ -47,39 +60,51 @@ function buildSeoFilesPlugin(env: Record<string, string>): Plugin {
       ];
       await fsp.writeFile(path.join(outDir, 'robots.txt'), robotsLines.join('\n'), 'utf8');
 
-      // sitemap.xml (homepage + UI Framework docs)
+      // sitemap.xml: English home, Arabic home (/ar/), UI Framework docs.
+      // Language versions are real paths now; the old ?lang= URLs are not listed.
       const now = new Date().toISOString();
       const baseLoc = siteBaseUrl || base || '/';
-      const enLoc = siteBaseUrl ? `${siteBaseUrl}?lang=en` : `${base}?lang=en`;
-      const arLoc = siteBaseUrl ? `${siteBaseUrl}?lang=ar` : `${base}?lang=ar`;
-
-      const alternatesXml = () =>
-        `    <xhtml:link rel="alternate" hreflang="x-default" href="${baseLoc}" />\n` +
-        `    <xhtml:link rel="alternate" hreflang="en" href="${enLoc}" />\n` +
-        `    <xhtml:link rel="alternate" hreflang="ar-SA" href="${arLoc}" />\n`;
-
-      const urlXml = (loc: string, priority: string) => `  <url>\n` +
-        `    <loc>${loc}</loc>\n` +
-        alternatesXml() +
-        `    <lastmod>${now}</lastmod>\n` +
-        `    <changefreq>weekly</changefreq>\n` +
-        `    <priority>${priority}</priority>\n` +
-        `  </url>\n`;
-
-      // UI Framework docs (static page copied from public/uiframework)
+      const arLoc = siteBaseUrl ? new URL('ar/', siteBaseUrl).toString() : `${base}ar/`;
       const docsLoc = siteBaseUrl ? new URL('uiframework/', siteBaseUrl).toString() : `${base}uiframework/`;
-      const docsUrlXml = `  <url>\n` +
-        `    <loc>${docsLoc}</loc>\n` +
+
+      const alternatesXml =
+        `    <xhtml:link rel="alternate" hreflang="en" href="${baseLoc}" />\n` +
+        `    <xhtml:link rel="alternate" hreflang="ar" href="${arLoc}" />\n` +
+        `    <xhtml:link rel="alternate" hreflang="x-default" href="${baseLoc}" />\n`;
+
+      const urlXml = (loc: string, priority: string, alternates: boolean) => `  <url>\n` +
+        `    <loc>${loc}</loc>\n` +
+        (alternates ? alternatesXml : '') +
         `    <lastmod>${now}</lastmod>\n` +
-        `    <changefreq>weekly</changefreq>\n` +
-        `    <priority>0.8</priority>\n` +
+        `    <priority>${priority}</priority>\n` +
         `  </url>\n`;
 
       const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${urlXml(baseLoc, '1.0')}${urlXml(enLoc, '0.9')}${urlXml(arLoc, '0.9')}${docsUrlXml}</urlset>
+${urlXml(baseLoc, '1.0', true)}${urlXml(arLoc, '0.9', true)}${urlXml(docsLoc, '0.9', false)}</urlset>
 `;
       await fsp.writeFile(path.join(outDir, 'sitemap.xml'), sitemapXml, 'utf8');
+
+      // /ar/index.html: the Arabic home page as its own indexable URL, with Arabic meta,
+      // a self-referencing canonical and Arabic crawlable content. The app reads the
+      // language from the /ar/ path (see src/app/i18n).
+      const indexPath = path.join(outDir, 'index.html');
+      let arHtml = await fsp.readFile(indexPath, 'utf8');
+      const enTitle = 'Game Design Company in Saudi Arabia | Dawaniyah Games Studio';
+      arHtml = arHtml
+        .replace('<html lang="en">', '<html lang="ar" dir="rtl">')
+        .replaceAll(enTitle, AR_META.title)
+        .replace(/(<meta\s+name="description"\s+content=")[^"]*(")/, `$1${AR_META.description}$2`)
+        .replace(/(<meta\s+property="og:description"\s+content=")[^"]*(")/, `$1${AR_META.description}$2`)
+        .replace(/(<meta\s+name="twitter:description"\s+content=")[^"]*(")/, `$1${AR_META.description}$2`)
+        .replace(/<link rel="canonical" href="[^"]*"\s*\/?>/, `<link rel="canonical" href="${arLoc}" />`)
+        .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${arLoc}$2`)
+        .replace('<meta property="og:locale" content="en_US" />', '<meta property="og:locale" content="ar_SA" />')
+        .replace('<meta property="og:locale:alternate" content="ar_SA" />', '<meta property="og:locale:alternate" content="en_US" />');
+      const enStatic = buildStaticContent(en, 'en', base);
+      arHtml = arHtml.replace(enStatic, buildStaticContent(ar, 'ar', base));
+      await fsp.mkdir(path.join(outDir, 'ar'), { recursive: true });
+      await fsp.writeFile(path.join(outDir, 'ar', 'index.html'), arHtml, 'utf8');
 
       // Copy OG/favicons into dist root so meta tags resolve at %BASE_URL%...
       const srcLogo = path.resolve(resolved.root, 'src/assets/logo-icon.png');

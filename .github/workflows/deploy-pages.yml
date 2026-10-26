@@ -50,7 +50,7 @@ jobs:
       - name: Build
         env:
           VITE_BASE: ${{ secrets['VITE_BASE'] }}
-          VITE_SITE_URL: https://dawaniyahgames.com
+          VITE_SITE_URL: https://www.dawaniyahgames.com
         run: npm run build
 
       - name: Configure Pages

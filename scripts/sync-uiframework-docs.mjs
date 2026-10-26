@@ -13,7 +13,7 @@ const sourceDir = path.resolve(
   process.env.UIFRAMEWORK_DOCS_DIR || path.join(root, '..', 'UiFramework', 'docs'),
 );
 const targetDir = path.join(root, 'public', 'uiframework');
-const siteUrl = 'https://dawaniyahgames.com/uiframework/';
+const siteUrl = 'https://www.dawaniyahgames.com/uiframework/';
 
 const sourceHtml = path.join(sourceDir, 'index.html');
 if (!fs.existsSync(sourceHtml)) {
@@ -24,6 +24,15 @@ if (!fs.existsSync(sourceHtml)) {
 
 // The page uses relative paths (images/...), so it must be served with a trailing slash.
 // Redirect /uiframework -> /uiframework/ before anything else loads, keeping the hash.
+let html = fs.readFileSync(sourceHtml, 'utf8');
+
+// The docs page carries its own canonical, Open Graph and JSON-LD tags now. Only add the
+// ones it is missing, so the page never ends up with two canonicals.
+const optionalTags = [
+  [/<link rel="canonical"/, `<link rel="canonical" href="${siteUrl}">`],
+  [/<meta property="og:url"/, `<meta property="og:url" content="${siteUrl}">`],
+  [/<meta property="og:title"/, '<meta property="og:title" content="UI Framework for Unity | Dawaniyah Games">'],
+];
 const headInjection = [
   '<script>',
   '// Added by sync-uiframework-docs: relative image paths need a trailing slash.',
@@ -31,13 +40,10 @@ const headInjection = [
   '    location.replace(location.pathname + "/" + location.search + location.hash);',
   '}',
   '</script>',
-  `<link rel="canonical" href="${siteUrl}">`,
-  `<meta property="og:url" content="${siteUrl}">`,
-  '<meta property="og:title" content="UI Framework for Unity | Dawaniyah Games">',
+  ...optionalTags.filter(([pattern]) => !pattern.test(html)).map(([, tag]) => tag),
   '<link rel="icon" type="image/png" href="../favicon.png">',
 ].join('\n');
 
-let html = fs.readFileSync(sourceHtml, 'utf8');
 if (!html.includes('<meta name="viewport"')) {
   throw new Error('Unexpected docs HTML: no viewport meta to anchor the injection.');
 }
@@ -46,6 +52,12 @@ html = html.replace(/(<meta name="viewport"[^>]*>)/, `$1\n${headInjection}`);
 fs.rmSync(targetDir, { recursive: true, force: true });
 fs.mkdirSync(path.join(targetDir, 'images'), { recursive: true });
 fs.writeFileSync(path.join(targetDir, 'index.html'), html, 'utf8');
+
+// llms.txt: a plain-text summary for AI assistants, served at /uiframework/llms.txt.
+const llmsTxt = path.join(sourceDir, 'llms.txt');
+if (fs.existsSync(llmsTxt)) {
+  fs.copyFileSync(llmsTxt, path.join(targetDir, 'llms.txt'));
+}
 
 const imagesDir = path.join(sourceDir, 'images');
 let imageCount = 0;

@@ -25,11 +25,21 @@ function normalizeSupportedLanguage(value: string | null | undefined): Supported
   return null;
 }
 
+const BASE_PATH = (import.meta.env.BASE_URL as string | undefined) || "/";
+const ARABIC_PATH = `${BASE_PATH}ar/`;
+
+function isArabicPath(pathname: string): boolean {
+  return pathname === ARABIC_PATH || pathname === ARABIC_PATH.slice(0, -1) || pathname === `${ARABIC_PATH}index.html`;
+}
+
 function getLanguageFromUrl(): SupportedLanguage | null {
   if (typeof window === "undefined") return null;
   try {
     const url = new URL(window.location.href);
-    return normalizeSupportedLanguage(url.searchParams.get("lang"));
+    // ?lang= still wins so old links keep working; /ar/ is the indexable Arabic URL.
+    const fromQuery = normalizeSupportedLanguage(url.searchParams.get("lang"));
+    if (fromQuery) return fromQuery;
+    return isArabicPath(url.pathname) ? "ar" : null;
   } catch {
     return null;
   }
@@ -38,8 +48,12 @@ function getLanguageFromUrl(): SupportedLanguage | null {
 function setLanguageInUrl(lang: SupportedLanguage) {
   if (typeof window === "undefined") return;
   try {
+    // Each language has its own URL: English at the base path, Arabic at /ar/.
     const url = new URL(window.location.href);
-    url.searchParams.set("lang", lang);
+    url.searchParams.delete("lang");
+    if (url.pathname === BASE_PATH || isArabicPath(url.pathname)) {
+      url.pathname = lang === "ar" ? ARABIC_PATH : BASE_PATH;
+    }
     window.history.replaceState({}, "", url.toString());
   } catch {
     // ignore
