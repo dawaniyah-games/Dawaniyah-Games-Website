@@ -1,14 +1,15 @@
 # Dawaniyah Games Studio
 
-> Dawaniyah Games (دَوَانِيَّة الألعاب) is a game development and game design studio based in Riyadh, Saudi Arabia, with a team in Cologne, Germany. It builds mobile, PC, console and VR games in Unity and Unreal Engine, and offers game UI/UX design, 2D/3D art and animation, LiveOps and performance optimization. It also publishes UI Framework for Unity, a free open-source Unity UI framework.
+> Dawaniyah Games (دوانية الألعاب) is a game development studio based in Riyadh, Saudi Arabia, serving clients in Saudi Arabia, the UAE, Kuwait and Qatar, with an engineering team in Cologne, Germany. It builds mobile, PC, console and VR games on Unity and Unreal Engine for clients, develops original games for Gulf players, and publishes open-source tools for Unity developers, starting with UI Framework for Unity.
 
 ## Studio
 
 - [Home (English)](https://www.dawaniyahgames.com/): services, portfolio, team, FAQ, contact
-- [Home (Arabic)](https://www.dawaniyahgames.com/ar/): شركة تطوير وتصميم ألعاب في السعودية
+- [Home (Arabic)](https://www.dawaniyahgames.com/ar/): شركة تطوير ألعاب في السعودية والخليج
 - Services: full-cycle game development, mobile game production (iOS and Android), game art and animation, game UI/UX design, LiveOps and support, performance optimization
-- Projects: Dendon Games (social board games), Khuzama Games (puzzle and strategy), UI Framework for Unity (open source)
-- Founder and tech director: Mohamed Moghazi, game engineer with 15+ years on large productions
+- Original games in development for Gulf players: Dendon Games (social board games) and Khuzama Games (puzzle and strategy)
+- Open-source tools: UI Framework for Unity
+- Founder and tech director: Mohamed Moghazi, game engineer with 15 years on large productions, including XCOM and Angry Birds Evolution (past roles)
 - Contact: info@dawaniyahgames.com, +966 55 119 4463 (Saudi Arabia), +49 1522 9018095 (Germany)
 
 ## Unity tools

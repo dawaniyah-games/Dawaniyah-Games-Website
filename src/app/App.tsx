@@ -19,14 +19,11 @@ const Portfolio = lazyWithPreload(() =>
 const WhyChooseUs = lazyWithPreload(() =>
   import('./components/sections/WhyChooseUs').then((m) => ({ default: m.WhyChooseUs })),
 );
-const XOGame = lazyWithPreload(() =>
-  import('./components/sections/XOGame').then((m) => ({ default: m.XOGame })),
+const Tools = lazyWithPreload(() =>
+  import('./components/sections/Tools').then((m) => ({ default: m.Tools })),
 );
 const Technologies = lazyWithPreload(() =>
   import('./components/sections/Technologies').then((m) => ({ default: m.Technologies })),
-);
-const Testimonials = lazyWithPreload(() =>
-  import('./components/sections/Testimonials').then((m) => ({ default: m.Testimonials })),
 );
 const About = lazyWithPreload(() =>
   import('./components/sections/About').then((m) => ({ default: m.About })),
@@ -46,18 +43,14 @@ const Footer = lazyWithPreload(() =>
 
 const SEO_COPY = {
   en: {
-    title: 'Game Design Company in Saudi Arabia | Dawaniyah Games Studio',
+    title: 'Game Development Studio in Saudi Arabia & the Gulf | Dawaniyah',
     description:
-      'Dawaniyah Games is a game design company in Riyadh and a Saudi game developer offering mobile game development, UI/UX design, and professional art and animation for a high-quality gaming experience. Start your project with us today.',
-    keywords:
-      'Dawaniyah Games, Saudi Game Developer, Game Developer, Game Developer in Saudi Arabia, Game Developer in Riyadh, Electronic Game Programming Company, Game Design and Development Company, Game Development Company, Game Development Company in Saudi Arabia, Game Design Company in Saudi Arabia, Game Company, Game Studio, Game Design, Game Development, Unity, Unreal Engine, Unity 3d game engine Studio',
+      'Unity and Unreal game studio in Riyadh, serving Saudi Arabia, the UAE, Kuwait and Qatar. We build mobile and PC games for clients, and open-source tools for Unity developers.',
   },
   ar: {
-    title: 'شركة تطوير وتصميم ألعاب في السعودية | دَوَانِيَّة الألعاب',
+    title: 'شركة تطوير ألعاب في السعودية والخليج | دوانية الألعاب',
     description:
-      'دَوَانِيَّة الألعاب شركة تطوير وتصميم ألعاب في الرياض: تطوير ألعاب الموبايل والكمبيوتر والكونسول بمحرك Unity وUnreal، وتصميم واجهات UI/UX، وفن وتحريك احترافي. ابدأ مشروعك معنا.',
-    keywords:
-      'دَوَانِيَّة الألعاب, Dawaniyah Games, مطور ألعاب سعودي, مطور العاب, مطور العاب في السعودية, مطور العاب في السعوديه, مطور العاب في الرياض, شركة برمجة ألعاب الكترونية, شركة تصميم و برمجة الالعاب, شركة تطوير ألعاب, شركة تطوير ألعاب في السعودية, شركة تصميم ألعاب في السعودية, شركة العاب, استوديو ألعاب, تصميم العاب, تطوير العاب, Unity, Unreal Engine, Unity 3d game engine Studio',
+      'استوديو تطوير ألعاب في الرياض بمحركي Unity وUnreal، نخدم السعودية والإمارات والكويت وقطر. نطوّر ألعاب الجوال والكمبيوتر لعملائنا، وننشر أدوات مفتوحة المصدر لمطوري Unity.',
   },
 } as const;
 
@@ -110,9 +103,8 @@ export default function App() {
       // Load the rest of the page content soon after.
       GameAssets.preload?.();
       WhyChooseUs.preload?.();
-      XOGame.preload?.();
+      Tools.preload?.();
       Technologies.preload?.();
-      Testimonials.preload?.();
       FAQ.preload?.();
       Map.preload?.();
       Footer.preload?.();
@@ -126,7 +118,6 @@ export default function App() {
 
     document.title = copy.title;
     setMetaContent('meta[name="description"]', copy.description);
-    setMetaContent('meta[name="keywords"]', copy.keywords);
     setMetaContent('meta[property="og:title"]', copy.title);
     setMetaContent('meta[property="og:description"]', copy.description);
     setMetaContent('meta[property="og:locale"]', isArabic ? 'ar_SA' : 'en_US');
@@ -153,12 +144,11 @@ export default function App() {
         <Navbar />
         <Hero />
         <DeferredSection anchorId="services" component={Services} rootMargin="1400px 0px" />
+        <DeferredSection anchorId="tools" component={Tools} rootMargin="1500px 0px" />
         <DeferredSection component={GameAssets} rootMargin="1600px 0px" />
         <DeferredSection anchorId="portfolio" component={Portfolio} rootMargin="1800px 0px" />
         <DeferredSection component={WhyChooseUs} rootMargin="2200px 0px" />
-        <DeferredSection component={XOGame} rootMargin="2400px 0px" />
         <DeferredSection component={Technologies} rootMargin="2600px 0px" />
-        <DeferredSection component={Testimonials} rootMargin="2800px 0px" />
         <DeferredSection anchorId="about" component={About} rootMargin="3200px 0px" />
         <DeferredSection anchorId="contact" component={Contact} rootMargin="3400px 0px" />
         <DeferredSection component={FAQ} rootMargin="3600px 0px" />

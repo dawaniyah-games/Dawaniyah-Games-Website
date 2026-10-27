@@ -10,9 +10,9 @@ import ar from './src/app/i18n/locales/ar'
 import { buildStaticContent } from './scripts/static-seo-content'
 
 const AR_META = {
-  title: 'شركة تطوير وتصميم ألعاب في السعودية | دَوَانِيَّة الألعاب',
+  title: 'شركة تطوير ألعاب في السعودية والخليج | دوانية الألعاب',
   description:
-    'دَوَانِيَّة الألعاب شركة تطوير وتصميم ألعاب في الرياض: تطوير ألعاب الموبايل والكمبيوتر والكونسول بمحرك Unity وUnreal، وتصميم واجهات UI/UX، وفن وتحريك احترافي. ابدأ مشروعك معنا.',
+    'استوديو تطوير ألعاب في الرياض بمحركي Unity وUnreal، نخدم السعودية والإمارات والكويت وقطر. نطوّر ألعاب الجوال والكمبيوتر لعملائنا، وننشر أدوات مفتوحة المصدر لمطوري Unity.',
 };
 
 function normalizeSiteUrl(value: string | undefined): string {
@@ -100,7 +100,7 @@ ${urlXml(baseLoc, '1.0', true)}${urlXml(arLoc, '0.9', true)}${urlXml(docsLoc, '0
       // language from the /ar/ path (see src/app/i18n).
       const indexPath = path.join(outDir, 'index.html');
       let arHtml = await fsp.readFile(indexPath, 'utf8');
-      const enTitle = 'Game Design Company in Saudi Arabia | Dawaniyah Games Studio';
+      const enTitle = 'Game Development Studio in Saudi Arabia &amp; the Gulf | Dawaniyah';
       arHtml = arHtml
         .replace('<html lang="en">', '<html lang="ar" dir="rtl">')
         .replaceAll(enTitle, AR_META.title)

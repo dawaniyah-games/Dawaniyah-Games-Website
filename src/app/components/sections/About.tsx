@@ -32,7 +32,7 @@ export function About() {
     if (isMobile) setIsExpanded(false);
   }, [isMobile]);
   const stats = [
-    { label: t('about.stats.years'), value: "14+", icon: BadgeCheck },
+    { label: t('about.stats.years'), value: "15+", icon: BadgeCheck },
     { label: t('about.stats.global'), value: t('about.stats.international'), icon: Globe },
     { label: t('about.stats.scaled'), value: t('about.stats.highPerf'), icon: Zap },
     { label: t('about.stats.vision'), value: t('about.stats.innovative'), icon: Lightbulb },

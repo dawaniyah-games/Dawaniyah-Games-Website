@@ -3,10 +3,8 @@ import { motion } from 'motion/react';
 import { ExternalLink } from 'lucide-react';
 import imgNew1 from "../../../assets/project-dendon-games.jpg";
 import imgNew2 from "../../../assets/project-khuzama-games.jpg";
-import imgUiFramework from "../../../assets/Uiframework_promo.jpg";
 import imgNew1WebpSrcSet from "../../../assets/project-dendon-games.jpg?w=320;480;640;768&format=webp&as=srcset";
 import imgNew2WebpSrcSet from "../../../assets/project-khuzama-games.jpg?w=320;480;640;768&format=webp&as=srcset";
-import imgUiFrameworkWebpSrcSet from "../../../assets/Uiframework_promo.jpg?w=320;480;640;768&format=webp&as=srcset";
 // import imgWallary from "../../../assets/wallary.png";
 // import imgWallaryWebpSrcSet from "../../../assets/wallary.png?w=320;480;640;768&format=webp&as=srcset";
 import { fadeLeft, fadeScale, stagger, VIEWPORT_ONCE } from '../../motion/presets';
@@ -15,7 +13,17 @@ import { useTranslation } from 'react-i18next';
 export function Portfolio() {
   const { t } = useTranslation();
 
-  const projects = [
+  type Project = {
+    title: string;
+    category: string;
+    image: string;
+    webpSrcSet?: string;
+    tools: string[];
+    linkUrl?: string;
+    linkLabel?: string;
+  };
+
+  const projects: Project[] = [
     {
       title: t('portfolio.projects.dendon.title'),
       category: t('portfolio.projects.dendon.category'),
@@ -39,15 +47,6 @@ export function Portfolio() {
     //   linkLabel: t('portfolio.actions.visitWebsite'),
     //   tools: ['ARKit', 'iOS', 'Interior Design'],
     // },
-    {
-      title: "UiFramework Open Source",
-      category: "",
-      image: imgUiFramework,
-      webpSrcSet: imgUiFrameworkWebpSrcSet,
-      linkUrl: `${import.meta.env.BASE_URL}uiframework/`,
-      linkLabel: t('portfolio.actions.viewDocs'),
-      tools: ["Open Source"],
-    },
   ];
 
   return (
@@ -157,19 +156,12 @@ export function Portfolio() {
                       </span>
                     </div>
                   </div>
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 [html[dir='rtl']_&]:text-right">
+                  {/* Title and genre, always visible over the faded bottom of the image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end px-6 pb-6 [html[dir='rtl']_&]:text-right">
                     <h3 className="text-2xl font-bold text-white mb-2 font-['Josefin_Sans']">{project.title}</h3>
                     {project.category && (
-                      <p className="text-[#D4AF37] mb-4">{project.category}</p>
+                      <p className="text-[#D4AF37]">{project.category}</p>
                     )}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tools.map((tool) => (
-                        <span key={tool} className="text-xs px-3 py-1 rounded-full bg-white/10 text-white backdrop-blur-sm border border-white/10">
-                          {tool}
-                        </span>
-                      ))}
-                    </div>
                   </div>
                 </motion.div>
               )}
