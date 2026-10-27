@@ -7,7 +7,8 @@ const en = {
   nav: {
     home: "Home",
     services: "Services",
-    portfolio: "Portfolio",
+    portfolio: "Our games",
+    tools: "Tools",
     about: "About",
     contact: "Contact",
     getStarted: "Get Started",
@@ -15,47 +16,47 @@ const en = {
     closeMenu: "Close menu",
   },
   hero: {
-    titleTop: "CRAFTING WORLDS",
-    titleBottom: "POWERING EXPERIENCES",
-    descriptionLine1: "Dawaniyah Games Studio (Multi-Platform Game Development, Done Right).",
+    titleTop: "WE BUILD GAMES",
+    titleBottom: "AND THE TOOLS BEHIND THEM",
+    descriptionLine1: "Dawaniyah Games is a game development studio in Riyadh, serving Saudi Arabia, the UAE, Kuwait and Qatar.",
     descriptionLine2:
-      "Renowned across Germany, our Cologne and Riyadh teams create exceptional games for mobile, PC, console, and VR. We fuse strong narrative design with advanced engineering to build immersive, memorable experiences for players.",
-    ctaServices: "Our Services",
-    ctaPortfolio: "View Portfolio",
+      "We build mobile and PC games for clients on Unity and Unreal, create original games for Gulf players, and publish open-source tools that Unity developers use in their own projects. Our founder brings 15 years on large productions, including XCOM and Angry Birds Evolution.",
+    ctaServices: "Start a project",
+    ctaPortfolio: "Explore our tools",
   },
   services: {
-    heading: "OUR SERVICES",
-    subheading: "Comprehensive game development solutions tailored to your vision.",
+    heading: "GAME DEVELOPMENT SERVICES",
+    subheading: "From prototype to launch and live operation, on Unity and Unreal.",
     items: {
       fullCycle: {
         title: "Full-Cycle Game Development",
         description:
-          "From concept to release, we handle every stage of production using Unity & Unreal Engine.",
+          "From concept to release, we handle every stage of production on Unity and Unreal Engine.",
       },
       mobile: {
         title: "Mobile Game Production",
         description:
-          "Native iOS and Android development with a focus on performance and monetization.",
+          "iOS and Android games built for performance, retention and monetization.",
       },
       art: {
         title: "Art & Animation",
         description:
-          "High-quality 2D/3D assets, character design, and fluid animations that bring worlds to life.",
+          "Characters, 2D and 3D game art and animation, made in-house and ready for production.",
       },
       uiux: {
         title: "UI/UX Design",
         description:
-          "Intuitive and immersive interfaces designed specifically for gaming experiences.",
+          "Game interfaces that are clear, fast and built to scale, using the same UI architecture we open-source.",
       },
       liveops: {
         title: "LiveOps & Support",
         description:
-          "Continuous updates, event management, and analytics to keep players engaged.",
+          "Updates, live events and analytics that keep players engaged after launch.",
       },
       perf: {
         title: "Performance Optimization",
         description:
-          "Ensuring smooth framerates and fast load times across all target devices.",
+          "Smooth frame rates and fast load times on every target device.",
       },
     },
   },
@@ -70,9 +71,9 @@ const en = {
     },
   },
   portfolio: {
-    heading: "FEATURED PROJECTS",
-    subheading: "A glimpse into the worlds we've built.",
-    comingSoon: "Coming Soon",
+    heading: "OUR GAMES",
+    subheading: "Original games for players in Saudi Arabia and the Gulf, now in development.",
+    comingSoon: "In development",
     actions: {
       viewGithub: "View on GitHub",
       viewDocs: "View Docs",
@@ -98,32 +99,44 @@ const en = {
       // },
     },
   },
+  toolsSection: {
+    heading: "TOOLS FOR UNITY DEVELOPERS",
+    subheading: "We build the tools we needed on large productions, and share them.",
+    uiframework: {
+      title: "UI Framework for Unity",
+      description:
+        "A free, open-source screen and popup manager for UGUI, built on Addressable scenes and a state stack. Animated transitions, editor tooling that generates scripts and scenes, and Unity 2022.3 to Unity 6 support.",
+      tags: ["Free and open source", "MIT license", "Unity 2022.3+", "UGUI + Addressables"],
+      docs: "Read the docs",
+      github: "View on GitHub",
+    },
+  },
   why: {
-    heading: "WHY CHOOSE US",
+    heading: "WHY WORK WITH US",
     reasons: {
       experience: {
-        title: "14+ Years Experience",
-        text: "Deep industry knowledge delivering successful titles.",
+        title: "15 Years on Large Productions",
+        text: "Our founder worked on titles including XCOM and Angry Birds Evolution.",
       },
       cross: {
-        title: "Cross-Platform",
-        text: "Seamless gameplay on PC, Console, iOS, and Android.",
+        title: "Every Platform",
+        text: "Mobile, PC, console and VR, on Unity and Unreal.",
       },
       scalable: {
-        title: "Scalable Architecture",
-        text: "Robust backends built for millions of players.",
+        title: "Our Own Tools",
+        text: "We build and open-source the tools we use, like UI Framework for Unity.",
       },
       player: {
-        title: "Player-Centric",
-        text: "Design philosophies that prioritize user engagement.",
+        title: "Based in the Gulf",
+        text: "From Riyadh, we work with companies in Saudi Arabia, the UAE, Kuwait and Qatar.",
       },
       qa: {
-        title: "Quality Assurance",
-        text: "Rigorous testing for bug-free releases.",
+        title: "Tested at Every Milestone",
+        text: "Testing is part of each milestone, not left to the end.",
       },
       reach: {
-        title: "International Reach",
-        text: "Experience working with global studios and teams.",
+        title: "Arabic and English",
+        text: "We work with your team in Arabic or English, with engineering in Riyadh and Cologne.",
       },
     },
   },
@@ -174,7 +187,7 @@ const en = {
     mohamedRole: "Founder & Tech Director",
     mohamedLocation: "Cologne, Germany",
     p1:
-      "With over 14 years of experience in the game development industry, I specialize in crafting immersive gameplay mechanics and building scalable systems in Unity3D.",
+      "With over 15 years in the game industry, including work on XCOM and Angry Birds Evolution, I specialize in gameplay systems and scalable architecture in Unity.",
     p2:
       "Dawaniyah Games represents the culmination of this journey, a studio dedicated to pushing the boundaries of what's possible in interactive entertainment, focusing on innovation, quality, and performance.",
     ahmedName: "Ahmed Naguib",
@@ -275,18 +288,18 @@ const en = {
     viewCv: "View Full CV",
   },
   contact: {
-    headingTop: "LET'S BUILD",
-    headingBottom: "SOMETHING EPIC",
+    headingTop: "HAVE A GAME",
+    headingBottom: "TO BUILD?",
     intro:
-      "Have a game idea? Need help scaling your current project? Reach out to us and let's turn your vision into reality.",
+      "Tell us about your project. We work with companies and founders across Saudi Arabia, the UAE, Kuwait and Qatar, in Arabic or English.",
     emailUs: "Email Us",
     linkedIn: "LinkedIn",
     followUs: "Follow Us",
     github: "GitHub",
     viewRepos: "View Repositories",
-      phoneKSA: "+966 0551194463",
+      phoneKSA: "+966 55 119 4463",
       phoneLabelKSA: "Call Us (KSA)",
-      phoneDE: "+49 15229018095",
+      phoneDE: "+49 1522 9018095",
       phoneLabelDE: "Call Us (Germany)",
       form: {
       name: "Name",
@@ -315,8 +328,8 @@ const en = {
     },
   },
   map: {
-    heading: "GLOBAL REACH",
-    subheading: "Creating world-class gaming experiences from Riyadh and Cologne",
+    heading: "WHERE WE WORK",
+    subheading: "Serving Saudi Arabia, the UAE, Kuwait and Qatar from Riyadh, with engineering in Cologne.",
     riyadh: "Riyadh, KSA",
     cologne: "Cologne, Germany",
     locationsLine: "Riyadh, KSA • Cologne, Germany",
@@ -324,32 +337,32 @@ const en = {
   faq: {
     heading: "FAQ",
     subheading:
-      "Quick answers for teams looking for a game developer or game studio in Saudi Arabia (KSA), including Riyadh, and beyond.",
+      "Quick answers for companies looking for a game development studio in Saudi Arabia and the Gulf.",
     items: {
       q1: {
-        question: "Are you a game studio in Saudi Arabia (KSA)?",
+        question: "Are you a game development studio in Saudi Arabia?",
         answer:
-          "Yes, we are one of the leading game development studios in Saudi Arabia, offering professional Game Development services from Riyadh with international experience extending to Europe.",
+          "Yes. Dawaniyah Games is a game development studio based in Riyadh, with an engineering team in Cologne, Germany. We work with clients across Saudi Arabia, the UAE, Kuwait and Qatar.",
       },
       q2: {
         question: "Can I hire you as a game developer in Riyadh?",
         answer:
-          "Yes, you can hire us as a game developer in Riyadh to execute your full project, from concept to launch.",
+          "Yes. You can hire us for a full project, from concept to launch, or to strengthen your team with engineering, UI/UX, art or optimization.",
       },
       q3: {
         question: "What engines and tech do you use?",
         answer:
-          "We rely on the latest game development technologies, with strong expertise in Unity and Unreal Engine to ensure the best performance and quality.",
+          "We build on Unity and Unreal Engine, and maintain our own open-source Unity tools, such as UI Framework for Unity.",
       },
       q4: {
         question: "What types of games do you build?",
         answer:
-          "We build a wide variety of games including mobile games (Android & iOS), multiplayer experiences, 3D games, as well as educational and entertainment titles.",
+          "Mobile games (iOS and Android), PC and console games, multiplayer and social games, and 3D games. Our own titles, Dendon Games and Khuzama Games, are social and strategy games for Gulf players.",
       },
       q5: {
-        question: "Do you offer cartoon character design?",
+        question: "Do you provide game art and character design?",
         answer:
-          "Yes, we provide cartoon character design and professional art asset creation to enhance your game's experience and elevate the quality of its worlds.",
+          "Yes. We create characters, 2D and 3D game art and animation in-house, ready for production.",
       },
       q6: {
         question: "How much does game development cost?",
@@ -364,7 +377,7 @@ const en = {
       q8: {
         question: "Can you develop a custom game based on my idea?",
         answer:
-          "Absolutely, we offer tailored game development solutions in Saudi Arabia to turn your idea into a launch-ready game.",
+          "Yes. We build custom games from your idea, for clients in Saudi Arabia and across the Gulf.",
       },
       q9: {
         question: "Do you offer post-launch support?",
@@ -374,13 +387,13 @@ const en = {
       q10: {
         question: "How do you start a project with Dawaniyah Games?",
         answer:
-          "Start your Game Development journey in simple steps: contact our team, share your idea, and we'll develop your game through to launch.",
+          "Contact us with a short description of your idea. We reply with questions and next steps, then agree scope, timeline and cost before work starts.",
       },
     },
   },
   footer: {
     tagline:
-      "Crafting immersive digital experiences with a touch of luxury and innovation.",
+      "Games and tools for developers. Riyadh, Saudi Arabia.",
     rights: "© 2026 Dawaniyah Games. All rights reserved.",
   },
   whatsapp: {

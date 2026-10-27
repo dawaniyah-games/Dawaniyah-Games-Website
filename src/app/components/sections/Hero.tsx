@@ -124,7 +124,7 @@ export function Hero() {
         >
           <h1 className="text-[2.35rem] md:text-[3.55rem] lg:text-[4.1rem] font-bold font-['Josefin_Sans'] leading-tight mb-8 -mt-2">
             <span className="sr-only">
-              Dawaniyah Games Studio (دَوَانِيَّة الألعاب) (game studio and game developer in Riyadh, Saudi Arabia (KSA)).
+              Dawaniyah Games (دوانية الألعاب): game development studio in Riyadh, Saudi Arabia, serving the UAE, Kuwait and Qatar.
             </span>
             <span className="block text-white mb-2 text-[0.95em]">{t('hero.titleTop')}</span>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#D4AF37] via-[#F4E3B2] to-[#DC00D3] animate-gradient-x text-[0.75em] leading-normal pt-2">
@@ -158,8 +158,8 @@ export function Hero() {
             size="lg"
             className="bg-[#D4AF37] text-[#100425] hover:bg-[#C5A059] border-none font-bold px-8 py-6 text-lg"
             onClick={() => {
-              preloadSection('services');
-              document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              preloadSection('contact');
+              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
           >
             {t('hero.ctaServices')}
@@ -169,8 +169,8 @@ export function Hero() {
             size="lg"
             className="border-[#DC00D3] text-[#DC00D3] hover:bg-[#DC00D3] hover:text-white font-bold px-8 py-6 text-lg"
             onClick={() => {
-              preloadSection('portfolio');
-              document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              preloadSection('tools');
+              document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
           >
             {t('hero.ctaPortfolio')}
