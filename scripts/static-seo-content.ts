@@ -19,7 +19,7 @@ const UI_FRAMEWORK_COPY = {
   en: {
     heading: 'UI Framework for Unity (free and open source)',
     text:
-      'Our open-source Unity UI framework: a screen and popup manager for UGUI built on Addressable scenes and a state stack, with animated transitions and an editor that generates scripts, scenes and config. Unity 2022.3 to Unity 6, MIT license.',
+      'Our free, open-source UI framework for Unity: smooth, organized game UI, AI-ready. Build Unity game UI from Addressable scenes on a state stack, with shared elements, built-in animations and an editor that generates the scripts, scenes and config for you. Unity 2022.3 to Unity 6, MIT license.',
     docs: 'Read the UI Framework docs',
     github: 'UI Framework on GitHub',
     langLink: 'العربية',
@@ -27,7 +27,7 @@ const UI_FRAMEWORK_COPY = {
   ar: {
     heading: 'UI Framework لمحرك Unity (مجاني ومفتوح المصدر)',
     text:
-      'إطار عمل واجهات مستخدم مفتوح المصدر لمحرك Unity: مدير شاشات ونوافذ منبثقة لـ UGUI مبني على مشاهد Addressables وكومة حالات، مع انتقالات متحركة ومحرر يولّد السكربتات والمشاهد والإعدادات. يدعم Unity 2022.3 حتى Unity 6 برخصة MIT.',
+      'إطار عمل واجهات مجاني ومفتوح المصدر لمحرك Unity: واجهات ألعاب سلسة ومنظمة، وجاهزة للعمل مع الذكاء الاصطناعي. ابنِ واجهات لعبتك من مشاهد Addressables على كومة حالات، مع عناصر مشتركة وحركات جاهزة ومحرر يولّد السكربتات والمشاهد والإعدادات. يدعم Unity 2022.3 حتى Unity 6 برخصة MIT.',
     docs: 'توثيق UI Framework',
     github: 'UI Framework على GitHub',
     langLink: 'English',

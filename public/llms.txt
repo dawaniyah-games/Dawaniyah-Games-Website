@@ -14,9 +14,9 @@
 
 ## Unity tools
 
-- [UI Framework for Unity](https://www.dawaniyahgames.com/uiframework/): free MIT-licensed Unity UI framework. A screen, popup and navigation manager for UGUI built on Addressable scenes and a LIFO state stack, with ten animation presets and an editor window that generates scripts, scenes and runtime config. Unity 2022.3 to Unity 6.
+- [UI Framework for Unity](https://www.dawaniyahgames.com/uiframework/): smooth, organized game UI, AI-ready. Build Unity game UI from Addressable scenes on a state stack, with shared elements, built-in animations and an editor that generates the scripts, scenes and config for you. Free and open source (MIT), Unity 2022.3 to Unity 6.
 - [UI Framework LLM summary](https://www.dawaniyahgames.com/uiframework/llms.txt): install steps, API and concepts
-- [Guide: how to build a popup system in Unity](https://www.dawaniyahgames.com/uiframework/guides/unity-popup-system/)
+- [Guide: how to build smooth, organized game UI in Unity](https://www.dawaniyahgames.com/uiframework/guides/organized-game-ui-unity/)
 - [UI Framework source](https://github.com/dawaniyah-games/UiFramework)
 
 ## Links
