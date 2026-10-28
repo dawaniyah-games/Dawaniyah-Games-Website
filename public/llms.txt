@@ -16,6 +16,7 @@
 
 - [UI Framework for Unity](https://www.dawaniyahgames.com/uiframework/): free MIT-licensed Unity UI framework. A screen, popup and navigation manager for UGUI built on Addressable scenes and a LIFO state stack, with ten animation presets and an editor window that generates scripts, scenes and runtime config. Unity 2022.3 to Unity 6.
 - [UI Framework LLM summary](https://www.dawaniyahgames.com/uiframework/llms.txt): install steps, API and concepts
+- [Guide: how to build a popup system in Unity](https://www.dawaniyahgames.com/uiframework/guides/unity-popup-system/)
 - [UI Framework source](https://github.com/dawaniyah-games/UiFramework)
 
 ## Links

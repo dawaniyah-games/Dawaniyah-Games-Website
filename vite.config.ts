@@ -81,13 +81,19 @@ function buildSeoFilesPlugin(env: Record<string, string>): Plugin {
 
       // UI Framework docs sub-pages, one folder per tab (written by scripts/split-uiframework-docs.mjs).
       const docsDir = path.join(outDir, 'uiframework');
-      const docsPageLocs = fs.existsSync(docsDir)
-        ? fs
-            .readdirSync(docsDir, { withFileTypes: true })
-            .filter((d) => d.isDirectory() && fs.existsSync(path.join(docsDir, d.name, 'index.html')))
-            .map((d) => new URL(`${d.name}/`, docsLoc).toString())
-            .sort()
-        : [];
+      // Every folder under /uiframework/ with an index.html: docs tabs and guides (e.g. guides/unity-popup-system/).
+      const docsPageLocs: string[] = [];
+      const walkDocs = (dir: string, rel: string) => {
+        if (!fs.existsSync(dir)) return;
+        for (const d of fs.readdirSync(dir, { withFileTypes: true })) {
+          if (!d.isDirectory() || d.name === 'images') continue;
+          const childRel = `${rel}${d.name}/`;
+          if (fs.existsSync(path.join(dir, d.name, 'index.html'))) docsPageLocs.push(new URL(childRel, docsLoc).toString());
+          walkDocs(path.join(dir, d.name), childRel);
+        }
+      };
+      walkDocs(docsDir, '');
+      docsPageLocs.sort();
 
       const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">

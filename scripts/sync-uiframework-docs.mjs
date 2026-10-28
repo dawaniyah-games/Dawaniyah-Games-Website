@@ -66,6 +66,14 @@ if (fs.existsSync(llmsTxt)) {
   fs.copyFileSync(llmsTxt, path.join(targetDir, 'llms.txt'));
 }
 
+// Guides live in this repo (uiframework-guides/) and are served under /uiframework/guides/.
+const guidesDir = path.join(root, 'uiframework-guides');
+let guideCount = 0;
+if (fs.existsSync(guidesDir)) {
+  fs.cpSync(guidesDir, path.join(targetDir, 'guides'), { recursive: true });
+  guideCount = fs.readdirSync(guidesDir, { withFileTypes: true }).filter((d) => d.isDirectory()).length;
+}
+
 const imagesDir = path.join(sourceDir, 'images');
 let imageCount = 0;
 if (fs.existsSync(imagesDir)) {
@@ -77,4 +85,4 @@ if (fs.existsSync(imagesDir)) {
 }
 
 console.log(`Synced UI Framework docs from ${sourceDir}`);
-console.log(`  -> public/uiframework/: ${pages.length} pages (${pages.map((p) => p.slug || 'overview').join(', ')}) + ${imageCount} images`);
+console.log(`  -> public/uiframework/: ${guideCount} guides, ${pages.length} pages (${pages.map((p) => p.slug || 'overview').join(', ')}) + ${imageCount} images`);

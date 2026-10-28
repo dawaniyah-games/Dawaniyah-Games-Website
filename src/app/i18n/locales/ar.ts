@@ -109,6 +109,7 @@ const ar = {
       tags: ["مجاني ومفتوح المصدر", "رخصة MIT", "Unity 2022.3+", "UGUI + Addressables"],
       docs: "اقرأ التوثيق",
       github: "عرض على GitHub",
+      guide: "دليل: كيف تبني نظام نوافذ منبثقة في Unity ←",
     },
   },
   why: {

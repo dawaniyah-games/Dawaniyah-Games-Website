@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Build a Popup System in Unity (Without SetActive) | UI Framework</title>
+<meta name="description" content="Build a Unity popup system with a state stack: open popups on top of any screen, pass them data, close them with one call, and handle Back. Step by step, with code, using free UI Framework for Unity.">
+<link rel="canonical" href="https://www.dawaniyahgames.com/uiframework/guides/unity-popup-system/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Dawaniyah Games">
+<meta property="og:title" content="How to Build a Popup System in Unity (Without SetActive)">
+<meta property="og:description" content="Open popups on top of any screen, pass them data, close them with one call, and handle Back. Step by step, with code.">
+<meta property="og:url" content="https://www.dawaniyahgames.com/uiframework/guides/unity-popup-system/">
+<meta property="og:image" content="https://www.dawaniyahgames.com/uiframework/images/showcase-reward.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Build a Popup System in Unity (Without SetActive)">
+<meta name="twitter:description" content="Open popups on top of any screen, pass them data, close them with one call, and handle Back.">
+<meta name="twitter:image" content="https://www.dawaniyahgames.com/uiframework/images/showcase-reward.png">
+<link rel="icon" type="image/svg+xml" href="../../images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "TechArticle",
+ "headline": "How to Build a Popup System in Unity (Without SetActive)",
+ "description": "Build a Unity popup system with a state stack: open popups on top of any screen, pass them data, close them with one call, and handle Back.",
+ "url": "https://www.dawaniyahgames.com/uiframework/guides/unity-popup-system/",
+ "image": "https://www.dawaniyahgames.com/uiframework/images/showcase-reward.png",
+ "datePublished": "2026-10-28",
+ "dateModified": "2026-10-28",
+ "proficiencyLevel": "Beginner",
+ "dependencies": "Unity 2022.3+, Addressables, UI Framework for Unity",
+ "author": {"@type": "Person", "name": "Mohamed Moghazi", "url": "https://www.linkedin.com/in/mohamed-moghazi-9a729554/"},
+ "publisher": {"@type": "Organization", "name": "Dawaniyah Games", "url": "https://www.dawaniyahgames.com/", "logo": {"@type": "ImageObject", "url": "https://www.dawaniyahgames.com/logo-icon.png"}},
+ "about": {"@type": "SoftwareApplication", "name": "UI Framework for Unity", "url": "https://www.dawaniyahgames.com/uiframework/"}
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {"@type": "ListItem", "position": 1, "name": "Dawaniyah Games", "item": "https://www.dawaniyahgames.com/"},
+  {"@type": "ListItem", "position": 2, "name": "UI Framework for Unity", "item": "https://www.dawaniyahgames.com/uiframework/"},
+  {"@type": "ListItem", "position": 3, "name": "Guides", "item": "https://www.dawaniyahgames.com/uiframework/guides/"},
+  {"@type": "ListItem", "position": 4, "name": "Popup system in Unity", "item": "https://www.dawaniyahgames.com/uiframework/guides/unity-popup-system/"}
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {"@type": "Question", "name": "How do I show a popup on top of the current screen in Unity?", "acceptedAnswer": {"@type": "Answer", "text": "Make the popup its own UI state and show it additively: await UiManager.ShowState<MyPopupUiState>(data, additive: true). The screen below stays loaded and visible, and UiManager.HideUI() removes only the popup."}},
+  {"@type": "Question", "name": "How do I pass data to a Unity popup?", "acceptedAnswer": {"@type": "Answer", "text": "Pass an object as the context of ShowState. The popup element reads it in Populate(object context), for example ConfirmPurchaseUiElementParams data = context as ConfirmPurchaseUiElementParams."}},
+  {"@type": "Question", "name": "How do I close a popup with the Android Back button?", "acceptedAnswer": {"@type": "Answer", "text": "Check that the popup is on top with UiManager.IsLastSceneActive<MyPopupUiState>(), then call UiManager.HideUI()."}},
+  {"@type": "Question", "name": "Can I open a popup on top of another popup?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Each additive state is pushed on the stack, and each HideUI() call closes the top one, so popups close in the reverse order they opened."}}
+ ]
+}
+</script>
+<style>
+:root {
+    --bg: #f6f7fb; --surface: #ffffff; --border: #dde1ec; --heading: #0f1222; --text: #23283f;
+    --muted: #4a5170; --primary: #5b3df5; --primary-soft: #efebff; --link: #4a2ee0; --code-bg: #12142a;
+    --ok: #0f8a5f; --warn: #8a5a00;
+}
+@media (prefers-color-scheme: dark) {
+    :root { --bg: #0d0f1f; --surface: #15182e; --border: #262a4d; --heading: #f3f4ff; --text: #d6d9f0;
+            --muted: #a3a8c7; --primary: #8b74ff; --primary-soft: #221c4a; --link: #a996ff; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.7 Inter, system-ui, sans-serif; }
+a { color: var(--link); }
+header.site { position: sticky; top: 0; z-index: 5; background: var(--surface); border-bottom: 1px solid var(--border); }
+header.site .in { max-width: 860px; margin: 0 auto; padding: 12px 20px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+header.site .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--heading); text-decoration: none; }
+header.site .brand img { width: 26px; height: 26px; }
+header.site nav { display: flex; gap: 16px; flex-wrap: wrap; font-size: 15px; }
+header.site nav a { color: var(--muted); text-decoration: none; }
+header.site nav a:hover { color: var(--heading); }
+main { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+.crumbs { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+.crumbs a { color: var(--muted); }
+h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.15; color: var(--heading); margin: 0 0 12px; letter-spacing: -0.02em; }
+h2 { font-size: 26px; color: var(--heading); margin: 44px 0 8px; letter-spacing: -0.01em; }
+h3 { font-size: 19px; color: var(--heading); margin: 28px 0 4px; }
+.meta { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+.answer { background: var(--primary-soft); border-left: 4px solid var(--primary); padding: 16px 20px; border-radius: 8px; margin: 20px 0 8px; }
+.answer p { margin: 0; }
+figure { margin: 24px 0; }
+figure img { width: 100%; max-width: 360px; display: block; margin: 0 auto; border-radius: 16px; border: 1px solid var(--border); }
+figcaption { text-align: center; font-size: 14px; color: var(--muted); margin-top: 8px; }
+pre[class*="language-"] { border-radius: 10px; font-size: 14px; line-height: 1.6; margin: 16px 0; }
+code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.9em; }
+:not(pre) > code { background: var(--primary-soft); padding: 1px 6px; border-radius: 5px; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 15px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { color: var(--heading); }
+ol li, ul li { margin: 6px 0; }
+.cta { margin: 48px 0 0; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }
+.cta h2 { margin-top: 0; }
+.btn { display: inline-block; padding: 10px 18px; border-radius: 8px; background: var(--primary); color: #fff; text-decoration: none; font-weight: 600; margin: 6px 8px 0 0; }
+.btn.ghost { background: transparent; color: var(--link); border: 1px solid var(--border); }
+footer { max-width: 760px; margin: 0 auto; padding: 24px 20px 48px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<header class="site">
+    <div class="in">
+        <a class="brand" href="../../"><img src="../../images/logo.svg" alt="">UI Framework for Unity</a>
+        <nav>
+            <a href="../../">Docs</a>
+            <a href="../../get-started/">Get started</a>
+            <a href="../../tutorial/">Tutorial</a>
+            <a href="../">Guides</a>
+            <a href="https://github.com/dawaniyah-games/UiFramework">GitHub</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="crumbs"><a href="../../">UI Framework</a> / <a href="../">Guides</a></div>
+    <h1>How to Build a Popup System in Unity (Without SetActive)</h1>
+    <div class="meta">By Mohamed Moghazi &middot; Unity 2022.3 to Unity 6 &middot; UGUI &middot; about 8 minutes</div>
+
+    <div class="answer">
+        <p><strong>Short answer:</strong> treat every popup as a <em>state</em> on a stack. Showing a popup pushes it on top of the current screen; closing it pops it off. With the free <a href="../../">UI Framework for Unity</a> that is two calls: <code>await UiManager.ShowState&lt;MyPopupUiState&gt;(data, additive: true)</code> to open and <code>await UiManager.HideUI()</code> to close.</p>
+    </div>
+
+    <p>This guide builds a <strong>confirm-purchase popup</strong> that opens over a store screen, shows the item and price it is given, closes from its own buttons and from the Android Back button, and can stack with other popups.</p>
+
+    <h2>Why SetActive popups break</h2>
+    <p>The usual first version keeps every popup in the scene and toggles it with <code>SetActive(true)</code>. It works for one popup and decays as the game grows:</p>
+    <ul>
+        <li><strong>Nothing knows the order.</strong> Two popups open, the player presses Back, and the wrong one closes.</li>
+        <li><strong>Sort orders are picked by feel.</strong> A new popup shows behind the store because its canvas order was never set.</li>
+        <li><strong>Data leaks between opens.</strong> The popup still shows the last item because nothing resets it.</li>
+        <li><strong>Everything is loaded at boot.</strong> Every popup sits in memory whether or not it ever opens.</li>
+    </ul>
+    <p>A popup <em>system</em> fixes all four with one idea: a stack of states. The top of the stack is what the player is looking at, Back always means "pop the top", and each popup gets its data handed in when it opens.</p>
+
+    <h2>What a popup system needs</h2>
+    <table>
+        <thead><tr><th>Need</th><th>How a state stack handles it</th></tr></thead>
+        <tbody>
+            <tr><td>Open on top of any screen</td><td>Push the popup state additively; the screen below stays loaded and visible</td></tr>
+            <tr><td>Close the right one</td><td>Pop the top of the stack</td></tr>
+            <tr><td>Pass data</td><td>Hand an object to the popup when it opens</td></tr>
+            <tr><td>Draw above screens</td><td>A higher canvas sorting order on the popup</td></tr>
+            <tr><td>Use memory only when open</td><td>Load the popup on open, unload it on close</td></tr>
+            <tr><td>Animate in and out</td><td>Show and hide animations per popup</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Build it with UI Framework, step by step</h2>
+    <p>If the package isn't installed yet, follow <a href="../../get-started/">Get started</a> first (Package Manager &rarr; Add package from git URL, then create the config). It takes about two minutes.</p>
+
+    <h3>1. Create the popup element</h3>
+    <p>Open <strong>Window &rarr; UI Framework &rarr; UI Setup Manager &rarr; Elements</strong> and create <code>ConfirmPurchaseUiElement</code> with <em>Include Parameters Class</em> ticked. The editor generates the script, a params class and the popup's own scene. Build the popup under <code>Root</code>: a dimmed full-screen backdrop (an Image that blocks clicks) and a panel with the item name, price, and Cancel and Buy buttons.</p>
+    <p>In the element's <strong>Canvas</strong> settings, set the sorting order above your screens, so the popup always draws on top. Pick a show animation such as <code>Scale</code> and a hide animation such as <code>Fade</code>.</p>
+
+    <h3>2. Give it data</h3>
+    <p>The generated params class holds what the popup shows:</p>
+<pre><code class="language-csharp">using UiFramework.Core;
+
+public class ConfirmPurchaseUiElementParams : UiPopulationParams
+{
+    public string ItemName;
+    public int Price;
+}</code></pre>
+    <p>The element reads it in <code>Populate</code>, which runs every time the popup opens. Keep it idempotent: set values, don't append to them.</p>
+<pre><code class="language-csharp">using System;
+using TMPro;
+using UiFramework.Core;
+using UiFramework.Runtime.Manager;
+using UnityEngine;
+
+public class ConfirmPurchaseUiElement : UiElement
+{
+    [SerializeField] private TMP_Text itemNameText;
+    [SerializeField] private TMP_Text priceText;
+
+    public override void Populate(object context = null)
+    {
+        base.Populate(context);
+
+        ConfirmPurchaseUiElementParams data = context as ConfirmPurchaseUiElementParams;
+        if (data == null)
+        {
+            return;
+        }
+
+        itemNameText.text = data.ItemName;
+        priceText.text = data.Price.ToString();
+    }
+
+    // Hook the Cancel button's OnClick to this in the Inspector.
+    public async void OnCancelClicked()
+    {
+        try
+        {
+            await UiManager.HideUI();
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError("[ConfirmPurchase] Close failed: " + exception);
+        }
+    }
+}</code></pre>
+
+    <h3>3. Make it a state</h3>
+    <p>In the <strong>States</strong> tab, create <code>ConfirmPurchaseUiState</code> containing only the popup's scene, then press <strong>Build Runtime UiConfig</strong>. A popup state contains just the popup; the screen it opens over is already on the stack.</p>
+
+    <h3>4. Open it from the store</h3>
+<pre><code class="language-csharp">ConfirmPurchaseUiElementParams purchase = new ConfirmPurchaseUiElementParams();
+purchase.ItemName = "Neon Blade";
+purchase.Price = 250;
+
+// additive: true pushes the popup on top; the store stays loaded and visible.
+await UiManager.ShowState&lt;ConfirmPurchaseUiState&gt;(purchase, additive: true);</code></pre>
+    <p>Without <code>additive: true</code>, <code>ShowState</code> replaces the whole stack, which is what you want for moving between screens, not for popups.</p>
+
+    <h3>5. Close it, including with Back</h3>
+    <p><code>HideUI()</code> pops the top state: it plays the popup's hide animation and unloads its scene, and the store underneath is untouched. For the Android Back button, close only when the popup is actually on top:</p>
+<pre><code class="language-csharp">if (UiManager.IsLastSceneActive&lt;ConfirmPurchaseUiState&gt;())
+{
+    await UiManager.HideUI();
+}</code></pre>
+
+    <h3>6. Stack popups</h3>
+    <p>A popup can open another popup, for example a "Not enough coins" notice from the purchase popup. Each additive state goes on top of the last, and each <code>HideUI()</code> closes the newest one, so they always close in the reverse order they opened.</p>
+
+    <figure>
+        <img src="../../images/showcase-purchase.png" alt="A confirm-purchase bottom sheet open over the store screen in the UI Framework showcase app" loading="lazy" width="360">
+        <figcaption>The confirm-purchase popup in the showcase app, open over the store.</figcaption>
+    </figure>
+
+    <h2>Common mistakes</h2>
+    <ul>
+        <li><strong>The popup replaces the screen instead of covering it.</strong> You left out <code>additive: true</code>.</li>
+        <li><strong>"No UI state key registered".</strong> The state class name must equal the state key exactly, and <em>Build Runtime UiConfig</em> must run after you create the state.</li>
+        <li><strong>The popup shows behind the store.</strong> Raise its canvas sorting order in the element's Canvas settings.</li>
+        <li><strong>Two fast taps open or close the wrong thing.</strong> Calls aren't queued for you. Await each call, or route navigation through one place that queues calls, as the showcase app's <code>ShowcaseNavigator</code> does.</li>
+        <li><strong>Old data flashes on open.</strong> Set every field in <code>Populate</code>, every time.</li>
+    </ul>
+
+    <h2>FAQ</h2>
+    <h3>How do I pass data to a Unity popup?</h3>
+    <p>Pass an object as the context of <code>ShowState</code>. The popup reads it in <code>Populate(object context)</code> with <code>context as YourParams</code>.</p>
+    <h3>Does the screen under the popup keep running?</h3>
+    <p>Yes. An additive state leaves the states below loaded and on screen; the popup's backdrop blocks clicks to them.</p>
+    <h3>Can I override the popup's animation for one call?</h3>
+    <p>Yes: pass a transition, for example <code>transition: UiTransition.ShowWith(TweenPresets.SlideUpKey)</code>, to <code>ShowState</code>, or <code>UiTransition.HideWith(...)</code> to <code>HideUI</code>.</p>
+
+    <section class="cta">
+        <h2>Try it in your project</h2>
+        <p>UI Framework for Unity is free and open source (MIT). It manages screens, popups and navigation for UGUI, with an editor that generates the scripts and scenes for you.</p>
+        <a class="btn" href="../../get-started/">Get started</a>
+        <a class="btn ghost" href="../../tutorial/">Video tutorial</a>
+        <a class="btn ghost" href="https://github.com/dawaniyah-games/UiFramework">GitHub</a>
+    </section>
+</main>
+
+<footer>
+    UI Framework for Unity &middot; by <a href="https://www.dawaniyahgames.com/">Dawaniyah Games</a> &middot; MIT license
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+</body>
+</html>
