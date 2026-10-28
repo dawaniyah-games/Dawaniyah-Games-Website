@@ -117,6 +117,8 @@ export function splitDocs(html, siteUrl) {
         `<a class="tab" role="tab" data-tab="${name}" aria-selected="${name === panel.name}" href="${pagePath(name)}">${label}</a>`,
     );
     out = out.replace('</style>', 'a.tab { text-decoration: none; display: inline-block; }\n</style>');
+    // Guides are separate pages (uiframework-guides/ in the website repo); link them after the last tab.
+    out = out.replace(/(<a class="tab" role="tab" data-tab="faq"[^>]*>[^<]*<\/a>)/, `$1\n            <a class="tab" role="tab" aria-selected="false" href="${docsPath}guides/">Guides</a>`);
 
     // Links to ids in other tabs point at their pages.
     out = out.replace(/href="#([^"]+)"/g, (match, id) => {

@@ -109,6 +109,7 @@ const en = {
       tags: ["Free and open source", "MIT license", "Unity 2022.3+", "UGUI + Addressables"],
       docs: "Read the docs",
       github: "View on GitHub",
+      guide: "Guide: how to build a popup system in Unity →",
     },
   },
   why: {

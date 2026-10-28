@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unity UI Guides: Popups, Screens and Navigation | UI Framework</title>
+<meta name="description" content="Practical Unity UI guides: build a popup system, a screen manager and smooth UI transitions for UGUI, with code, using the free UI Framework for Unity.">
+<link rel="canonical" href="https://www.dawaniyahgames.com/uiframework/guides/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Unity UI Guides | UI Framework for Unity">
+<meta property="og:description" content="Practical Unity UI guides with code: popups, screens and navigation for UGUI.">
+<meta property="og:url" content="https://www.dawaniyahgames.com/uiframework/guides/">
+<meta property="og:image" content="https://www.dawaniyahgames.com/uiframework/images/editor-overview.png">
+<link rel="icon" type="image/svg+xml" href="../images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+ {"@type":"ListItem","position":1,"name":"Dawaniyah Games","item":"https://www.dawaniyahgames.com/"},
+ {"@type":"ListItem","position":2,"name":"UI Framework for Unity","item":"https://www.dawaniyahgames.com/uiframework/"},
+ {"@type":"ListItem","position":3,"name":"Guides","item":"https://www.dawaniyahgames.com/uiframework/guides/"}]}
+</script>
+<style>
+:root {
+    --bg: #f6f7fb; --surface: #ffffff; --border: #dde1ec; --heading: #0f1222; --text: #23283f;
+    --muted: #4a5170; --primary: #5b3df5; --primary-soft: #efebff; --link: #4a2ee0; --code-bg: #12142a;
+    --ok: #0f8a5f; --warn: #8a5a00;
+}
+@media (prefers-color-scheme: dark) {
+    :root { --bg: #0d0f1f; --surface: #15182e; --border: #262a4d; --heading: #f3f4ff; --text: #d6d9f0;
+            --muted: #a3a8c7; --primary: #8b74ff; --primary-soft: #221c4a; --link: #a996ff; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.7 Inter, system-ui, sans-serif; }
+a { color: var(--link); }
+header.site { position: sticky; top: 0; z-index: 5; background: var(--surface); border-bottom: 1px solid var(--border); }
+header.site .in { max-width: 860px; margin: 0 auto; padding: 12px 20px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+header.site .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--heading); text-decoration: none; }
+header.site .brand img { width: 26px; height: 26px; }
+header.site nav { display: flex; gap: 16px; flex-wrap: wrap; font-size: 15px; }
+header.site nav a { color: var(--muted); text-decoration: none; }
+header.site nav a:hover { color: var(--heading); }
+main { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+.crumbs { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+.crumbs a { color: var(--muted); }
+h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.15; color: var(--heading); margin: 0 0 12px; letter-spacing: -0.02em; }
+h2 { font-size: 26px; color: var(--heading); margin: 44px 0 8px; letter-spacing: -0.01em; }
+h3 { font-size: 19px; color: var(--heading); margin: 28px 0 4px; }
+.meta { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+.answer { background: var(--primary-soft); border-left: 4px solid var(--primary); padding: 16px 20px; border-radius: 8px; margin: 20px 0 8px; }
+.answer p { margin: 0; }
+figure { margin: 24px 0; }
+figure img { width: 100%; max-width: 360px; display: block; margin: 0 auto; border-radius: 16px; border: 1px solid var(--border); }
+figcaption { text-align: center; font-size: 14px; color: var(--muted); margin-top: 8px; }
+pre[class*="language-"] { border-radius: 10px; font-size: 14px; line-height: 1.6; margin: 16px 0; }
+code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.9em; }
+:not(pre) > code { background: var(--primary-soft); padding: 1px 6px; border-radius: 5px; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 15px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { color: var(--heading); }
+ol li, ul li { margin: 6px 0; }
+.cta { margin: 48px 0 0; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }
+.cta h2 { margin-top: 0; }
+.btn { display: inline-block; padding: 10px 18px; border-radius: 8px; background: var(--primary); color: #fff; text-decoration: none; font-weight: 600; margin: 6px 8px 0 0; }
+.btn.ghost { background: transparent; color: var(--link); border: 1px solid var(--border); }
+footer { max-width: 760px; margin: 0 auto; padding: 24px 20px 48px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--border); }
+</style>
+<style>.guide { display:block; padding:20px 22px; background:var(--surface); border:1px solid var(--border); border-radius:14px; text-decoration:none; color:var(--text); margin:16px 0; }
+.guide:hover { border-color: var(--primary); } .guide h2 { margin:0 0 6px; font-size:22px; } .guide p { margin:0; color:var(--muted); }</style>
+</head>
+<body>
+<header class="site">
+    <div class="in">
+        <a class="brand" href="../"><img src="../images/logo.svg" alt="">UI Framework for Unity</a>
+        <nav>
+            <a href="../">Docs</a>
+            <a href="../get-started/">Get started</a>
+            <a href="../tutorial/">Tutorial</a>
+            <a href="./">Guides</a>
+            <a href="https://github.com/dawaniyah-games/UiFramework">GitHub</a>
+        </nav>
+    </div>
+</header>
+<main>
+    <div class="crumbs"><a href="../">UI Framework</a> / Guides</div>
+    <h1>Unity UI guides</h1>
+    <p>Practical guides for building game UI in Unity with UGUI: one problem each, with working code you can drop into your project.</p>
+    <a class="guide" href="unity-popup-system/">
+        <h2>How to build a popup system in Unity (without SetActive)</h2>
+        <p>Open popups on top of any screen, pass them data, close them with one call, and handle the Back button.</p>
+    </a>
+</main>
+<footer>UI Framework for Unity &middot; by <a href="https://www.dawaniyahgames.com/">Dawaniyah Games</a> &middot; MIT license</footer>
+</body>
+</html>

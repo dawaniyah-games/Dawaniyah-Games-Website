@@ -89,6 +89,11 @@ export function Tools() {
                 <Github size={18} /> {t('toolsSection.uiframework.github')}
               </a>
             </div>
+            <p className="mt-6 text-sm text-gray-400">
+              <a href={`${docsUrl}guides/unity-popup-system/`} className="text-[#D4AF37] hover:underline">
+                {t('toolsSection.uiframework.guide')}
+              </a>
+            </p>
           </motion.div>
         </div>
       </div>
