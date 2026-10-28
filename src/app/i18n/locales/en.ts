@@ -105,11 +105,11 @@ const en = {
     uiframework: {
       title: "UI Framework for Unity",
       description:
-        "A free, open-source screen and popup manager for UGUI, built on Addressable scenes and a state stack. Animated transitions, editor tooling that generates scripts and scenes, and Unity 2022.3 to Unity 6 support.",
+        "Smooth, organized game UI, AI-ready. Build Unity game UI from Addressable scenes on a state stack, with shared elements, built-in animations and an editor that generates the scripts, scenes and config for you. Free and open source, Unity 2022.3 to Unity 6.",
       tags: ["Free and open source", "MIT license", "Unity 2022.3+", "UGUI + Addressables"],
       docs: "Read the docs",
       github: "View on GitHub",
-      guide: "Guide: how to build a popup system in Unity →",
+      guide: "Guide: how to build smooth, organized game UI in Unity →",
     },
   },
   why: {

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Build Smooth, Organized Game UI in Unity with a UI Framework</title>
+<meta name="description" content="Give every Unity screen the same shape: its own Addressable scene, its own script, its own place in a state stack. A step-by-step guide with code, using the free UI Framework for Unity. AI-ready by design.">
+<link rel="canonical" href="https://www.dawaniyahgames.com/uiframework/guides/organized-game-ui-unity/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Dawaniyah Games">
+<meta property="og:title" content="How to Build Smooth, Organized Game UI in Unity with a UI Framework">
+<meta property="og:description" content="Give every Unity screen the same shape: its own Addressable scene, its own script, its own place in a state stack. Step by step, with code.">
+<meta property="og:url" content="https://www.dawaniyahgames.com/uiframework/guides/organized-game-ui-unity/">
+<meta property="og:image" content="https://www.dawaniyahgames.com/uiframework/images/editor-overview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Build Smooth, Organized Game UI in Unity with a UI Framework">
+<meta name="twitter:description" content="Every screen gets its own Addressable scene, its own script and its own place in a state stack. Step by step, with code.">
+<meta name="twitter:image" content="https://www.dawaniyahgames.com/uiframework/images/editor-overview.png">
+<link rel="icon" type="image/svg+xml" href="../../images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "TechArticle",
+ "headline": "How to Build Smooth, Organized Game UI in Unity with a UI Framework",
+ "description": "Give every Unity screen the same shape: its own Addressable scene, its own script, its own place in a state stack. A step-by-step guide with code, using the free UI Framework for Unity.",
+ "url": "https://www.dawaniyahgames.com/uiframework/guides/organized-game-ui-unity/",
+ "image": "https://www.dawaniyahgames.com/uiframework/images/editor-overview.png",
+ "datePublished": "2026-10-28",
+ "dateModified": "2026-10-28",
+ "proficiencyLevel": "Beginner",
+ "dependencies": "Unity 2022.3+, Addressables, UI Framework for Unity",
+ "author": {"@type": "Person", "name": "Mohamed Moghazi", "url": "https://www.linkedin.com/in/mohamed-moghazi-9a729554/"},
+ "publisher": {"@type": "Organization", "name": "Dawaniyah Games", "url": "https://www.dawaniyahgames.com/", "logo": {"@type": "ImageObject", "url": "https://www.dawaniyahgames.com/logo-icon.png"}},
+ "about": {"@type": "SoftwareApplication", "name": "UI Framework for Unity", "url": "https://www.dawaniyahgames.com/uiframework/"}
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {"@type": "ListItem", "position": 1, "name": "Dawaniyah Games", "item": "https://www.dawaniyahgames.com/"},
+  {"@type": "ListItem", "position": 2, "name": "UI Framework for Unity", "item": "https://www.dawaniyahgames.com/uiframework/"},
+  {"@type": "ListItem", "position": 3, "name": "Guides", "item": "https://www.dawaniyahgames.com/uiframework/guides/"},
+  {"@type": "ListItem", "position": 4, "name": "Organized game UI in Unity", "item": "https://www.dawaniyahgames.com/uiframework/guides/organized-game-ui-unity/"}
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {"@type": "Question", "name": "What is UI Framework for Unity?", "acceptedAnswer": {"@type": "Answer", "text": "A free, open-source (MIT) framework for building Unity game UI from Addressable scenes on a state stack, with shared elements, built-in animations and an editor that generates the scripts, scenes and config for you. It works with UGUI on Unity 2022.3 to Unity 6."}},
+  {"@type": "Question", "name": "Why is it AI-ready?", "acceptedAnswer": {"@type": "Answer", "text": "Every screen has the same shape: its own Addressable scene, its own script and its own place in the state stack. Code written by AI tools always has a clear place to go, so the project stays easy to follow as it grows."}},
+  {"@type": "Question", "name": "Can several people add screens at the same time?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Each state is its own asset and each element its own scene and script, so parallel branches add different files and merge cleanly. The shared runtime config is generated, not merged by hand."}},
+  {"@type": "Question", "name": "Does it work with TextMeshPro and my own components?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The framework only cares about the scene's shape; anything UGUI can draw works inside it."}}
+ ]
+}
+</script>
+<style>
+:root {
+    --bg: #f6f7fb; --surface: #ffffff; --border: #dde1ec; --heading: #0f1222; --text: #23283f;
+    --muted: #4a5170; --primary: #5b3df5; --primary-soft: #efebff; --link: #4a2ee0;
+}
+@media (prefers-color-scheme: dark) {
+    :root { --bg: #0d0f1f; --surface: #15182e; --border: #262a4d; --heading: #f3f4ff; --text: #d6d9f0;
+            --muted: #a3a8c7; --primary: #8b74ff; --primary-soft: #221c4a; --link: #a996ff; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.7 Inter, system-ui, sans-serif; }
+a { color: var(--link); }
+header.site { position: sticky; top: 0; z-index: 5; background: var(--surface); border-bottom: 1px solid var(--border); }
+header.site .in { max-width: 860px; margin: 0 auto; padding: 12px 20px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+header.site .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--heading); text-decoration: none; }
+header.site .brand img { width: 26px; height: 26px; }
+header.site nav { display: flex; gap: 16px; flex-wrap: wrap; font-size: 15px; }
+header.site nav a { color: var(--muted); text-decoration: none; }
+header.site nav a:hover { color: var(--heading); }
+main { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+.crumbs { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+.crumbs a { color: var(--muted); }
+h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.15; color: var(--heading); margin: 0 0 12px; letter-spacing: -0.02em; }
+h2 { font-size: 26px; color: var(--heading); margin: 44px 0 8px; letter-spacing: -0.01em; }
+h3 { font-size: 19px; color: var(--heading); margin: 28px 0 4px; }
+.meta { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+.answer { background: var(--primary-soft); border-left: 4px solid var(--primary); padding: 16px 20px; border-radius: 8px; margin: 20px 0 8px; }
+.answer p { margin: 0; }
+figure { margin: 24px 0; }
+figure img { width: 100%; display: block; border-radius: 12px; border: 1px solid var(--border); }
+figcaption { text-align: center; font-size: 14px; color: var(--muted); margin-top: 8px; }
+pre[class*="language-"] { border-radius: 10px; font-size: 14px; line-height: 1.6; margin: 16px 0; }
+code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.9em; }
+:not(pre) > code { background: var(--primary-soft); padding: 1px 6px; border-radius: 5px; overflow-wrap: anywhere; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 15px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { color: var(--heading); }
+ol li, ul li { margin: 6px 0; }
+.cta { margin: 48px 0 0; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }
+.cta h2 { margin-top: 0; }
+.btn { display: inline-block; padding: 10px 18px; border-radius: 8px; background: var(--primary); color: #fff; text-decoration: none; font-weight: 600; margin: 6px 8px 0 0; }
+.btn.ghost { background: transparent; color: var(--link); border: 1px solid var(--border); }
+footer { max-width: 760px; margin: 0 auto; padding: 24px 20px 48px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<header class="site">
+    <div class="in">
+        <a class="brand" href="../../"><img src="../../images/logo.svg" alt="">UI Framework for Unity</a>
+        <nav>
+            <a href="../../">Docs</a>
+            <a href="../../get-started/">Get started</a>
+            <a href="../../tutorial/">Tutorial</a>
+            <a href="../">Guides</a>
+            <a href="https://github.com/dawaniyah-games/UiFramework">GitHub</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="crumbs"><a href="../../">UI Framework</a> / <a href="../">Guides</a></div>
+    <h1>How to Build Smooth, Organized Game UI in Unity with a UI Framework</h1>
+    <div class="meta">By Mohamed Moghazi &middot; Unity 2022.3 to Unity 6 &middot; UGUI &middot; about 8 minutes</div>
+
+    <div class="answer">
+        <p><strong>Short answer:</strong> give every screen the same shape. Each UI element gets its own Addressable scene and its own script, and every screen is a state on a stack. The free <a href="../../">UI Framework for Unity</a> builds that structure for you: an editor window generates the scripts, scenes and config, and one call, <code>await UiManager.ShowState&lt;T&gt;()</code>, shows any screen.</p>
+    </div>
+
+    <figure>
+        <img src="../../images/editor-overview.png" alt="The Unity editor in Play mode: UI element scenes loaded additively in the Hierarchy, the showcase app in the Game view and the UI Setup Manager window" loading="lazy" width="1600" height="900">
+        <figcaption>Each UI element is its own scene, loaded additively, with the UI Setup Manager docked on the right.</figcaption>
+    </figure>
+
+    <h2>Why game UI turns into a tangle</h2>
+    <p>Almost every Unity project starts its UI the same way, and hits the same wall a few months in:</p>
+    <ul>
+        <li><strong>One giant UI scene.</strong> Every screen lives in one scene or prefab, loads at boot, and two people can't edit it at the same time without a merge conflict.</li>
+        <li><strong>SetActive spaghetti.</strong> Screens switch each other on and off by hand; a canvas never closes and Back goes to the wrong place.</li>
+        <li><strong>A new screen manager for every game.</strong> Each project rewrites its own, and only the person who wrote it knows how it works.</li>
+        <li><strong>Managers and singletons everywhere.</strong> Every screen reaches into <code>UIManager.Instance</code> and friends, so start-up order matters and one null breaks a screen.</li>
+        <li><strong>Motion as an afterthought.</strong> Screens pop in, flash an empty frame, or animate differently on every screen.</li>
+    </ul>
+    <p>With AI coding tools the tangle grows faster: they write a lot of code quickly, and without a structure it piles up in places nobody can track.</p>
+
+    <h2>The structure that keeps UI organized</h2>
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th></th><th>Without a framework</th><th>With UI Framework</th></tr></thead>
+        <tbody>
+            <tr><td>A new screen</td><td>Build a prefab, wire references, register it by hand</td><td>The editor creates the script and the scene and registers them</td></tr>
+            <tr><td>Navigation</td><td><code>SetActive</code> calls spread through the code</td><td><code>await UiManager.ShowState&lt;StoreUiState&gt;()</code></td></tr>
+            <tr><td>Popups</td><td>Sort-order fights and hand-written close logic</td><td>Pushed on top with <code>additive: true</code>, closed with <code>HideUI()</code></td></tr>
+            <tr><td>Shared bars</td><td>Copied into every screen, or reloaded with a flicker</td><td>Stay loaded and on screen while screens change</td></tr>
+            <tr><td>Memory</td><td>Every screen loaded at boot</td><td>Scenes load on demand and unload when unused</td></tr>
+            <tr><td>Data</td><td>Screens reach into singletons</td><td>Passed in through <code>Populate</code></td></tr>
+            <tr><td>Teamwork</td><td>One shared config, edited one person at a time</td><td>One file per state, one scene per element: branches merge cleanly</td></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <h2>Build it, step by step</h2>
+
+    <h3>1. Install the package</h3>
+    <p>In Unity, open <strong>Package Manager &rarr; + &rarr; Add package from git URL</strong> and paste:</p>
+<pre><code class="language-none">https://github.com/dawaniyah-games/UiFramework.git?path=Packages/com.dawaniyahgames.uiframework</code></pre>
+    <p>Requirements: Unity 2022.3 or newer; Addressables is installed with it.</p>
+
+    <h3>2. Create a screen</h3>
+    <p>Open <strong>Window &rarr; UI Framework &rarr; UI Setup Manager</strong>. In <strong>General</strong>, create the config. In <strong>Elements</strong>, create <code>MainMenuUiElement</code>: the editor generates its script and its own scene. Build the screen's UI under <code>Root</code> and pick show and hide animations in the list.</p>
+
+    <h3>3. Make it a state</h3>
+    <p>In <strong>States</strong>, create <code>MainMenuUiState</code>, add the element scenes it shows (for example a TopBar, the main menu and a NavBar), then press <strong>Build Runtime UiConfig</strong>.</p>
+
+    <h3>4. Show it from code</h3>
+<pre><code class="language-csharp">using System;
+using UiFramework.Runtime.Manager;
+using UnityEngine;
+
+public class GameBootstrap : MonoBehaviour
+{
+    private async void Start()
+    {
+        try
+        {
+            await UiManager.InitializeAsync();
+            await UiManager.ShowState&lt;MainMenuUiState&gt;();
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError("[Bootstrap] UI failed to start: " + exception);
+        }
+    }
+}</code></pre>
+    <p>To move to another screen, show another state: <code>await UiManager.ShowState&lt;StoreUiState&gt;()</code>. Shared elements such as the TopBar and NavBar stay on screen and don't re-animate.</p>
+
+    <h3>5. Give the screen its data</h3>
+<pre><code class="language-csharp">using UiFramework.Core;
+
+public class MainMenuUiElement : UiElement
+{
+    public override void Populate(object context = null)
+    {
+        base.Populate(context);
+
+        MenuData data = context as MenuData;
+        if (data == null)
+        {
+            return;
+        }
+
+        // Configure the UI from data. May run more than once: keep it idempotent.
+    }
+}</code></pre>
+    <p>Pass the data when you show the state: <code>await UiManager.ShowState&lt;MainMenuUiState&gt;(menuData)</code>. Screens only show what they are given, so game systems and the backend never reach into the UI.</p>
+
+    <h3>6. Put a popup on top</h3>
+<pre><code class="language-csharp">// additive: true pushes the popup on top; the screen below stays loaded.
+await UiManager.ShowState&lt;RewardUiState&gt;(reward, additive: true);
+
+// Later, from the popup's button:
+await UiManager.HideUI();</code></pre>
+
+    <h2>Why this structure is AI-ready</h2>
+    <p>Every screen has the same shape: its own Addressable scene, its own script, its own place in the state stack. When you ask an AI tool for a new screen, the generated code has a clear place to go, and the editor checks every scene against the same contract and fixes drift in one click. The project stays easy to follow as it grows, whether the code was written by your team or by a tool.</p>
+
+    <h2>Common mistakes</h2>
+    <ul>
+        <li><strong>"No UI state key registered".</strong> The state class name must equal the state key exactly.</li>
+        <li><strong>"Failed to locate UiConfig".</strong> Run <em>Build Runtime UiConfig</em>, and make sure Addressables content is built (or play mode uses the Asset Database).</li>
+        <li><strong>Logic in a <code>UiState</code> subclass never runs.</strong> State classes are only type markers; put behaviour in elements.</li>
+        <li><strong>Data duplicated after switching screens.</strong> <code>Populate</code> runs again when a state reuses a shared scene, so make it idempotent.</li>
+    </ul>
+
+    <h2>FAQ</h2>
+    <h3>What is UI Framework for Unity?</h3>
+    <p>A free, open-source (MIT) framework for building Unity game UI from Addressable scenes on a state stack, with shared elements, built-in animations and an editor that generates the scripts, scenes and config for you.</p>
+    <h3>Can several people add screens at the same time?</h3>
+    <p>Yes. Each state is its own asset and each element its own scene and script, so branches add different files and merge cleanly.</p>
+    <h3>Does it work with TextMeshPro and my own components?</h3>
+    <p>Yes. The framework only cares about the scene's shape; anything UGUI can draw works inside it.</p>
+
+    <section class="cta">
+        <h2>Try it in your project</h2>
+        <p>UI Framework for Unity is free and open source. Install it in two minutes and follow the 10-part video tutorial.</p>
+        <a class="btn" href="../../get-started/">Get started</a>
+        <a class="btn ghost" href="../../tutorial/">Video tutorial</a>
+        <a class="btn ghost" href="https://github.com/dawaniyah-games/UiFramework">GitHub</a>
+    </section>
+</main>
+
+<footer>
+    UI Framework for Unity &middot; by <a href="https://www.dawaniyahgames.com/">Dawaniyah Games</a> &middot; MIT license
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+</body>
+</html>

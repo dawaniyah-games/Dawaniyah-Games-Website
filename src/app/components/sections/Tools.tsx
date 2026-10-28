@@ -90,7 +90,7 @@ export function Tools() {
               </a>
             </div>
             <p className="mt-6 text-sm text-gray-400">
-              <a href={`${docsUrl}guides/unity-popup-system/`} className="text-[#D4AF37] hover:underline">
+              <a href={`${docsUrl}guides/organized-game-ui-unity/`} className="text-[#D4AF37] hover:underline">
                 {t('toolsSection.uiframework.guide')}
               </a>
             </p>
