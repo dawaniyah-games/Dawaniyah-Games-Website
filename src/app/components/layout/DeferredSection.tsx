@@ -1,5 +1,5 @@
 import React from 'react';
-import { registerSectionPreloader, unregisterSectionPreloader } from '../../utils/sectionPreload';
+import { onMountAll, registerSectionPreloader, unregisterSectionPreloader } from '../../utils/sectionPreload';
 
 type LazyComponentWithPreload<T extends React.ComponentType<any>> = React.LazyExoticComponent<T> & {
   preload?: () => Promise<unknown>;
@@ -34,6 +34,15 @@ export function DeferredSection<T extends React.ComponentType<any>>({
     registerSectionPreloader(anchorId, preload);
     return () => unregisterSectionPreloader(anchorId, preload);
   }, [anchorId, preload]);
+
+  // A nav link to a section below this one mounts everything at once, so the scroll can land.
+  React.useEffect(() => {
+    if (shouldRender) return;
+    return onMountAll(() => {
+      preload();
+      setShouldRender(true);
+    });
+  }, [preload, shouldRender]);
 
   React.useEffect(() => {
     if (shouldRender) return;

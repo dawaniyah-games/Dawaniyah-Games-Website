@@ -2,31 +2,18 @@ import React, { useEffect } from 'react';
 import { MotionConfig } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { Navbar } from './components/layout/Navbar';
+import { LoadingScreen } from './components/layout/LoadingScreen';
 import { Hero } from './components/sections/Hero';
+// Not deferred: the story's flying card needs the project spots to land in.
+import { Story } from './components/sections/Story';
+import { Tools } from './components/sections/Tools';
+import { Portfolio } from './components/sections/Portfolio';
 import { DeferredSection, lazyWithPreload } from './components/layout/DeferredSection';
 import { Toaster } from './components/ui/sonner';
 import { WhatsAppButton } from './components/ui/WhatsAppButton';
 
-const Services = lazyWithPreload(() =>
-  import('./components/sections/Services').then((m) => ({ default: m.Services })),
-);
-const GameAssets = lazyWithPreload(() =>
-  import('./components/sections/GameAssets').then((m) => ({ default: m.GameAssets })),
-);
-const Portfolio = lazyWithPreload(() =>
-  import('./components/sections/Portfolio').then((m) => ({ default: m.Portfolio })),
-);
-const WhyChooseUs = lazyWithPreload(() =>
-  import('./components/sections/WhyChooseUs').then((m) => ({ default: m.WhyChooseUs })),
-);
-const Tools = lazyWithPreload(() =>
-  import('./components/sections/Tools').then((m) => ({ default: m.Tools })),
-);
 const Technologies = lazyWithPreload(() =>
   import('./components/sections/Technologies').then((m) => ({ default: m.Technologies })),
-);
-const About = lazyWithPreload(() =>
-  import('./components/sections/About').then((m) => ({ default: m.About })),
 );
 const Contact = lazyWithPreload(() =>
   import('./components/sections/Contact').then((m) => ({ default: m.Contact })),
@@ -96,14 +83,7 @@ export default function App() {
   // are ready before the user clicks a nav link (avoids empty-page-on-scroll).
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      Services.preload?.();
-      Portfolio.preload?.();
-      About.preload?.();
       Contact.preload?.();
-      // Load the rest of the page content soon after.
-      GameAssets.preload?.();
-      WhyChooseUs.preload?.();
-      Tools.preload?.();
       Technologies.preload?.();
       FAQ.preload?.();
       Map.preload?.();
@@ -140,16 +120,18 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="bg-[#100425] min-h-screen text-white font-['Inter'] selection:bg-[#DC00D3] selection:text-white overflow-x-hidden">
+      <div className="site bg-night min-h-screen text-white selection:bg-saffron selection:text-night">
+        <LoadingScreen />
         <Navbar />
         <Hero />
-        <DeferredSection anchorId="services" component={Services} rootMargin="1400px 0px" />
-        <DeferredSection anchorId="tools" component={Tools} rootMargin="1500px 0px" />
-        <DeferredSection component={GameAssets} rootMargin="1600px 0px" />
-        <DeferredSection anchorId="portfolio" component={Portfolio} rootMargin="1800px 0px" />
-        <DeferredSection component={WhyChooseUs} rootMargin="2200px 0px" />
+        <Story />
+        <div id="tools">
+          <Tools />
+        </div>
+        <div id="portfolio">
+          <Portfolio />
+        </div>
         <DeferredSection component={Technologies} rootMargin="2600px 0px" />
-        <DeferredSection anchorId="about" component={About} rootMargin="3200px 0px" />
         <DeferredSection anchorId="contact" component={Contact} rootMargin="3400px 0px" />
         <DeferredSection component={FAQ} rootMargin="3600px 0px" />
         <DeferredSection component={Map} rootMargin="3800px 0px" />

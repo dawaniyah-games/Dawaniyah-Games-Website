@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Globe } from "lucide-react";
 import { ensureLanguageResources } from '../../i18n';
 
 import {
@@ -24,17 +23,16 @@ export function LanguageSwitcher() {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="inline-flex h-9 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-4 text-xs font-bold text-gray-200 hover:text-white hover:border-[#D4AF37]/40 transition-colors font-['Josefin_Sans'] uppercase tracking-widest"
+          className="t-nav inline-flex shrink-0 items-center gap-1 text-night hover:text-majlis transition-colors cursor-pointer"
           aria-label={t("common.language")}
         >
           <span>{current.label}</span>
-          <Globe size={16} className="text-[#D4AF37]" />
         </button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
         align="end"
-        className="bg-[#100425] border border-white/10 text-white min-w-[170px]"
+        className="bg-ivory border border-night/10 text-night min-w-[170px]"
       >
         {LANGS.map((lang) => (
           <DropdownMenuItem
@@ -42,10 +40,10 @@ export function LanguageSwitcher() {
             onSelect={() =>
               void ensureLanguageResources(lang.code).then(() => i18n.changeLanguage(lang.code))
             }
-            className="cursor-pointer focus:bg-white/10"
+            className="cursor-pointer focus:bg-night/8"
           >
-            <span className="font-['Josefin_Sans'] font-bold">{lang.label}</span>
-            <span className="ml-auto text-sm text-gray-300 [html[dir='rtl']_&]:mr-auto [html[dir='rtl']_&]:ml-0">{t(lang.nameKey)}</span>
+            <span className="font-semibold">{lang.label}</span>
+            <span className="ml-auto text-sm text-night/70 [html[dir='rtl']_&]:mr-auto [html[dir='rtl']_&]:ml-0">{t(lang.nameKey)}</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
