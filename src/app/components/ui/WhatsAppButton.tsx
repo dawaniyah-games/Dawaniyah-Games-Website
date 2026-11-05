@@ -64,13 +64,14 @@ export function WhatsAppButton({ message }: WhatsAppButtonProps) {
   const positionClass = isRtl ? 'left-6 right-auto' : 'right-6';
 
   return (
-    <div className={`fixed bottom-6 z-50 ${positionClass}`}>
+    <div data-bird-avoid="" className={`fixed bottom-6 z-50 ${positionClass}`}>
       {/* Relative anchor sized to the WA button; the bubble is placed from it */}
       <div className="relative size-12">
 
         {/* Chat bubble — right-aligned with WA button (LTR) / left-aligned (RTL) */}
         <div
           aria-live="polite"
+          data-bird-avoid={showBubble ? '' : undefined}
           className={`
             max-sm:hidden absolute bottom-[calc(100%+12px)] w-max
             ${isRtl ? 'left-0 origin-bottom-left' : 'right-0 origin-bottom-right'}

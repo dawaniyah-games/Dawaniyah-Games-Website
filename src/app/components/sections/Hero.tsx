@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PixelTwinkle } from '../brand/PixelTwinkle';
+import { HeadlineLine } from './bird/HeadlineLine';
+import { IslandBird } from './bird/IslandBird';
 import { IslandScene } from './island/IslandScene';
 import { WaterfallEdge } from './island/WaterfallEdge';
 import { scrollToSection } from '../../utils/sectionPreload';
@@ -10,7 +12,8 @@ function scrollToId(id: string) {
 }
 
 export function Hero() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const rtl = i18n.dir() === 'rtl';
   const heroRef = useRef<HTMLElement>(null);
 
   return (
@@ -26,16 +29,16 @@ export function Hero() {
                 <span className="sr-only">
                   Dawaniyah Games (دوانية الألعاب): game development studio in Riyadh, Saudi Arabia, serving the UAE, Kuwait and Qatar.
                 </span>
-                <span className="block">{t('hero.titleTop')}</span>
-                <span className="block">{t('hero.titleBottom')}</span>
+                <HeadlineLine text={t('hero.titleTop')} rtl={rtl} />
+                <HeadlineLine text={t('hero.titleBottom')} rtl={rtl} />
               </h1>
 
-              <div className="t-body-l opacity-85 mt-6 lg:max-w-[560px]">
+              <div data-bird-nofly="" className="t-body-l opacity-85 mt-6 lg:max-w-[560px]">
                 <p>{t('hero.descriptionLine1')}</p>
                 <p>{t('hero.descriptionLine2')}</p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 mt-9">
+              <div data-bird-nofly="" className="flex flex-wrap items-center gap-4 mt-9">
                 <button type="button" className="btn btn-saffron t-button t-upper" onClick={() => scrollToId('contact')}>
                   {t('hero.ctaServices')}
                 </button>
@@ -48,6 +51,7 @@ export function Hero() {
 
           {/* The page mirrors on /ar/; the island itself does not. */}
           <IslandScene className="mt-10 mb-6 w-[112%] -ms-[6%] lg:mt-0 lg:mb-0 lg:ms-0 lg:absolute lg:w-[min(50vw,720px)] lg:top-[min(15.6vw,225px)] lg:end-[max(-2.8vw,-40px)]" />
+          <IslandBird />
         </div>
       </section>
       <WaterfallEdge heroRef={heroRef} />
