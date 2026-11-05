@@ -55,10 +55,10 @@ const MAX_ATLAS = 4096;
 const FX_ATLAS = 1024;
 const FX_CAPACITY = 110;
 const SQUARE_DEPTH = 420;
-const PALE_CYAN = '#B9E9F2';
 const STONE_GLOW_SCALE = 1.1;
-// Spray around water that keeps falling, not the place where the water ends.
-const STANDING_MIST = 0.6;
+// Spray around water that keeps falling, not the place where the water ends. The fall carries on
+// past here to the hero's edge (WaterfallEdge), so the mist at the old foot stays faint and white.
+const STANDING_MIST = 0.25;
 const SHADOW_SIZE = 110;
 
 const GROUND_LAYERS = new Set(['island-cliff-base', 'island-sand-plateau', 'island-stream-waterfall', 'island-rug', 'island-rope-bridge']);
@@ -657,7 +657,6 @@ export function createStage(canvas: HTMLCanvasElement, images: IslandImages): Is
     { id: 'puff', w: 128, h: 128, draw: (ctx, x, y, w, h) => ctx.drawImage(tinted(sprite('foam'), 128, '#E9C48F'), x, y, w, h) },
     { id: 'foam', w: 128, h: 128, draw: (ctx, x, y, w, h) => { const img = sprite('foam'); if (img) ctx.drawImage(img, x, y, w, h); } },
     { id: 'mist', w: 256, h: 256, draw: (ctx, x, y, w, h) => { const img = sprite('mist'); if (img) ctx.drawImage(img, x, y, w, h); } },
-    { id: 'mistCyan', w: 256, h: 256, draw: (ctx, x, y, w, h) => ctx.drawImage(tinted(sprite('mist'), 256, PALE_CYAN), x, y, w, h) },
     {
       id: 'shadow',
       w: 128,
@@ -822,8 +821,8 @@ export function createStage(canvas: HTMLCanvasElement, images: IslandImages): Is
       }
       case 'mist': {
         const size = (150 + 110 * t) * p.scale * 1.1;
-        const alpha = (0.35 + (p.pale ? 0.15 : 0.05)) * Math.sin(Math.PI * t) * 1.3;
-        fx.add(p.pale ? fxUv.mistCyan : fxUv.mist, place, size, size * 0.72, 0, alpha);
+        const alpha = 0.4 * Math.sin(Math.PI * t) * 1.3 * STANDING_MIST;
+        fx.add(fxUv.mist, place, size, size * 0.72, 0, alpha);
         break;
       }
       case 'drop': {

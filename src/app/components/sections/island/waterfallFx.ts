@@ -8,9 +8,21 @@ import type { WaterfallEnds, WaterfallPoint } from './waterfallEnd';
 
 export const WATERFALL = {
   handoff: { fadeFrom: 1660, fadeTo: 1806, top: { y: 1660, x: [371, 514] }, bottom: { y: 1793, x: [368, 498] } },
-  column: { widenAtEdge: 0.12, scroll: 300, stretch: 220, alpha: 0.92, thinAtEdge: 0.72, band: 10, layerB: { speed: 1.35, alpha: 0.45 } },
+  column: {
+    widenAtEdge: 0.12,
+    scroll: 300,
+    stretch: 220,
+    alpha: 0.92,
+    thinAtEdge: 0.72,
+    band: 10,
+    layerB: { speed: 1.35, alpha: 0.45 },
+    // Fully in within this share of the painted fall's fade, so the two never thin out together.
+    fadeInShare: 0.35,
+    // Soft sides, as a share of the fall's width on each side.
+    feather: 0.1,
+  },
   fall: { v0: [300, 420], gravity: 2600 },
-  streaks: { rate: 130, cap: 90, width: [2, 4.5], len: [0.03, 10, 70], alpha: [0.45, 0.95] },
+  streaks: { rate: 110, cap: 80, width: [1.4, 3], len: [0.03, 10, 70], alpha: [0.3, 0.75] },
   sideDrops: { rate: 9, cap: 14, vx: [20, 70], r: [2, 3.6] },
   splash: {
     chance: 0.85,
@@ -105,7 +117,7 @@ const pickTone = (): Tone => {
   return r < 0.6 ? 'white' : r < 0.9 ? 'pale' : 'teal';
 };
 
-function flippedCopy(img: HTMLImageElement) {
+function flippedCopy(img: HTMLImageElement | HTMLCanvasElement) {
   const canvas = document.createElement('canvas');
   canvas.width = img.width;
   canvas.height = img.height;
@@ -137,7 +149,7 @@ export class WaterfallEdgeFx {
   private ctx: CanvasRenderingContext2D;
   private buffer = document.createElement('canvas');
   private bctx: CanvasRenderingContext2D;
-  private flipped: HTMLCanvasElement;
+  private scaledTiles: { width: number; height: number; tile: HTMLCanvasElement; flipped: HTMLCanvasElement } | null = null;
   private tinted: Record<Tinted, HTMLCanvasElement>;
 
   private time = 0;
@@ -167,7 +179,6 @@ export class WaterfallEdgeFx {
     this.reduced = reduced;
     this.ctx = canvas.getContext('2d')!;
     this.bctx = this.buffer.getContext('2d')!;
-    this.flipped = flippedCopy(sprites.column);
     this.tinted = {
       white: tintedCopy(sprites.square, C.colors.white),
       pale: tintedCopy(sprites.square, C.colors.pale),
@@ -242,8 +253,11 @@ export class WaterfallEdgeFx {
     return Math.sqrt(v0 * v0 + 2 * C.fall.gravity * Math.max(0, y - g.yStart));
   }
 
+  /** The column and its streaks come in over the top of the painted fall's fade, quicker than it goes. */
   private fadeIn(y: number) {
-    return smooth(C.handoff.fadeFrom - C.handoff.bottom.y, C.handoff.fadeTo - C.handoff.bottom.y, y);
+    const from = C.handoff.fadeFrom - C.handoff.bottom.y;
+    const to = C.handoff.fadeTo - C.handoff.bottom.y;
+    return smooth(from, lerp(from, to, C.column.fadeInShare), y);
   }
 
   private spawn<T>(name: string, cfg: { rate: number; cap: number }, list: T[], dt: number, lite: number, make: () => T) {
@@ -289,7 +303,7 @@ export class WaterfallEdgeFx {
         vy: rnd(C.fall.v0),
         w: rnd(C.streaks.width),
         a: rnd(C.streaks.alpha),
-        tone: pick < 0.7 ? 'white' : pick < 0.9 ? 'pale' : 'teal',
+        tone: pick < 0.7 ? 'white' : pick < 0.96 ? 'pale' : 'teal',
         phase: Math.random() * TAU,
       };
     });
@@ -425,15 +439,61 @@ export class WaterfallEdgeFx {
     this.drips = this.drips.filter((d) => d.y - g.yEdge < d.fall);
   }
 
+  /**
+   * The tile at the size it is drawn on screen, with soft sides, and its mirror image. Drawing it
+   * at about one texel per device pixel keeps the fine strands from shimmering into a mesh.
+   */
+  private columnTiles(widthPx: number) {
+    const cached = this.scaledTiles;
+    if (cached && Math.abs(cached.width - widthPx) < 1) return cached;
+    const source = this.sprites.column;
+    const width = Math.max(4, Math.round(widthPx));
+    const height = Math.max(4, Math.round((source.height * width) / source.width));
+    // Halve in steps for a clean downscale, then land on the exact size.
+    let step: CanvasImageSource = source;
+    let w = source.width;
+    let h = source.height;
+    while (w / 2 >= width) {
+      const half = document.createElement('canvas');
+      half.width = Math.round(w / 2);
+      half.height = Math.round(h / 2);
+      const hctx = half.getContext('2d')!;
+      hctx.imageSmoothingQuality = 'high';
+      hctx.drawImage(step, 0, 0, half.width, half.height);
+      step = half;
+      w = half.width;
+      h = half.height;
+    }
+    const tile = document.createElement('canvas');
+    tile.width = width;
+    tile.height = height;
+    const tctx = tile.getContext('2d')!;
+    tctx.imageSmoothingQuality = 'high';
+    tctx.drawImage(step, 0, 0, width, height);
+    // Soft sides, like the painted fall's.
+    const soft = C.column.feather;
+    const sides = tctx.createLinearGradient(0, 0, width, 0);
+    sides.addColorStop(0, 'rgba(0,0,0,0)');
+    sides.addColorStop(soft, 'rgba(0,0,0,1)');
+    sides.addColorStop(1 - soft, 'rgba(0,0,0,1)');
+    sides.addColorStop(1, 'rgba(0,0,0,0)');
+    tctx.globalCompositeOperation = 'destination-in';
+    tctx.fillStyle = sides;
+    tctx.fillRect(0, 0, width, height);
+    this.scaledTiles = { width, height, tile, flipped: flippedCopy(tile) };
+    return this.scaledTiles;
+  }
+
   /** The column: the tile scrolled down, stretched further down so the water speeds up as it falls. */
   private drawColumn(g: Geometry, X: (x: number) => number, Y: (y: number) => number, edgeCanvasY: number) {
-    const { ctx, box, dpr, sprites } = this;
+    const { ctx, box, dpr } = this;
     const b = this.bctx;
-    const tile = sprites.column;
     const s = g.s;
-    b.setTransform(dpr, 0, 0, dpr, 0, 0);
-    b.clearRect(0, 0, box.width, box.height);
-    const texel = g.wBottom / tile.width; // art px per texel
+    const { tile, flipped, width: tileW, height: tileH } = this.columnTiles(g.wBottom * s * dpr);
+    // Bands are placed in device pixels, edge to edge, so they never overlap into lines.
+    b.setTransform(1, 0, 0, 1, 0, 0);
+    b.clearRect(0, 0, this.buffer.width, this.buffer.height);
+    const texel = g.wBottom / tileW; // art px per texel
     const L = C.column.stretch;
     const gOf = (y: number) => L * Math.log(1 + Math.max(0, y - g.yStart) / L);
     const band = C.column.band;
@@ -441,7 +501,7 @@ export class WaterfallEdgeFx {
       ? [[tile, 1, 1, 0]]
       : [
           [tile, 1, 1, 0],
-          [this.flipped, C.column.layerB.speed, C.column.layerB.alpha, 256],
+          [flipped, C.column.layerB.speed, C.column.layerB.alpha, tileH / 2],
         ];
     for (const [img, speed, alpha, offset] of layers) {
       b.globalAlpha = alpha;
@@ -449,25 +509,28 @@ export class WaterfallEdgeFx {
         const y2 = Math.min(g.yEdge + 1, y + band);
         const w = this.widthAt(g, (y + y2) / 2);
         const xc = this.centerAt(g, (y + y2) / 2);
-        let sy = ((gOf(y) - this.scroll * speed) / texel + offset) % tile.height;
-        if (sy < 0) sy += tile.height;
+        let sy = ((gOf(y) - this.scroll * speed) / texel + offset) % tileH;
+        if (sy < 0) sy += tileH;
         const sh = Math.max(0.5, (gOf(y2) - gOf(y)) / texel);
-        const dx = X(xc - w / 2);
-        const dw = w * s;
-        const dy = Y(y);
-        const dh = (y2 - y) * s + 0.6;
-        if (sy + sh <= tile.height) {
-          b.drawImage(img, 0, sy, tile.width, sh, dx, dy, dw, dh);
+        const dx = X(xc - w / 2) * dpr;
+        const dw = w * s * dpr;
+        const dy = Math.round(Y(y) * dpr);
+        const dh = Math.round(Y(y2) * dpr) - dy;
+        if (dh <= 0) continue;
+        if (sy + sh <= tileH) {
+          b.drawImage(img, 0, sy, tileW, sh, dx, dy, dw, dh);
         } else {
-          const first = tile.height - sy;
-          b.drawImage(img, 0, sy, tile.width, first, dx, dy, dw, dh * (first / sh));
-          b.drawImage(img, 0, 0, tile.width, sh - first, dx, dy + dh * (first / sh), dw, dh * (1 - first / sh));
+          const first = tileH - sy;
+          const split = Math.round(dh * (first / sh));
+          if (split > 0) b.drawImage(img, 0, sy, tileW, first, dx, dy, dw, split);
+          if (dh - split > 0) b.drawImage(img, 0, 0, tileW, sh - first, dx, dy + split, dw, dh - split);
         }
       }
     }
+    b.globalAlpha = 1;
+    b.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     // Fade in where the painted fall fades out, and thin a little towards the edge.
-    b.globalAlpha = 1;
     b.globalCompositeOperation = 'destination-in';
     const top = Y(g.yStart);
     const span = Math.max(1, edgeCanvasY - top);
@@ -475,8 +538,9 @@ export class WaterfallEdgeFx {
     const stop = (y: number, a: number) => grad.addColorStop(Math.min(1, Math.max(0, (Y(y) - top) / span)), `rgba(0,0,0,${a})`);
     const f0 = C.handoff.fadeFrom - C.handoff.bottom.y;
     const f1 = C.handoff.fadeTo - C.handoff.bottom.y;
-    for (let i = 0; i <= 6; i += 1) {
-      const y = lerp(f0, f1, i / 6);
+    const fullAt = lerp(f0, f1, C.column.fadeInShare);
+    for (let i = 0; i <= 8; i += 1) {
+      const y = i < 8 ? lerp(f0, fullAt, i / 7) : f1;
       if (y < g.yEdge) stop(y, this.fadeIn(y) * lerp(1, C.column.thinAtEdge, Math.max(0, y) / g.yEdge));
     }
     stop(g.yEdge, C.column.thinAtEdge);

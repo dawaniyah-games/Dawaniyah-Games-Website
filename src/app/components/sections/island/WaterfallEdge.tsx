@@ -5,7 +5,7 @@ import { WaterfallEdgeFx, type WaterfallSprites } from './waterfallFx';
 
 const BASE = `${import.meta.env.BASE_URL}island/`;
 const SPRITE_FILES: Record<keyof WaterfallSprites, string> = {
-  column: 'water/fall-column-tile-128x512.png',
+  column: 'water/fall-column-painted-128x190.png',
   foam: 'water/edge-foam-256x64.png',
   sheen: 'water/edge-sheen-512x16.png',
   glow: 'water/edge-glow-512x160.png',
