@@ -60,16 +60,6 @@ const en = {
       },
     },
   },
-  assets: {
-    heading: "GAME ASSETS",
-    subheading:
-      "High-quality characters and production-ready art that elevate your game worlds.\n\nWe create high-quality game assets that are built for production: strong silhouettes, clean topology, and materials that hold up in real-time rendering. The work below showcases the level of character art quality we can deliver.\n\nAssets created by Sherif Amer.",
-    videos: {
-      midshot: "Character turntable (Mid Shot)",
-      b: "Character turntable",
-      marmoset: "Marmoset / real-time render preview",
-    },
-  },
   portfolio: {
     heading: "OUR GAMES",
     subheading: "Original games for players in Saudi Arabia and the Gulf, now in development.",

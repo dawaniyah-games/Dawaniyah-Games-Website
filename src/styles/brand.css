@@ -1,0 +1,395 @@
+/*
+  Dawaniyah brand layer. Colours and type come from the Figma local styles
+  (Brand/*, EN/*, AR/*). The type classes switch family and metrics on RTL pages.
+*/
+@theme {
+  --color-night: #2b1b4d;
+  --color-night-deep: #0f081f;
+  --color-cream: #f6e7cf;
+  --color-ivory: #fbf3e6;
+  --color-majlis: #b8322a;
+  --color-saffron: #f4b740;
+  --color-mint: #9fdcc8;
+  --color-dusk: #8a5cf0;
+}
+
+:root {
+  --font-en: 'Fredoka', 'Baloo Bhaijaan 2', system-ui, sans-serif;
+  --font-ar-display: 'Lalezar', 'Baloo Bhaijaan 2', system-ui, sans-serif;
+  --font-ar: 'Baloo Bhaijaan 2', 'Fredoka', system-ui, sans-serif;
+  --dusk-sky: linear-gradient(146.6deg, #fde7c8 7.4%, #d9c8f5 81.5%);
+}
+
+html {
+  background: var(--color-night);
+  scroll-padding-top: 88px;
+  /* On the root, so nothing between the sticky card and the page clips or scrolls. */
+  overflow-x: clip;
+}
+
+.site { font-family: var(--font-en); }
+html[dir='rtl'] .site { font-family: var(--font-ar); }
+
+.bg-dusk-sky { background-image: var(--dusk-sky); }
+/* The same sky run backwards, so one project section flows into the next. */
+.bg-dusk-sky-reverse { background-image: linear-gradient(146.9deg, #d9c8f5 7.4%, #fde7c8 81.5%); }
+
+.page-gutter {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6.67vw, 96px);
+}
+
+/* Type scale: 1440 values from Figma, eased down on smaller screens. */
+.t-display { font: 600 clamp(40px, 4.72vw, 68px) / 1.118 var(--font-en); }
+.t-h2 { font: 600 clamp(32px, 3.2vw, 46px) / 1.174 var(--font-en); }
+.t-h3 { font: 600 24px / 30px var(--font-en); }
+.t-body-l { font: 400 clamp(18px, 1.39vw, 20px) / 1.55 var(--font-en); }
+.t-body { font: 400 17px / 26px var(--font-en); }
+.t-eyebrow { font: 600 14px / 18px var(--font-en); letter-spacing: 0.1em; }
+.t-button { font: 600 17px / 22px var(--font-en); }
+.t-nav { font: 500 16px / 20px var(--font-en); }
+
+html[dir='rtl'] .t-display { font: 400 clamp(44px, 5.14vw, 74px) / 1.297 var(--font-ar-display); }
+html[dir='rtl'] .t-h2 { font: 400 clamp(34px, 3.33vw, 48px) / 1.333 var(--font-ar-display); }
+html[dir='rtl'] .t-h3 { font: 700 24px / 34px var(--font-ar); }
+html[dir='rtl'] .t-body-l { font: 400 clamp(18px, 1.39vw, 20px) / 1.7 var(--font-ar); }
+html[dir='rtl'] .t-body { font: 400 17px / 29px var(--font-ar); }
+html[dir='rtl'] .t-eyebrow { font: 600 15px / 22px var(--font-ar); letter-spacing: 0; }
+html[dir='rtl'] .t-button { font: 600 18px / 26px var(--font-ar); }
+html[dir='rtl'] .t-nav { font: 500 17px / 24px var(--font-ar); }
+
+/* Arabic has no capitals, so only Latin copy is uppercased. */
+html:not([dir='rtl']) .t-upper { text-transform: uppercase; }
+
+/* Buttons. Layered so utilities such as `hidden` still win over them. */
+@layer components {
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 28px;
+  border-radius: 999px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn:focus-visible { outline: 3px solid var(--color-dusk); outline-offset: 2px; }
+.btn:disabled { opacity: 0.65; transform: none; cursor: not-allowed; }
+.btn-saffron { background: var(--color-saffron); color: var(--color-night); }
+.btn-saffron:hover { box-shadow: 0 10px 24px -10px rgb(244 183 64 / 0.9); }
+.btn-night { background: var(--color-night); color: #fff; }
+.btn-night:hover { box-shadow: 0 10px 24px -10px rgb(43 27 77 / 0.8); }
+.btn-outline { border: 2px solid var(--color-night); color: var(--color-night); }
+.btn-outline:hover { background: var(--color-night); color: #fff; }
+.btn-outline-light { border: 2px solid rgb(255 255 255 / 0.7); color: #fff; }
+.btn-outline-light:hover { background: #fff; color: var(--color-night); }
+}
+
+/* Powered-by marquee: the track holds the list twice and moves by half its width. */
+@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes marquee-rtl { to { transform: translateX(50%); } }
+.marquee-track { animation: marquee 34s linear infinite; }
+html[dir='rtl'] .marquee-track { animation-name: marquee-rtl; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; flex-wrap: wrap; width: auto; }
+  .btn, .btn:hover { transition: none; transform: none; }
+}
+
+/* The die's result chip, placed over the island. Sized in art pixels. */
+.island-die {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+}
+.island-die-chip {
+  position: absolute;
+  left: 86px;
+  top: -176px;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+  background: var(--color-saffron);
+  color: var(--color-night);
+  font: 600 54px / 1 var(--font-en);
+  transition: opacity 200ms ease;
+}
+
+/* Section 02: two lists beside one card, which is an ordinary sticky child of the page here. */
+.story-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 420fr) minmax(0, 744fr);
+  column-gap: clamp(40px, 5.8vw, 84px);
+  padding-block: 128px;
+}
+.story-card-sticky {
+  position: sticky;
+  top: 88px;
+  display: grid;
+  place-items: center;
+  height: calc(100vh - 88px);
+  height: calc(100svh - 88px);
+}
+/* The card's place. It is never transformed, so measuring it is always safe. */
+.story-card-slot {
+  position: relative;
+  width: min(320px, 24vw, calc((100vh - 168px) * 0.744));
+  aspect-ratio: 360 / 484;
+}
+.story-card {
+  position: absolute;
+  inset: 0;
+  perspective: 1000px;
+}
+.story-group + .story-group { margin-top: 112px; }
+.story-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 72px 72px;
+  margin-top: 44px;
+}
+.story-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0.55;
+  transition: opacity 260ms ease;
+}
+.story-item.is-active { opacity: 1; }
+
+/* Reduced motion: each item carries its own face as a small card. */
+.story-item-with-face {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 20px;
+  opacity: 1;
+}
+.story-item-with-face .story-face {
+  position: relative;
+  width: 96px;
+  aspect-ratio: 360 / 484;
+}
+
+/* One face of the story card. --u is one pixel of the 360 px wide design. */
+.story-face {
+  position: absolute;
+  inset: 0;
+  container-type: inline-size;
+  border-radius: 7.2%/5.4%;
+}
+.sf {
+  --u: calc(100cqw / 360);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: calc(10 * var(--u)) solid var(--color-cream);
+  border-radius: calc(26 * var(--u));
+  background: #fff8ee;
+  color: var(--color-night);
+}
+.sf-inner-line {
+  position: absolute;
+  inset: calc(8 * var(--u));
+  border: calc(1.5 * var(--u)) solid var(--color-saffron);
+  border-radius: calc(12 * var(--u));
+}
+.sf-sadu {
+  position: absolute;
+  left: calc(26 * var(--u));
+  top: calc(20 * var(--u));
+  width: calc(288 * var(--u));
+  height: calc(13 * var(--u));
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 288 13'%3E%3Cg id='a'%3E%3Cpath fill='%23B8322A' d='M0 0h18L9 13z'/%3E%3Cpath fill='%232B1B4D' d='M18 0h18l-9 13z'/%3E%3Cpath fill='%23F4B740' d='M36 0h18l-9 13z'/%3E%3Cpath fill='%23B8322A' d='M54 0h18l-9 13z'/%3E%3C/g%3E%3Cuse href='%23a' x='72'/%3E%3Cuse href='%23a' x='144'/%3E%3Cuse href='%23a' x='216'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.sf-sadu-bottom {
+  top: auto;
+  bottom: calc(20 * var(--u));
+  transform: scaleY(-1);
+}
+.sf-number {
+  position: absolute;
+  left: calc(26 * var(--u));
+  top: calc(40 * var(--u));
+  font: 600 calc(30 * var(--u)) / 1.2 var(--font-en);
+}
+.sf-number-end {
+  left: auto;
+  top: auto;
+  right: calc(26 * var(--u));
+  bottom: calc(40 * var(--u));
+  transform: rotate(180deg);
+}
+.sf-medallion {
+  position: absolute;
+  left: calc(72 * var(--u));
+  top: calc(82 * var(--u));
+  display: grid;
+  place-items: center;
+  width: calc(196 * var(--u));
+  height: calc(196 * var(--u));
+  border: calc(6 * var(--u)) solid var(--color-saffron);
+  border-radius: 50%;
+  background: var(--color-night);
+  color: var(--color-cream);
+}
+.sf-medallion svg {
+  width: calc(92 * var(--u));
+  height: calc(92 * var(--u));
+}
+.sf-title {
+  position: absolute;
+  left: calc(38 * var(--u));
+  right: calc(38 * var(--u));
+  top: calc(308 * var(--u));
+  text-align: center;
+  font: 600 calc(24 * var(--u)) / 1.25 var(--font-en);
+}
+html[dir='rtl'] .sf-title { font: 700 calc(24 * var(--u)) / 1.35 var(--font-ar); }
+
+/* The fixed layer is only used for flights between places. */
+.story-flight {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  overflow: clip;
+}
+/* The perspective lives on the card, so its vanishing point is its own centre. On the fixed layer
+   it would be the middle of the screen, and a card to one side would shear instead of turning.
+   Here it is part of the inner transform: on the deck the card has to start almost flat-on. */
+.flight-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 375px;
+  height: 504px;
+  visibility: hidden;
+  will-change: transform;
+}
+.flight-card-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.flight-card .flight-card-inner { will-change: transform; }
+.flight-face,
+.flight-edge,
+.flight-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 7.2%/5.4%;
+}
+.flight-face {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  backface-visibility: hidden;
+  transform: translateZ(2px);
+}
+.flight-back { transform: rotateY(180deg) translateZ(2px); }
+.flight-edge { background: #e3cfae; }
+.flight-front { visibility: hidden; }
+.flight-front.is-current { visibility: inherit; }
+.flight-card-inner .story-face {
+  backface-visibility: hidden;
+  transform: translateZ(2px);
+  visibility: hidden;
+}
+.flight-card-inner .story-face.is-shown,
+.flight-card-inner .story-face.is-current { visibility: inherit; }
+.flight-sheen {
+  background: linear-gradient(105deg, transparent 38%, rgb(255 255 255 / 0.36) 50%, transparent 62%) var(--sheen, 50%) 0 / 280% 100% no-repeat;
+  opacity: var(--sheen-strength, 0);
+  backface-visibility: hidden;
+}
+.flight-sheen-front { transform: translateZ(2.2px); }
+.flight-sheen-back { transform: rotateY(180deg) translateZ(2.2px); }
+.flight-shadow {
+  position: absolute;
+  inset: 6% -2% -8%;
+  background: radial-gradient(closest-side, rgb(13 5 31 / 0.6), rgb(13 5 31 / 0.32) 62%, transparent);
+}
+.flight-card.is-landing .flight-face,
+.flight-card.is-landing .sf { box-shadow: 0 0 0 3px var(--color-saffron), 0 0 26px rgb(244 183 64 / 0.75); }
+
+/* The slot's own artwork stays hidden until the card first reaches it. */
+.card-slot { position: relative; display: block; }
+.card-slot picture { display: block; width: 100%; height: 100%; }
+/* opacity rather than visibility, so screen readers still get the alt text. */
+.card-slot.is-waiting picture { opacity: 0; }
+.card-slot.is-waiting::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px dashed currentColor;
+  border-radius: inherit;
+  opacity: 0.28;
+}
+
+/* Sections 03 to 05: one project each. */
+.project-section { position: relative; }
+.project-pad { padding-block: 96px; }
+.project-row {
+  display: flex;
+  gap: 109px;
+  margin-top: 44px;
+}
+.project-text { flex: 1; min-width: 0; padding-top: 20px; }
+.project-spot {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 375px;
+  aspect-ratio: 375 / 504;
+}
+.game-panel {
+  display: flex;
+  align-items: center;
+  border-radius: 32px;
+  background: rgb(255 255 255 / 0.82);
+  padding: 28px;
+}
+.game-panel.is-flipped { flex-direction: row-reverse; }
+.game-panel-text { flex: 1; min-width: 0; padding-inline: 64px; }
+.game-panel.is-flipped .game-panel-text { padding-inline: 36px 64px; }
+
+@media (max-width: 1023px) {
+  /* Too narrow for a column: the card stays in view in a band under the nav, the items run below. */
+  .story-layout { display: block; padding-block: 0 72px; }
+  /* Its own box would be only as tall as the card, leaving it no room to stick. */
+  .story-card-column { display: contents; }
+  .story-card-sticky {
+    z-index: 5;
+    height: auto;
+    padding-block: 16px;
+    background: var(--color-night);
+  }
+  .story-card-slot { width: calc(24vh * 0.744); }
+  .story-group { scroll-margin-top: calc(24vh + 32px); padding-top: 24px; }
+  .story-group + .story-group { margin-top: 72px; }
+  .project-pad { padding-block: 64px; }
+  .project-row,
+  .game-panel,
+  .game-panel.is-flipped { flex-direction: column; gap: 32px; align-items: stretch; }
+  .project-spot { margin-inline: auto; }
+  .project-text { padding-top: 0; }
+  .game-panel { padding: 20px; }
+  .game-panel-text,
+  .game-panel.is-flipped .game-panel-text { padding: 0 8px 12px; }
+}
+@media (max-width: 639px) {
+  .story-items { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+}
+
+/* <picture> would flatten the 3D context and defeat backface-visibility on the card front. */
+.flight-card-inner picture { display: contents; }
