@@ -65,9 +65,14 @@
     <link rel="alternate" type="text/plain" title="LLM summary" href="%BASE_URL%llms.txt" />
 
     <!-- Icons (served from /public at build time) -->
-    <link rel="icon" type="image/png" sizes="192x192" href="%BASE_URL%favicon-192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="%BASE_URL%favicon.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="%BASE_URL%favicon-192.png" />
+    <link rel="icon" href="%BASE_URL%favicon.ico?v=2" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="16x16" href="%BASE_URL%favicon-16.png?v=2" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%favicon-32.png?v=2" />
+    <link rel="icon" type="image/png" sizes="48x48" href="%BASE_URL%favicon-48.png?v=2" />
+    <link rel="icon" type="image/png" sizes="96x96" href="%BASE_URL%favicon-96.png?v=2" />
+    <link rel="icon" type="image/png" sizes="192x192" href="%BASE_URL%favicon-192.png?v=2" />
+    <link rel="icon" type="image/png" sizes="512x512" href="%BASE_URL%favicon.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="%BASE_URL%apple-touch-icon.png?v=2" />
     <link rel="manifest" href="%BASE_URL%site.webmanifest" />
 
     <!-- Language alternates: English at /, Arabic at /ar/ (generated at build) -->
@@ -84,7 +89,10 @@
       content="Unity and Unreal game studio in Riyadh, serving Saudi Arabia, the UAE, Kuwait and Qatar. We build mobile and PC games for clients, and open-source tools for Unity developers."
     />
     <meta property="og:url" content="%VITE_SITE_URL%%BASE_URL%" />
-    <meta property="og:image" content="%VITE_SITE_URL%%BASE_URL%logo-icon.png" />
+    <meta property="og:image" content="%VITE_SITE_URL%%BASE_URL%og-image.png?v=2" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Dawaniyah Games" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="ar_SA" />
 
@@ -95,7 +103,7 @@
       name="twitter:description"
       content="Unity and Unreal game studio in Riyadh, serving Saudi Arabia, the UAE, Kuwait and Qatar. We build mobile and PC games for clients, and open-source tools for Unity developers."
     />
-    <meta name="twitter:image" content="%VITE_SITE_URL%%BASE_URL%logo-icon.png" />
+    <meta name="twitter:image" content="%VITE_SITE_URL%%BASE_URL%og-image.png?v=2" />
 
     <!-- Structured data (JSON-LD) -->
     <script type="application/ld+json">
@@ -105,7 +113,7 @@
         "name": "Dawaniyah Games Studio",
         "alternateName": ["Dawaniyah Games", "دوانية الألعاب"],
         "url": "%VITE_SITE_URL%%BASE_URL%",
-        "logo": "%VITE_SITE_URL%%BASE_URL%logo-icon.png",
+        "logo": "%VITE_SITE_URL%%BASE_URL%logo-icon.png?v=2",
         "telephone": "+966 55 119 4463",
         "email": "info@dawaniyahgames.com",
         "address": {
