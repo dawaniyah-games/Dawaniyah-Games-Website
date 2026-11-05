@@ -1,3 +1,4 @@
+import { motionViewportHeight } from '../../../utils/motionViewport';
 import React, { useEffect, useRef } from 'react';
 import { prefersReducedMotion } from '../../../hooks/useReducedMotion';
 import { setDeckCardReader } from './deckCard';
@@ -101,7 +102,7 @@ export function IslandScene({ className = '' }: { className?: string }) {
       document.addEventListener('visibilitychange', onVisibility);
       cleanups.push(() => document.removeEventListener('visibilitychange', onVisibility));
 
-      const onScroll = () => engine?.setScrollProgress(window.scrollY / Math.max(window.innerHeight, 1));
+      const onScroll = () => engine?.setScrollProgress(window.scrollY / Math.max(motionViewportHeight(), 1));
       window.addEventListener('scroll', onScroll, { passive: true });
       cleanups.push(() => window.removeEventListener('scroll', onScroll));
       onScroll();

@@ -4,6 +4,7 @@
  * waterfall-edge.json. Lengths are art pixels of the island, so everything scales with it, and times
  * are seconds.
  */
+import { isTouchScreen } from '../../../utils/motionViewport';
 import type { WaterfallEnds, WaterfallPoint } from './waterfallEnd';
 
 export const WATERFALL = {
@@ -56,7 +57,7 @@ export const WATERFALL = {
 const C = WATERFALL;
 
 const TAU = 6.283;
-const MAX_DPR = 2;
+const MAX_DPR = isTouchScreen() ? 1.5 : 2;
 const SIDE_ROOM = 6; // the canvas reaches this many fall widths either side of the fall
 const TOP_ROOM = 40;
 

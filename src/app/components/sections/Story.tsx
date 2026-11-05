@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Activity,
@@ -16,6 +17,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { isTouchScreen, motionViewportHeight } from '../../utils/motionViewport';
 import { CARD_BACK, PROJECT_CARDS } from './cards/projectCards';
 import { StoryFace } from './cards/StoryFace';
 import { readDeckCard, type DeckCardPlace } from './island/deckCard';
@@ -112,6 +114,8 @@ const NAV_CLEARANCE_PX = 96;
 const CARD_TALL = 504 / 375;
 // The scroll position this flight reads, softened twice over: a wheel notch becomes a move, not a step.
 const FLIGHT_SOFT_MS = 45;
+const FLOAT_SETTLE = 0.2; // of the way to still, each frame the page moves
+const FLOAT_RETURN = 0.03; // and back, each frame it rests
 const FLIGHT_SOFT_DT_MS = 34;
 const FLAT_PERSPECTIVE = 9000;
 const CARD_PERSPECTIVE = 1000;
@@ -474,12 +478,33 @@ function styleWriter(el: HTMLElement) {
 /** The turn of a card from square-on, whichever face is showing, for its sheen and shadow. */
 const faceTurn = (angle: number) => (((angle + 90) % 180) + 180) % 180 - 90;
 
-function dressCard(inner: HTMLElement, shadow: HTMLElement, turn: number, inFlight: number) {
-  inner.style.setProperty('--sheen', `${50 + turn * SHEEN_SLIDE}%`);
-  inner.style.setProperty('--sheen-strength', `${clamp01(Math.abs(turn) / SHEEN_FULL_DEG)}`);
-  shadow.style.transform =
-    `translate(${SHADOW_X - turn * SHADOW_SHIFT}px, ${SHADOW_Y + SHADOW_FLIGHT_DROP_PX * inFlight}px) scale(${1 + SHADOW_FLIGHT_GROWTH * inFlight})`;
-  shadow.style.opacity = `${1 - 0.3 * inFlight}`;
+/**
+ * Sheen and shadow. The sheen is written straight on its two layers, and only when it changes: a
+ * variable on the card would restyle every face inside it, every frame.
+ */
+function cardDresser(inner: HTMLElement, shadow: HTMLElement) {
+  const sheens = [...inner.querySelectorAll<HTMLElement>('.flight-sheen')];
+  let position = '';
+  let strength = '';
+  return (turn: number, inFlight: number) => {
+    const nextPosition = `${Math.round(50 + turn * SHEEN_SLIDE)}% 0`;
+    const nextStrength = clamp01(Math.abs(turn) / SHEEN_FULL_DEG).toFixed(2);
+    if (nextPosition !== position) {
+      position = nextPosition;
+      sheens.forEach((el) => {
+        el.style.backgroundPosition = nextPosition;
+      });
+    }
+    if (nextStrength !== strength) {
+      strength = nextStrength;
+      sheens.forEach((el) => {
+        el.style.opacity = nextStrength;
+      });
+    }
+    shadow.style.transform =
+      `translate(${SHADOW_X - turn * SHADOW_SHIFT}px, ${SHADOW_Y + SHADOW_FLIGHT_DROP_PX * inFlight}px) scale(${1 + SHADOW_FLIGHT_GROWTH * inFlight})`;
+    shadow.style.opacity = `${1 - 0.3 * inFlight}`;
+  };
 }
 
 function StoryWithCard() {
@@ -516,6 +541,9 @@ function StoryWithCard() {
     const setStageInner = styleWriter(stageInner);
     const setFlyer = styleWriter(flyer);
     const setFlyerInner = styleWriter(flyerInner);
+    const dressStage = cardDresser(stageInner, stageShadow);
+    const dressFlyer = cardDresser(flyerInner, flyerShadow);
+    const touch = isTouchScreen();
 
     // Items only move with the page, so their positions inside the story are measured once per layout.
     let itemTops: number[] = [];
@@ -538,6 +566,8 @@ function StoryWithCard() {
     let softY: number | null = null;
     let softerY = 0;
     let lastTick = 0;
+    let floatShare = 1;
+    let floatScrollY = window.scrollY;
 
     // The face on the card, and the flip in progress. Each flip adds half a turn to `resting`.
     let shownItem = 0;
@@ -563,7 +593,7 @@ function StoryWithCard() {
       raf = 0;
 
       // ---- Read.
-      const vh = window.innerHeight;
+      const vh = motionViewportHeight();
       const vw = window.innerWidth;
       const storyRect = story.getBoundingClientRect();
       const slotRect = slot.getBoundingClientRect();
@@ -573,10 +603,11 @@ function StoryWithCard() {
       const deck = readDeckCard(FLYER_WIDTH, FLYER_HEIGHT);
 
       // Only the flight off the deck uses this: everywhere else the card is held to the page. A jump
-      // across the page is not a scroll, and it goes straight there.
+      // across the page is not a scroll, and it goes straight there. A finger is already smooth, and
+      // softening it would only leave the card behind.
       const step = Math.min(now - lastTick, FLIGHT_SOFT_DT_MS);
       lastTick = now;
-      if (softY === null || Math.abs(scrollY - softerY) > vh) {
+      if (touch || softY === null || Math.abs(scrollY - softerY) > vh) {
         softY = scrollY;
         softerY = scrollY;
       } else {
@@ -607,7 +638,13 @@ function StoryWithCard() {
       const flying = f > 0;
 
       // Worked out here rather than in CSS, so a card leaving or reaching the stage knows about it.
-      const float = Math.sin((now / 1000) * FLOAT_SPEED) * FLOAT_PX;
+      // On a phone it settles while the finger moves the page: two motions at once read as a shake.
+      if (touch) {
+        const moving = scrollY !== floatScrollY;
+        floatScrollY = scrollY;
+        floatShare = lerp(floatShare, moving ? 0 : 1, moving ? FLOAT_SETTLE : FLOAT_RETURN);
+      }
+      const float = Math.sin((now / 1000) * FLOAT_SPEED) * FLOAT_PX * floatShare;
       const progress = clamp01((vh / 2 - storyRect.top) / storyRect.height);
       const swing = Math.sin(progress * Math.PI * 2 * STAGE_TURNS);
       const stage = {
@@ -685,7 +722,7 @@ function StoryWithCard() {
           'transform',
           `translateY(${flipLift + float}px) rotateZ(${stage.roll + flipRoll}deg) rotateX(${stage.pitch}deg) rotateY(${stage.yaw + angle}deg)`,
         );
-        dressCard(stageInner, stageShadow, turn, 0);
+        dressStage(turn, 0);
       }
 
       let flyerOnScreen = false;
@@ -729,7 +766,8 @@ function StoryWithCard() {
         const halfH = (FLYER_HEIGHT * scale) / 2 + 40;
         flyerOnScreen = cx + halfW > 0 && cx - halfW < vw && cy + halfH > 0 && cy - halfH < vh;
 
-        setFlyer('transform', `translate3d(${cx - FLYER_WIDTH / 2}px, ${cy - FLYER_HEIGHT / 2}px, 0) scale(${scale}, ${scale * squash})`);
+        // In page coordinates, so the page carries the card between frames instead of leaving it behind.
+        setFlyer('transform', `translate3d(${cx - FLYER_WIDTH / 2}px, ${cy - FLYER_HEIGHT / 2 + scrollY}px, 0) scale(${scale}, ${scale * squash})`);
         setFlyerInner(
           'transform',
           // Divided by the scale, or a card scaled down reads as more steeply foreshortened than the
@@ -737,7 +775,7 @@ function StoryWithCard() {
           `perspective(${place.perspective / scale}px) rotateZ(${place.roll}deg) rotateX(${place.tilt}deg) rotateZ(${place.twist}deg) rotateY(${place.yaw}deg)`,
         );
         flyer.classList.toggle('is-landing', f >= LANDING_START);
-        dressCard(flyerInner, flyerShadow, faceTurn(place.yaw), inFlight);
+        dressFlyer(faceTurn(place.yaw), inFlight);
       }
       setFlyer('visibility', flyerOnScreen ? 'visible' : 'hidden');
 
@@ -756,15 +794,23 @@ function StoryWithCard() {
     measure();
     request();
 
+    // A sliding address bar resizes the window without changing the layout.
+    let layoutWidth = window.innerWidth;
+    const onResize = () => {
+      if (touch && window.innerWidth === layoutWidth) return;
+      layoutWidth = window.innerWidth;
+      onLayout();
+    };
+
     window.addEventListener('scroll', request, { passive: true });
-    window.addEventListener('resize', onLayout);
+    window.addEventListener('resize', onResize);
     const layout = new ResizeObserver(onLayout);
     layout.observe(document.body);
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('scroll', request);
-      window.removeEventListener('resize', onLayout);
+      window.removeEventListener('resize', onResize);
       layout.disconnect();
       slots.forEach((el) => el.classList.remove('is-waiting'));
     };
@@ -813,45 +859,48 @@ function StoryWithCard() {
       </div>
 
       {/* Only shown during a flight, so the card can leave the story and land in later sections. */}
-      <div aria-hidden="true" className="story-flight">
-        <div ref={flyerRef} className="flight-card">
-          <div ref={flyerShadowRef} className="flight-shadow" />
-          <div ref={flyerInnerRef} className="flight-card-inner">
-            <CardThickness />
-            <img src={CARD_BACK} alt="" className="flight-face flight-back" />
-            <StoryFace
-              number={firstItem.number}
-              title={firstItem.title}
-              Icon={firstItem.Icon}
-              ref={(el) => {
-                flyerFrontRefs.current[0] = el;
-              }}
-            />
-            <StoryFace
-              number={lastItem.number}
-              title={lastItem.title}
-              Icon={lastItem.Icon}
-              ref={(el) => {
-                flyerFrontRefs.current[1] = el;
-              }}
-            />
-            {PROJECT_CARDS.map((project, i) => (
-              <picture key={project.id}>
-                <source type="image/webp" srcSet={project.srcSet} sizes="375px" />
-                <img
+      {createPortal(
+        <div aria-hidden="true" className="site story-flight">
+            <div ref={flyerRef} className="flight-card">
+              <div ref={flyerShadowRef} className="flight-shadow" />
+              <div ref={flyerInnerRef} className="flight-card-inner">
+                <CardThickness />
+                <img src={CARD_BACK} alt="" className="flight-face flight-back" />
+                <StoryFace
+                  number={firstItem.number}
+                  title={firstItem.title}
+                  Icon={firstItem.Icon}
                   ref={(el) => {
-                    flyerFrontRefs.current[i + 2] = el;
+                    flyerFrontRefs.current[0] = el;
                   }}
-                  src={project.image}
-                  alt=""
-                  className="flight-face flight-front"
                 />
-              </picture>
-            ))}
-            <CardSheen />
-          </div>
-        </div>
-      </div>
+                <StoryFace
+                  number={lastItem.number}
+                  title={lastItem.title}
+                  Icon={lastItem.Icon}
+                  ref={(el) => {
+                    flyerFrontRefs.current[1] = el;
+                  }}
+                />
+                {PROJECT_CARDS.map((project, i) => (
+                  <picture key={project.id}>
+                    <source type="image/webp" srcSet={project.srcSet} sizes="375px" />
+                    <img
+                      ref={(el) => {
+                        flyerFrontRefs.current[i + 2] = el;
+                      }}
+                      src={project.image}
+                      alt=""
+                      className="flight-face flight-front"
+                    />
+                  </picture>
+                ))}
+                <CardSheen />
+              </div>
+            </div>
+        </div>,
+        document.body,
+      )}
     </>
   );
 }
