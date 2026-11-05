@@ -30,6 +30,7 @@ import {
   ShaderMaterial,
   SRGBColorSpace,
   Texture,
+  Vector2,
   Vector3,
   VSMShadowMap,
   WebGLRenderer,
@@ -160,8 +161,9 @@ function depthSampler(image: HTMLImageElement | undefined) {
 
 const LAYER_VERTEX = /* glsl */ `
   attribute vec4 aSway; // pivot x, pivot y, amplitude in radians, period
-  attribute vec2 aSwayShape; // phase, share of the faster second wave
+  attribute vec3 aSwayShape; // phase, share of the faster second wave, which palm (1 left, 2 right)
   uniform float uTime;
+  uniform vec2 uPalmLean; // what the bird adds to each palm's sway, left and right, in radians
   varying vec2 vUv;
   void main() {
     vUv = uv;
@@ -170,6 +172,7 @@ const LAYER_VERTEX = /* glsl */ `
       float w = 6.2831853 * uTime / aSway.w;
       float angle = aSway.z * sin(w + aSwayShape.x);
       if (aSwayShape.y > 0.0) angle += aSwayShape.y * aSway.z * sin(w / 0.37 + aSwayShape.x);
+      if (aSwayShape.z > 0.0) angle += aSwayShape.z < 1.5 ? uPalmLean.x : uPalmLean.y;
       float c = cos(-angle);
       float s = sin(-angle);
       vec2 d = p.xy - aSway.xy;
@@ -333,6 +336,8 @@ function createFx(map: Texture, capacity: number, additive: boolean) {
   };
 }
 
+export type PalmCrown = 'palm-left-crown' | 'palm-right-crown';
+
 export interface IslandStage {
   die: IslandDie;
   setTokens(tokens: Token[]): void;
@@ -342,6 +347,10 @@ export interface IslandStage {
   project(x: number, y: number): { x: number; y: number; scale: number };
   /** The same for a point on a standing layer, which lies in that layer's plane. */
   projectOnLayer(layerId: string, x: number, y: number): { x: number; y: number };
+  /** The same for a point on a palm's crown, wherever its sway has carried it this moment. */
+  projectOnPalm(layerId: PalmCrown, x: number, y: number): { x: number; y: number };
+  /** Adds to a palm's sway, about the same pivot: the bird's weight on its crown. */
+  leanPalm(layerId: PalmCrown, radians: number): void;
   dispose(): void;
 }
 
@@ -432,6 +441,7 @@ export function createStage(canvas: HTMLCanvasElement, images: IslandImages): Is
     uniforms: {
       uMap: { value: atlas },
       uTime: { value: 0 },
+      uPalmLean: { value: new Vector2() },
       uTint: { value: new Vector3(1, 1, 1) },
       uTintOn: { value: 0 },
       uOpacity: { value: 1 },
@@ -445,7 +455,7 @@ export function createStage(canvas: HTMLCanvasElement, images: IslandImages): Is
     side: DoubleSide,
   });
 
-  type Sway = { pivot: number[]; amplitude: number; period: number; phase: number; second: number };
+  type Sway = { pivot: number[]; amplitude: number; period: number; phase: number; second: number; palm: number };
   const seeded = (i: number) => {
     const v = Math.sin(i * 127.1 + 311.7) * 43758.5453;
     return v - Math.floor(v);
@@ -460,6 +470,7 @@ export function createStage(canvas: HTMLCanvasElement, images: IslandImages): Is
         period: palm.periodS,
         phase: palm.phase,
         second: 0.35,
+        palm: layer.id === 'palm-left-crown' ? 1 : 2,
       };
     }
     if (layer.anim === 'plant-sway-subtle') {
@@ -469,6 +480,7 @@ export function createStage(canvas: HTMLCanvasElement, images: IslandImages): Is
         period: 3 + seeded(index),
         phase: seeded(index + 40) * Math.PI * 2,
         second: 0,
+        palm: 0,
       };
     }
     return null;
@@ -505,7 +517,7 @@ export function createStage(canvas: HTMLCanvasElement, images: IslandImages): Is
           positions.push(...toWorld(x, y, z));
           uvs.push((rect.x + (rect.w * i) / nx) / atlasSize, (rect.y + (rect.h * j) / ny) / atlasSize);
           sways.push(pivot[0], pivot[1], sway?.amplitude ?? 0, sway?.period ?? 1);
-          shapes.push(sway?.phase ?? 0, sway?.second ?? 0);
+          shapes.push(sway?.phase ?? 0, sway?.second ?? 0, sway?.palm ?? 0);
         }
       }
       for (let j = 0; j < ny; j += 1) {
@@ -522,7 +534,7 @@ export function createStage(canvas: HTMLCanvasElement, images: IslandImages): Is
     geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
     geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
     geometry.setAttribute('aSway', new BufferAttribute(new Float32Array(sways), 4));
-    geometry.setAttribute('aSwayShape', new BufferAttribute(new Float32Array(shapes), 2));
+    geometry.setAttribute('aSwayShape', new BufferAttribute(new Float32Array(shapes), 3));
     geometry.setIndex(new BufferAttribute(new Uint32Array(indices), 1));
     return geometry;
   }
@@ -932,6 +944,30 @@ export function createStage(canvas: HTMLCanvasElement, images: IslandImages): Is
     projectOnLayer(layerId, x, y) {
       const foot = footOf(byId(layerId));
       return toCanvas(x, y, depthAt(foot[0], foot[1]));
+    },
+
+    projectOnPalm(layerId, x, y) {
+      const palm = scene.palms[layerId];
+      const [pivotX, pivotY] = byId(layerId).pivot!;
+      const amplitude = (palm.amplitudeDeg * Math.PI) / 180;
+      const wave = (Math.PI * 2 * layerMaterial.uniforms.uTime.value) / palm.periodS;
+      const lean: Vector2 = layerMaterial.uniforms.uPalmLean.value;
+      const angle =
+        amplitude * Math.sin(wave + palm.phase) +
+        0.35 * amplitude * Math.sin(wave / 0.37 + palm.phase) +
+        (layerId === 'palm-left-crown' ? lean.x : lean.y);
+      // The shader turns the art clockwise on screen, which is this turn with y pointing down.
+      const c = Math.cos(angle);
+      const s = Math.sin(angle);
+      const dx = x - pivotX;
+      const dy = y - pivotY;
+      return this.projectOnLayer(layerId, pivotX + dx * c - dy * s, pivotY + dx * s + dy * c);
+    },
+
+    leanPalm(layerId, radians) {
+      const lean: Vector2 = layerMaterial.uniforms.uPalmLean.value;
+      if (layerId === 'palm-left-crown') lean.x = radians;
+      else lean.y = radians;
     },
 
     dispose() {

@@ -1,6 +1,7 @@
 import { motionViewportHeight } from '../../../utils/motionViewport';
 import React, { useEffect, useRef } from 'react';
 import { prefersReducedMotion } from '../../../hooks/useReducedMotion';
+import { ISLAND_PERCHES, setBirdPerchReader, type BirdIslandView } from './birdPerches';
 import { setDeckCardReader } from './deckCard';
 import { ARTBOARD, IslandEngine, VIEW, loadIslandImages } from './engine';
 import { setWaterfallReader } from './waterfallEnd';
@@ -86,6 +87,28 @@ export function IslandScene({ className = '' }: { className?: string }) {
       });
       cleanups.push(() => setWaterfallReader(null));
 
+      // Where the bird can stand. The camera moves, so it asks again every frame.
+      setBirdPerchReader({
+        read(origin) {
+          const rect = canvas.getBoundingClientRect();
+          const box = root.getBoundingClientRect();
+          const offsetX = rect.left - origin.left;
+          const offsetY = rect.top - origin.top;
+          const perches = {} as BirdIslandView['perches'];
+          for (const { id, x, y, palm } of ISLAND_PERCHES) {
+            const ground = stage.project(x, y);
+            const point = palm ? stage.projectOnPalm(palm, x, y) : ground;
+            perches[id] = { x: point.x + offsetX, y: point.y + offsetY, scale: ground.scale };
+          }
+          return {
+            box: { left: box.left - origin.left, top: box.top - origin.top, right: box.right - origin.left, bottom: box.bottom - origin.top },
+            perches,
+          };
+        },
+        lean: (palm, radians) => stage.leanPalm(palm, radians),
+      });
+      cleanups.push(() => setBirdPerchReader(null));
+
       const resize = new ResizeObserver(() => engine?.resize());
       resize.observe(canvas);
       cleanups.push(() => resize.disconnect());
@@ -132,7 +155,7 @@ export function IslandScene({ className = '' }: { className?: string }) {
   }, []);
 
   return (
-    <div ref={rootRef} aria-hidden="true" className={`relative pointer-events-none ${className}`} style={{ aspectRatio: `${ARTBOARD.w} / ${ARTBOARD.h}` }}>
+    <div ref={rootRef} aria-hidden="true" data-bird-island="" className={`relative pointer-events-none ${className}`} style={{ aspectRatio: `${ARTBOARD.w} / ${ARTBOARD.h}` }}>
       <div className="absolute" style={canvasBox}>
         <canvas ref={canvasRef} className="absolute inset-0 size-full" />
         <div ref={hostRef} className="island-die">
