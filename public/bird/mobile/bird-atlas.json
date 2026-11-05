@@ -1,0 +1,1335 @@
+{
+ "version": 3,
+ "set": "mobile",
+ "scale_from_master": 0.25,
+ "faces": "right",
+ "referenceHeight": 98.2,
+ "notes": [
+  "All 19 animations show the bird at ONE size: the strips were normalised (normalise.py), so switching animations never changes its size. Never rescale one animation on its own.",
+  "Frame n is at x = (n-1) * frameWidth. Every frame of a sheet is the same size.",
+  "Standing sheets are pinned on the feet: anchor = where the toes meet the surface. Put it on the perch, 1 CSS px into it.",
+  "Flying sheets are pinned on the eye: anchor = the eye. Move the eye along the flight path; rotate about it to bank.",
+  "Mirror (scaleX -1 about the anchor) to face left, but never a standing bird from one frame to the next: use `turn`. In the air, mirror only while banked edge-on (glide 4).",
+  "Size: drawScale = targetHeightCss / referenceHeight, where referenceHeight is the standing look-around bird in sheet px. Headline: target = 1.0 x the headline font size. Island: target = 200 art px x stage.project(...).scale.",
+  "eye[] gives the eye per frame (sheet px) where it is visible, for hand-overs and for keeping cross-fades aligned.",
+  "eye[] corrected by hand after the first measure caught dark feathers: closed eyes are null, flap 1 and hover 6 are the pinned eye."
+ ],
+ "perchRule": "Only perch where both feet land: a flat top at least 14 CSS px wide with no taller ink within 22 CSS px either side. Never on a pointed or V-shaped top (M, A, W, V, N), a thin stem (I, L), an H crossbar, the tent finial, a pawn, the lantern. See perches.js and island_perches.json.",
+ "crossfade": {
+  "betweenAnimationsMs": 125,
+  "withinStandingStripMs": 42,
+  "onlyIfSilhouetteOverlap": 0.7,
+  "how": "draw the new frame at full opacity, then the previous frame on top at 0.6 -> 0.35 -> 0.15 (24 fps ticks); shift the old frame by how far the eye moved. Skip it when the two poses overlap less than 70 % (a clean cut reads better than a double image)."
+ },
+ "animations": {
+  "look-around": {
+   "image": "bird-look-around.webp",
+   "fallback": "bird-look-around.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1,
+    5,
+    1,
+    6,
+    7,
+    8
+   ],
+   "hold": [
+    8,
+    2,
+    10,
+    3,
+    6,
+    2,
+    6,
+    10,
+    4,
+    10,
+    8,
+    6
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     99.8,
+     93.8
+    ],
+    [
+     84.8,
+     96.2
+    ],
+    [
+     98.8,
+     97
+    ],
+    null,
+    [
+     75.3,
+     94.4
+    ],
+    [
+     87.4,
+     97.1
+    ],
+    [
+     99.2,
+     94.2
+    ],
+    [
+     98.9,
+     93.9
+    ]
+   ],
+   "use": "The main idle. 1 calm, 2 turns its head to you, 3 looks straight at you, 4 blinks, 5 looks back over its shoulder, 6 curious tilt, 7 crest up, 8 settles. Frames 2-3 are also \"looking at the cursor\"."
+  },
+  "chirp": {
+   "image": "bird-chirp.webp",
+   "fallback": "bird-chirp.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    4,
+    5,
+    6,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     98.3,
+     101.5
+    ],
+    [
+     96.1,
+     94.8
+    ],
+    [
+     94.3,
+     92.2
+    ],
+    [
+     93.8,
+     89.9
+    ],
+    [
+     95.2,
+     95
+    ],
+    [
+     91.1,
+     94.9
+    ],
+    [
+     94.5,
+     95.8
+    ],
+    [
+     98.6,
+     99.2
+    ]
+   ],
+   "use": "Sings two notes (4 and 6). The perch under it gives a 2 px bounce on each note."
+  },
+  "turn": {
+   "image": "bird-turn.webp",
+   "fallback": "bird-turn.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     104.1,
+     102
+    ],
+    [
+     90.2,
+     103.2
+    ],
+    [
+     85.5,
+     105.1
+    ],
+    [
+     80.7,
+     104.9
+    ],
+    [
+     80.1,
+     103.5
+    ],
+    [
+     75.7,
+     103.3
+    ],
+    [
+     79.8,
+     103.9
+    ],
+    [
+     75.1,
+     103.9
+    ]
+   ],
+   "use": "Turns round on the spot: 1 faces right, 3-4 faces you, 8 faces left. 1->8 turns right-to-left, 8->1 left-to-right. The ONLY way a standing bird changes side: never mirror a standing sprite in one frame."
+  },
+  "bob": {
+   "image": "bird-bob.webp",
+   "fallback": "bird-bob.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     98.4,
+     98.8
+    ],
+    [
+     107.1,
+     123.9
+    ],
+    [
+     98.9,
+     99
+    ],
+    [
+     102.5,
+     127.6
+    ],
+    [
+     91,
+     96.1
+    ],
+    [
+     107.3,
+     113.1
+    ],
+    [
+     98.3,
+     100.2
+    ],
+    [
+     98.5,
+     99.3
+    ]
+   ],
+   "use": "A quick dip and tail flick, the nervous habit of small birds. Between other idles."
+  },
+  "hop": {
+   "image": "bird-hop.webp",
+   "fallback": "bird-hop.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     98.4,
+     108
+    ],
+    [
+     108.4,
+     119.8
+    ],
+    [
+     110.3,
+     126.3
+    ],
+    [
+     101.1,
+     89.1
+    ],
+    [
+     107.9,
+     76.6
+    ],
+    [
+     105.6,
+     99.9
+    ],
+    [
+     104.5,
+     119.2
+    ],
+    [
+     101.2,
+     106.2
+    ]
+   ],
+   "use": "One hop: 2-3 crouch, 4-6 in the air, 7 lands, 8 stands. Move the anchor from one perch to the next while 4-6 play (smoothstep); the new perch dips on 7."
+  },
+  "peck": {
+   "image": "bird-peck.webp",
+   "fallback": "bird-peck.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     109.8,
+     116.5
+    ],
+    [
+     113.2,
+     132.1
+    ],
+    [
+     108.6,
+     146.9
+    ],
+    [
+     109.2,
+     123.6
+    ],
+    [
+     109,
+     145.4
+    ],
+    [
+     103.3,
+     102.6
+    ],
+    null,
+    [
+     108.7,
+     119.2
+    ]
+   ],
+   "use": "Eats a crumb: 3 and 5 peck the surface (a letter wobbles on each), 6 holds the crumb, 7 swallows, 8 pleased. On the island: \"eats something by the bridge\"."
+  },
+  "preen": {
+   "image": "bird-preen.webp",
+   "fallback": "bird-preen.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     97.8,
+     95.3
+    ],
+    [
+     94,
+     100.7
+    ],
+    [
+     93.9,
+     106.5
+    ],
+    [
+     97.6,
+     101
+    ],
+    [
+     89.5,
+     108.6
+    ],
+    [
+     95.2,
+     88.9
+    ],
+    [
+     93.1,
+     93
+    ],
+    [
+     96.9,
+     94.2
+    ]
+   ],
+   "use": "Grooms under its wing; 7 shakes a loose feather out."
+  },
+  "fluff": {
+   "image": "bird-fluff.webp",
+   "fallback": "bird-fluff.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     98.2,
+     97.6
+    ],
+    [
+     94.9,
+     96.8
+    ],
+    null,
+    [
+     102.5,
+     93.1
+    ],
+    [
+     108.4,
+     95.5
+    ],
+    [
+     94.9,
+     98.2
+    ],
+    [
+     98.2,
+     98.4
+    ],
+    [
+     98.4,
+     98.3
+    ]
+   ],
+   "use": "Puffs up and shakes it off, feathers flying on 4-5 (play them twice)."
+  },
+  "scratch": {
+   "image": "bird-scratch.webp",
+   "fallback": "bird-scratch.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     99.5,
+     97
+    ],
+    [
+     94.6,
+     96.6
+    ],
+    [
+     94.5,
+     100.2
+    ],
+    null,
+    null,
+    [
+     103,
+     97.4
+    ],
+    [
+     90.1,
+     102.2
+    ],
+    [
+     97.4,
+     98.5
+    ]
+   ],
+   "use": "Scratches its head with a foot (stands on one foot in 3-5)."
+  },
+  "stretch": {
+   "image": "bird-stretch.webp",
+   "fallback": "bird-stretch.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    4,
+    4,
+    5,
+    6,
+    6,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     101.1,
+     95.5
+    ],
+    [
+     110.4,
+     108.6
+    ],
+    [
+     105.7,
+     100.3
+    ],
+    [
+     111,
+     100.7
+    ],
+    [
+     100.5,
+     95.8
+    ],
+    [
+     94.6,
+     82.6
+    ],
+    [
+     100.1,
+     95.8
+    ],
+    [
+     100.7,
+     96.2
+    ]
+   ],
+   "use": "Wakes up properly: a long leg-and-wing stretch back (hold 4), then both wings up (hold 6)."
+  },
+  "startled": {
+   "image": "bird-startled.webp",
+   "fallback": "bird-startled.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    3,
+    4,
+    5,
+    6,
+    6
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     100.4,
+     92.4
+    ],
+    [
+     103,
+     93
+    ],
+    [
+     91.1,
+     82.4
+    ],
+    [
+     90.6,
+     92.4
+    ],
+    [
+     108.2,
+     124.7
+    ],
+    [
+     109.7,
+     147.6
+    ],
+    [
+     92.4,
+     99
+    ],
+    [
+     98.9,
+     95.8
+    ]
+   ],
+   "use": "A fright without contact (a sudden click nearby, the page jumping). Eyes wide, stands tall, crouches to spring; go into takeoff from 6, or 7-8 to calm down."
+  },
+  "sleep": {
+   "image": "bird-sleep.webp",
+   "fallback": "bird-sleep.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    5,
+    6,
+    5,
+    6,
+    7,
+    8
+   ],
+   "hold": [
+    6,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    10
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     93.9,
+     99.8
+    ],
+    null,
+    null,
+    null,
+    null,
+    null,
+    [
+     93.5,
+     101.7
+    ],
+    [
+     92.2,
+     104.2
+    ]
+   ],
+   "use": "Dozes off (1-4), sleeps (loop 5, 6 at about 0.33 s each), wakes with a start (7-8). Follow with stretch."
+  },
+  "annoyed": {
+   "image": "bird-annoyed.webp",
+   "fallback": "bird-annoyed.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    3,
+    4,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "hold": [
+    2,
+    3,
+    4,
+    3,
+    6,
+    6,
+    7,
+    5,
+    7,
+    4
+   ],
+   "burstFrame": 3,
+   "grounded": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     106.2,
+     95.3
+    ],
+    null,
+    [
+     94.8,
+     96.4
+    ],
+    [
+     100.7,
+     108.1
+    ],
+    [
+     116.4,
+     108.1
+    ],
+    null,
+    [
+     101.3,
+     89.1
+    ],
+    null
+   ],
+   "use": "Touched by the cursor or a finger. 2 flinches, 3 ruffles up with a squawk (spawn the feather particles here), 4 glares at you, 5 scolds, 6 shakes its head, 7 turns its beak up, offended, 8 crouches to spring. Go into takeoff from frame 2 of takeoff."
+  },
+  "takeoff": {
+   "image": "bird-takeoff.webp",
+   "fallback": "bird-takeoff.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "eye": [
+    [
+     116.2,
+     108.3
+    ],
+    [
+     120.1,
+     115.1
+    ],
+    [
+     119.6,
+     116.9
+    ],
+    [
+     120.6,
+     89.6
+    ],
+    [
+     124.2,
+     86.6
+    ],
+    [
+     122.7,
+     89.5
+    ],
+    [
+     121.2,
+     86.6
+    ],
+    [
+     123.9,
+     96.5
+    ]
+   ],
+   "handoverEye": {
+    "frame": 8,
+    "x": 123.9,
+    "y": 96.5,
+    "to": "flap"
+   },
+   "use": "Standing to flying: 2 crouch, wings open, 3 wings up, 4 pushes off, 5-8 climbing. Carry the anchor forward with an ease-in during 5-8 so the bird leaves at the flight's start speed; hand over to flap at 8 by putting the flap eye on handoverEye."
+  },
+  "landing": {
+   "image": "bird-landing.webp",
+   "fallback": "bird-landing.png",
+   "frameWidth": 180,
+   "frameHeight": 175,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "feet",
+    "x": 90,
+    "y": 162.5
+   },
+   "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "grounded": [
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "eye": [
+    [
+     111.6,
+     56
+    ],
+    [
+     102.3,
+     71.9
+    ],
+    [
+     105.3,
+     91.2
+    ],
+    [
+     111.3,
+     108.6
+    ],
+    [
+     115.2,
+     105.9
+    ],
+    [
+     111.5,
+     106.1
+    ],
+    [
+     103,
+     95.1
+    ],
+    [
+     99.8,
+     98.7
+    ]
+   ],
+   "handoverEye": {
+    "frame": 1,
+    "x": 111.6,
+    "y": 56,
+    "from": "flap or glide"
+   },
+   "use": "Flying to standing: 1 wings spread, 2 legs forward braking, 3 reaching down, 4 touches down, 5-8 folds and settles. Arrive with the eye on handoverEye of frame 1, with the anchor still moving and easing to a stop on frame 4."
+  },
+  "flap": {
+   "image": "bird-flap.webp",
+   "fallback": "bird-flap.png",
+   "frameWidth": 200,
+   "frameHeight": 210,
+   "frames": 8,
+   "fps": 14,
+   "loop": true,
+   "anchor": {
+    "kind": "eye",
+    "x": 110,
+    "y": 110
+   },
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    6
+   ],
+   "eye": [
+    [
+     110,
+     110
+    ],
+    [
+     110.1,
+     109.9
+    ],
+    [
+     110.1,
+     110
+    ],
+    [
+     110.1,
+     110.2
+    ],
+    [
+     110,
+     110.2
+    ],
+    [
+     110.2,
+     110.2
+    ],
+    [
+     110.1,
+     110
+    ],
+    [
+     110.2,
+     110.1
+    ]
+   ],
+   "use": "Powered flight. Loop `order` at 14 fps, 3-4 px of bob per wingbeat, bank with the path (spring, at most 16 deg)."
+  },
+  "glide": {
+   "image": "bird-glide.webp",
+   "fallback": "bird-glide.png",
+   "frameWidth": 200,
+   "frameHeight": 210,
+   "frames": 8,
+   "fps": 3,
+   "loop": false,
+   "anchor": {
+    "kind": "eye",
+    "x": 110,
+    "y": 110
+   },
+   "order": [
+    1,
+    2,
+    1,
+    6
+   ],
+   "eye": [
+    [
+     110.2,
+     110.1
+    ],
+    [
+     110.1,
+     109.8
+    ],
+    [
+     110.3,
+     109.9
+    ],
+    [
+     110.1,
+     110
+    ],
+    [
+     110.2,
+     109.9
+    ],
+    [
+     110.1,
+     110.1
+    ],
+    [
+     110.1,
+     109.9
+    ],
+    [
+     109.9,
+     110.1
+    ]
+   ],
+   "use": "Wings out, coasting. Cycle `order` slowly on a straight path; 3 banking, 4 steep bank (also the turn-round pose), 5 flare, 7 tucked dart, 8 level."
+  },
+  "swoop": {
+   "image": "bird-swoop.webp",
+   "fallback": "bird-swoop.png",
+   "frameWidth": 200,
+   "frameHeight": 210,
+   "frames": 8,
+   "fps": 12,
+   "loop": false,
+   "anchor": {
+    "kind": "eye",
+    "x": 110,
+    "y": 110
+   },
+   "sequence": [
+    2,
+    3,
+    4,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "eye": [
+    [
+     110.3,
+     110.2
+    ],
+    [
+     110.1,
+     110.1
+    ],
+    [
+     110.1,
+     109.9
+    ],
+    [
+     110.3,
+     110.2
+    ],
+    [
+     110.3,
+     109.9
+    ],
+    [
+     110.5,
+     111.2
+    ],
+    [
+     110.4,
+     109.9
+    ],
+    [
+     110.2,
+     110.2
+    ]
+   ],
+   "use": "A dive and pull-up. Map the frames to progress along a dipping stretch of the path, not to time."
+  },
+  "hover": {
+   "image": "bird-hover.webp",
+   "fallback": "bird-hover.png",
+   "frameWidth": 200,
+   "frameHeight": 210,
+   "frames": 8,
+   "fps": 18,
+   "loop": true,
+   "anchor": {
+    "kind": "eye",
+    "x": 110,
+    "y": 110
+   },
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "eye": [
+    [
+     110,
+     110.2
+    ],
+    [
+     110.1,
+     109.9
+    ],
+    [
+     110.4,
+     110
+    ],
+    [
+     110.5,
+     110.3
+    ],
+    [
+     110,
+     109.9
+    ],
+    [
+     110,
+     110
+    ],
+    [
+     110.2,
+     109
+    ],
+    [
+     110.5,
+     111.3
+    ]
+   ],
+   "use": "Hangs in the air with fast beats, legs down, checking a perch before landing. Loop at 18 fps, about 3 px of bob, nearly no forward speed."
+  }
+ },
+ "particles": {
+  "feathers": {
+   "image": "bird-feathers.webp",
+   "fallback": "bird-feathers.png",
+   "cell": 40,
+   "count": 8,
+   "use": "On annoyed frame 3: spawn 5-7 feathers at the bird's chest. Burst 120-190 CSS px/s up and outwards (-160 to -20 deg), drag 2.4/s, then fall at a terminal 75 CSS px/s with a 5-9 px side-to-side sway (3.2 rad/s) and a slow spin; 11-19 CSS px long; fade out over the last 0.6 s of a 1.5-2.1 s life. Mostly blue and teal, one or two amber; the yellow down (4) is the smallest."
+  }
+ }
+}
