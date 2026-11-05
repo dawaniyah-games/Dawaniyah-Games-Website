@@ -8,6 +8,7 @@
  * pixel stay together. Standing things are flat planes at the depth of their foot, so they stay
  * pinned to the sand.
  */
+import { isTouchScreen } from '../../../utils/motionViewport';
 import {
   AdditiveBlending,
   BufferAttribute,
@@ -48,7 +49,8 @@ const CENTER_Y = 980;
 const ORBIT_Z = -300;
 const NEAR = D * 0.2;
 const FAR = D * 2.5;
-const MAX_DPR = 1.75;
+// Phones have the sharpest screens and the least to spare: this is where the frames go.
+const MAX_DPR = isTouchScreen() ? 1.5 : 1.75;
 const GRID_CELL = 25; // art pixels: about 96 x 72 segments over the plateau
 const ATLAS_PADDING = 6;
 const MAX_ATLAS = 4096;

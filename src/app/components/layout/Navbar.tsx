@@ -55,7 +55,7 @@ export function Navbar() {
   return (
     <nav
       className={`fixed top-0 inset-x-0 z-50 text-night transition-[background-color,box-shadow] duration-300 ${
-        isScrolled || mobileMenuOpen ? 'bg-[#fbf3e6]/92 backdrop-blur-md shadow-[0_8px_30px_rgba(15,8,31,0.18)]' : ''
+        isScrolled || mobileMenuOpen ? 'bg-[#fbf3e6]/97 [@media(pointer:fine)]:bg-[#fbf3e6]/92 [@media(pointer:fine)]:backdrop-blur-md shadow-[0_8px_30px_rgba(15,8,31,0.18)]' : ''
       }`}
     >
       <div className="page-gutter flex items-center justify-between gap-6 h-[88px]">
