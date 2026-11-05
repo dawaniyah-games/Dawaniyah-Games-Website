@@ -71,25 +71,50 @@ const FOCUS_LATE_SPAN = 0.75;
 
 const ARC_PX = 120;
 const LANDING_START = 0.85;
+const LANDING_SQUASH = 0.04;
 const TUMBLE_DEG = 25;
 // Between two places: face down by this point of the hop, and face up again from the second.
 const FLIP_DOWN_END = 0.3;
 const FLIP_UP_START = 0.55;
 const FLIP_UP_SPAN = 0.3;
-const DECK_FLIP_START = 0.62;
-const DECK_FLIP_SPAN = 0.33;
-// Off the deck: it first rises with the island, growing towards the viewer, then sets off.
-const LIFT_END = 0.3;
-const LIFT_CARDS = 3; // how far it rises off the deck, in widths of the card lying there
+// Card flight v2, off the deck: deal → peel → sweep → land. f is the progress of this flight, 0 → 1.
+const DEAL_END = 0.14; // slides out of the deck along the table
+const PEEL_END = 0.34; // the leading edge lifts and it climbs off the island
+const SWEEP_END = 0.88; // the S-curve towards the viewer and over to the story; then it lands
+const DEAL_CARDS = 1.2; // how far it slides out, in widths of the card lying on the deck
+const DEAL_GROW = 0.12;
+const PEEL_RISE = 0.14; // of the screen height
+const PEEL_DRIFT = 0.06; // of the screen width, towards the story side
+const PEEL_SIZE = 0.42; // of its size in the story (at least PEEL_MIN_CARDS deck-widths)
+const PEEL_MIN_CARDS = 2.4;
+const SWEEP_PEAK = 1.16; // of its size in the story, where it passes closest
+const SWEEP_PEAK_AT = 0.55; // of the sweep
+const SWEEP_LAND_SIZE = 1.04;
+const SWEEP_OUT_X = 0.3; // first control point: out towards the story side, of the screen width
+const SWEEP_OUT_Y = 0.16; // ... and down, of the screen height
+const SWEEP_SWING_X = 0.1; // second control point: past the slot, of the screen width
+const SWEEP_SWING_Y = 0.2; // ... and above it, of the screen height
+const APPROACH_X = 0.04; // where the landing starts, short of the slot (screen width)
+const APPROACH_Y = 0.07; // ... and above it (screen height)
+const SPIN_DEG = 38; // in-plane spin while it peels
+const SWEEP_KEYS = [1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6];
+const SWING_DEG = 14; // past its resting roll, taken back on the landing
+const BANK_DEG = 32; // rotateY bank across the sweep
+const LIFT_TILT = 28; // rotateX when the leading edge is up
+const OVER_TILT = -12; // rotateX it passes through on the sweep
+const OVER_AT = 0.6; // of the sweep
+const SETTLE_DEG = 3; // last wobble on the landing
+const FLIP_FROM = 0.58; // back → face, through edge-on
+const FLIP_SPAN = 0.3;
+const MAX_COVER = 0.7; // the overshoot never makes the card wider than this share of the screen
+const ON_SCREEN_SHARE = 0.6; // at least this much of the card's width stays on screen
 const NAV_CLEARANCE_PX = 96;
 const CARD_TALL = 504 / 375;
-const SET_OFF = 0.18;
-const POSE_DONE = 0.6;
-const PEAK_AT = 0.72;
-const PEAK_SIZE = 1.16; // of its size in the story, on the way there
+// The scroll position this flight reads, softened twice over: a wheel notch becomes a move, not a step.
+const FLIGHT_SOFT_MS = 45;
+const FLIGHT_SOFT_DT_MS = 34;
 const FLAT_PERSPECTIVE = 9000;
 const CARD_PERSPECTIVE = 1000;
-const PERSPECTIVE_DONE = 0.4;
 // Between places it swells as it comes through the air, and banks into the turn.
 const HOP_SWELL = 0.22;
 const HOP_SWELL_PHONE = 0.1;
@@ -143,32 +168,144 @@ interface FlyerPlace extends Spot {
 
 const seat = (rect: DOMRect): Spot => ({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, width: rect.width });
 
-/** From the deck to the story: up off the island first, then across, larger than life, and in. */
-function flightFromDeck(f: number, deck: DeckCardPlace, to: Spot, end: Pose, vh: number): FlyerPlace {
-  const lift = easeOut(clamp01(f / LIFT_END));
-  const apex = { x: deck.x + (to.x < deck.x ? -1 : 1) * 24, y: deck.y - deck.width * LIFT_CARDS };
-  const start = { x: lerp(deck.x, apex.x, lift), y: lerp(deck.y, apex.y, lift) };
-  const across = easeInOut(clamp01((f - SET_OFF) / (1 - SET_OFF)));
-  const bend = { x: lerp(apex.x, to.x, 0.35), y: Math.max(apex.y, 0.32 * vh) };
-  const x = lerp(lerp(start.x, bend.x, across), lerp(bend.x, to.x, across), across);
-  const pathY = lerp(lerp(start.y, bend.y, across), lerp(bend.y, to.y, across), across);
+type Key = readonly [at: number, value: number];
 
-  // Small while it lifts, then growing as it comes across, past its final size and back.
-  const peak = to.width * PEAK_SIZE;
-  const width = f < PEAK_AT ? lerp(deck.width, peak, easeInOut(f / PEAK_AT)) : lerp(peak, to.width, easeInOut((f - PEAK_AT) / (1 - PEAK_AT)));
-  const y = Math.max(pathY, NAV_CLEARANCE_PX + (width * CARD_TALL) / 2);
+/**
+ * Through every key without a change of speed at any of them, resting only at the two ends and
+ * staying between each pair of values: a monotone cubic. Easing each phase on its own would stop the
+ * card at every join, however well the poses line up. `free` lets it run on through a turning point.
+ */
+const track = (keys: readonly Key[], at: number, free = false) => {
+  const last = keys.length - 1;
+  if (at <= keys[0][0]) return keys[0][1];
+  if (at >= keys[last][0]) return keys[last][1];
+  let i = 0;
+  while (at >= keys[i + 1][0]) i += 1;
+  const slope = (k: number) => (keys[k + 1][1] - keys[k][1]) / (keys[k + 1][0] - keys[k][0]);
+  const tangent = (k: number) => {
+    if (k === 0 || k === last) return 0;
+    const before = slope(k - 1);
+    const after = slope(k);
+    if (free) return (before + after) / 2;
+    return before * after <= 0 ? 0 : (2 * before * after) / (before + after);
+  };
+  const span = keys[i + 1][0] - keys[i][0];
+  const t = (at - keys[i][0]) / span;
+  const t2 = t * t;
+  const t3 = t2 * t;
+  return (
+    (2 * t3 - 3 * t2 + 1) * keys[i][1] +
+    (t3 - 2 * t2 + t) * span * tangent(i) +
+    (3 * t2 - 2 * t3) * keys[i + 1][1] +
+    (t3 - t2) * span * tangent(i + 1)
+  );
+};
 
-  const turned = easeOut(clamp01(f / POSE_DONE));
-  const flip = 180 * (1 - easeInOut(clamp01((f - DECK_FLIP_START) / DECK_FLIP_SPAN)));
+const bezier = (a: number, b: number, c: number, d: number, t: number) => {
+  const u = 1 - t;
+  return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d;
+};
+
+/**
+ * From the deck to the story, like a card flicked off a table: it is dealt out of the deck,
+ * peels up, sweeps towards the viewer on an S-curve, turns over edge-on and lands in its slot.
+ * It only grows while it travels, never in place. A card is stiff: no bend, only rigid turns.
+ */
+function flightFromDeck(f: number, deck: DeckCardPlace, to: Spot, end: Pose, vh: number, vw: number): FlyerPlace {
+  const side = to.x < deck.x ? -1 : 1;
+  const dealLen = deck.width * DEAL_CARDS;
+  const p1 = { x: deck.x + side * 0.75 * dealLen, y: deck.y + 0.66 * dealLen };
+  const p2 = { x: p1.x + side * PEEL_DRIFT * vw, y: p1.y - PEEL_RISE * vh };
+  const p3 = { x: to.x - side * APPROACH_X * vw, y: to.y - APPROACH_Y * vh };
+  const c1 = { x: p2.x + side * SWEEP_OUT_X * vw, y: p2.y + SWEEP_OUT_Y * vh };
+  const c2 = { x: p3.x + side * SWEEP_SWING_X * vw, y: p3.y - SWEEP_SWING_Y * vh };
+  const dealWidth = deck.width * (1 + DEAL_GROW);
+  const peelWidth = Math.max(deck.width * PEEL_MIN_CARDS, to.width * PEEL_SIZE);
+  const peak = Math.min(to.width * SWEEP_PEAK, Math.max(to.width, MAX_COVER * vw));
+  const spun = deck.roll - side * SPIN_DEG;
+  const swung = end.roll + side * SWING_DEG;
+
+  const sweepAt = (t: number) => lerp(PEEL_END, SWEEP_END, t);
+
+  // Its size changes by a steady ratio, not a steady number of pixels: doubling is what the eye sees.
+  const sizes: Key[] = (
+    [
+      [0, deck.width],
+      [DEAL_END, dealWidth],
+      [PEEL_END, peelWidth],
+      [sweepAt(SWEEP_PEAK_AT), peak],
+      [SWEEP_END, to.width * SWEEP_LAND_SIZE],
+      [1, to.width],
+    ] as Key[]
+  ).map(([at, size]) => [at, Math.log(size)]);
+  const widthAt = (at: number) => Math.exp(track(sizes, at));
+  const rolls: Key[] = [
+    [0, deck.roll],
+    [DEAL_END, deck.roll],
+    [PEEL_END, spun],
+    [SWEEP_END, swung],
+    [1, end.roll],
+  ];
+
+  // The whole card stays below the nav, corners included: it flies towards the viewer, so it never
+  // tucks under anything. Half the height of the card as it is turned in its own plane:
+  const lowest = (at: number) => {
+    const rad = (track(rolls, at) * Math.PI) / 180;
+    const size = widthAt(at);
+    return NAV_CLEARANCE_PX + ((size * CARD_TALL) / 2) * Math.abs(Math.cos(rad)) + (size / 2) * Math.abs(Math.sin(rad));
+  };
+  const onScreen = (value: number, at: number) => {
+    const inset = widthAt(at) * (ON_SCREEN_SHARE - 0.5);
+    return Math.min(Math.max(value, inset), vw - inset);
+  };
+  // Timed by distance along the curve: its control points would otherwise bunch the speed at one end.
+  const sweep = [p2, ...SWEEP_KEYS.map((t) => ({ x: bezier(p2.x, c1.x, c2.x, p3.x, t), y: bezier(p2.y, c1.y, c2.y, p3.y, t) })), p3];
+  const along = [0];
+  sweep.slice(1).forEach((place, i) => along.push(along[i] + Math.hypot(place.x - sweep[i].x, place.y - sweep[i].y)));
+  // Both limits go on the keys: applied to the finished path they would put a corner in it.
+  const route: [number, { x: number; y: number }][] = [
+    [0, deck],
+    [DEAL_END, p1],
+    ...sweep.map((place, i): [number, { x: number; y: number }] => [sweepAt(along[i] / along[along.length - 1]), place]),
+    [1, to],
+  ];
+  const width = widthAt(f);
+  const swept = clamp01((f - PEEL_END) / (SWEEP_END - PEEL_END));
+  const landed = clamp01((f - SWEEP_END) / (1 - SWEEP_END));
+  const x = track(route.map(([at, place]): Key => [at, onScreen(place.x, at)]), f, true);
+  const y = track(route.map(([at, place]): Key => [at, Math.max(place.y, lowest(at))]), f);
+  const roll = track(rolls, f) - side * SETTLE_DEG * 4 * landed * (1 - landed) * Math.sin(2 * Math.PI * landed);
+  const tilt = track(
+    [
+      [0, deck.tilt],
+      [DEAL_END, deck.tilt],
+      [PEEL_END, LIFT_TILT],
+      [sweepAt(OVER_AT), OVER_TILT],
+      [SWEEP_END, end.pitch],
+      [1, end.pitch],
+    ],
+    f,
+  );
+  const twist = track(
+    [
+      [0, deck.twist],
+      [DEAL_END, deck.twist],
+      [PEEL_END, 0],
+      [1, 0],
+    ],
+    f,
+  );
+  const bank = side * BANK_DEG * Math.sin(Math.PI * swept) ** 2;
+  const flip = 180 * (1 - easeInOut(clamp01((f - FLIP_FROM) / FLIP_SPAN)));
   return {
     x,
     y,
     width,
-    roll: lerp(deck.roll, end.roll, turned),
-    tilt: lerp(deck.tilt, end.pitch, turned),
-    twist: lerp(deck.twist, 0, turned),
-    yaw: lerp(0, end.yaw, turned) + flip,
-    perspective: lerp(FLAT_PERSPECTIVE, CARD_PERSPECTIVE, easeOut(clamp01(f / PERSPECTIVE_DONE))),
+    roll,
+    tilt,
+    twist,
+    yaw: lerp(0, end.yaw, easeInOut(clamp01((f - PEEL_END) / (1 - PEEL_END)))) + bank + flip,
+    perspective: lerp(FLAT_PERSPECTIVE, CARD_PERSPECTIVE, easeInOut(clamp01(f / PEEL_END))),
   };
 }
 
@@ -398,6 +535,9 @@ function StoryWithCard() {
     let faceStart = -Infinity;
     let frontShown = -1;
     let deckPageY: number | null = null;
+    let softY: number | null = null;
+    let softerY = 0;
+    let lastTick = 0;
 
     // The face on the card, and the flip in progress. Each flip adds half a turn to `resting`.
     let shownItem = 0;
@@ -432,11 +572,28 @@ function StoryWithCard() {
       const scrollY = window.scrollY;
       const deck = readDeckCard(FLYER_WIDTH, FLYER_HEIGHT);
 
+      // Only the flight off the deck uses this: everywhere else the card is held to the page. A jump
+      // across the page is not a scroll, and it goes straight there.
+      const step = Math.min(now - lastTick, FLIGHT_SOFT_DT_MS);
+      lastTick = now;
+      if (softY === null || Math.abs(scrollY - softerY) > vh) {
+        softY = scrollY;
+        softerY = scrollY;
+      } else {
+        const follow = 1 - Math.exp(-step / FLIGHT_SOFT_MS);
+        softY = lerp(softY, scrollY, follow);
+        softerY = lerp(softerY, softY, follow);
+        if (Math.abs(scrollY - softerY) < 0.2) {
+          softY = scrollY;
+          softerY = scrollY;
+        }
+      }
+
       // ---- Work it all out from the scroll position.
       if (deck && deckPageY === null) deckPageY = deck.y + scrollY;
       const deckStart = Math.max(DECK_START_SCROLL, (deckPageY ?? 0) - DECK_ON_SCREEN * vh);
       const deckEnd = storyRect.top + scrollY - DECK_RISE_END * vh;
-      let journey = clamp01((scrollY - deckStart) / Math.max(deckEnd - deckStart, 1));
+      let journey = clamp01((softerY - deckStart) / Math.max(deckEnd - deckStart, 1));
       if (journey >= 1) {
         for (const top of sectionTops) {
           const flight = clamp01((RISE_START * vh - top) / ((RISE_START - RISE_END) * vh));
@@ -539,7 +696,7 @@ function StoryWithCard() {
           const to = seat(slotRect);
           to.y += float * f;
           if (deck) {
-            place = flightFromDeck(f, deck, to, stage, vh);
+            place = flightFromDeck(f, deck, to, stage, vh, vw);
           } else {
             // Without the island there is no deck to leave from, so it drops in from above.
             const above = { x: to.x, y: (-FLYER_HEIGHT * to.width) / FLYER_WIDTH, width: to.width };
@@ -556,7 +713,7 @@ function StoryWithCard() {
 
         const landing = clamp01((f - LANDING_START) / (1 - LANDING_START));
         const scale = place.width / FLYER_WIDTH;
-        const squash = f >= LANDING_START ? lerp(0.96, 1, landing) : 1;
+        const squash = 1 - LANDING_SQUASH * Math.sin(Math.PI * landing);
         const cx = place.x;
         const cy = place.y - Math.sin(Math.PI * landing) * 6;
         const inFlight = Math.sin(Math.PI * f);
@@ -575,14 +732,16 @@ function StoryWithCard() {
         setFlyer('transform', `translate3d(${cx - FLYER_WIDTH / 2}px, ${cy - FLYER_HEIGHT / 2}px, 0) scale(${scale}, ${scale * squash})`);
         setFlyerInner(
           'transform',
-          `perspective(${place.perspective}px) rotateZ(${place.roll}deg) rotateX(${place.tilt}deg) rotateZ(${place.twist}deg) rotateY(${place.yaw}deg)`,
+          // Divided by the scale, or a card scaled down reads as more steeply foreshortened than the
+          // same-sized sticky card, and it visibly ticks when they swap.
+          `perspective(${place.perspective / scale}px) rotateZ(${place.roll}deg) rotateX(${place.tilt}deg) rotateZ(${place.twist}deg) rotateY(${place.yaw}deg)`,
         );
         flyer.classList.toggle('is-landing', f >= LANDING_START);
         dressCard(flyerInner, flyerShadow, faceTurn(place.yaw), inFlight);
       }
       setFlyer('visibility', flyerOnScreen ? 'visible' : 'hidden');
 
-      if (flip || onStage) request();
+      if (flip || onStage || softerY !== scrollY) request();
     };
 
     function request() {
