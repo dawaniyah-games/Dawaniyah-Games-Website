@@ -1,6 +1,6 @@
 # Dawaniyah Games Studio
 
-> Dawaniyah Games (دوانية الألعاب) is a game development studio based in Riyadh, Saudi Arabia, serving clients in Saudi Arabia, the UAE, Kuwait and Qatar, with an engineering team in Cologne, Germany. It builds mobile, PC, console and VR games on Unity and Unreal Engine for clients, develops original games for Gulf players, and publishes open-source tools for Unity developers, starting with UI Framework for Unity.
+> Dawaniyah Games (ديوانية الألعاب) is a game development studio based in Riyadh, Saudi Arabia, serving clients in Saudi Arabia, the UAE, Kuwait and Qatar, with an engineering team in Cologne, Germany. It builds mobile, PC, console and VR games on Unity and Unreal Engine for clients, develops original games for Gulf players, and publishes open-source tools for Unity developers, starting with UI Framework for Unity.
 
 ## Studio
 
