@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { openSoundPrompt, shouldAskForSound, startSoundIfAllowed } from '../../audio/soundStore';
 import { EmblemLockup } from '../brand/EmblemLockup';
 import { loadIslandImages } from '../sections/island/engine';
 import { prefersReducedMotion } from '../../hooks/useReducedMotion';
@@ -20,14 +21,21 @@ export function LoadingScreen() {
     let cancelled = false;
     const started = performance.now();
     let timer = 0;
+    let finished = false;
 
     const finish = () => {
-      if (cancelled) return;
+      // The timeout and the images can both get here.
+      if (cancelled || finished) return;
+      finished = true;
       window.clearTimeout(timer);
       setProgress(1);
       const wait = Math.max(0, MIN_VISIBLE_MS - (performance.now() - started));
       window.setTimeout(() => {
-        if (!cancelled) setPhase('dissolving');
+        void startSoundIfAllowed().then((sound) => {
+          if (cancelled) return;
+          if (sound === 'needs-gesture' && shouldAskForSound()) openSoundPrompt();
+          setPhase('dissolving');
+        });
       }, wait);
     };
 

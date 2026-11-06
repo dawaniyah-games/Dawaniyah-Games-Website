@@ -1,0 +1,425 @@
+{
+ "version": 1,
+ "sampleRate": 48000,
+ "formats": {
+  "webm": "Opus in WebM: use when canPlayType('audio/webm; codecs=\"opus\"') is not empty",
+  "m4a": "AAC: the fallback (older Safari)"
+ },
+ "levels": "Levels are baked in: at gain 1 the music sits at about -30 LUFS, the waterfall at -38 LUFS and the bird under the music. Keep every bus at 1 and let the visitor's volume do the rest.",
+ "buses": {
+  "music": 1.0,
+  "ambience": 1.0,
+  "bird": 1.0,
+  "island": 1.0,
+  "ui": 1.0
+ },
+ "sounds": {
+  "music": {
+   "category": "music",
+   "loop": true,
+   "loopLength": 70.144,
+   "crossfade": 0.0,
+   "lufs": -30,
+   "files": {
+    "music-oud-loop": {
+     "webm": "music-oud-loop.webm",
+     "m4a": "music-oud-loop.m4a",
+     "duration": 70.144
+    }
+   },
+   "when": "Background, site-wide, while sound is on. Solo oud, maqam Bayati, made for DenDon. Loops with a short natural breath at the seam: loop it as is (AudioBufferSourceNode.loop with loopEnd = loopLength)."
+  },
+  "waterfall": {
+   "category": "ambience",
+   "loop": true,
+   "loopLength": 20.0,
+   "crossfade": 2.0,
+   "lufs": -38,
+   "files": {
+    "ambience-waterfall": {
+     "webm": "ambience-waterfall.webm",
+     "m4a": "ambience-waterfall.m4a",
+     "duration": 20.0
+    }
+   },
+   "when": "Continuous while the island is on screen; its gain follows how much of the island is visible (eased, 0.6 s). The file loops seamlessly; play it with a 2 s overlap cross-fade anyway so codec padding never shows."
+  },
+  "bird-song": {
+   "category": "bird",
+   "when": "chirp frame 4 (note 2 is in the file 0.25 s later, on frame 6). Pick a variant, never the same twice in a row.",
+   "variants": [
+    "bird-song-1",
+    "bird-song-2",
+    "bird-song-3"
+   ],
+   "files": {
+    "bird-song-1": {
+     "webm": "bird-song-1.webm",
+     "m4a": "bird-song-1.m4a",
+     "duration": 0.686,
+     "peakDb": -23.0
+    },
+    "bird-song-2": {
+     "webm": "bird-song-2.webm",
+     "m4a": "bird-song-2.m4a",
+     "duration": 0.708,
+     "peakDb": -23.0
+    },
+    "bird-song-3": {
+     "webm": "bird-song-3.webm",
+     "m4a": "bird-song-3.m4a",
+     "duration": 0.711,
+     "peakDb": -23.0
+    }
+   }
+  },
+  "bird-tweet": {
+   "category": "bird",
+   "when": "look-around frame 2 (it turns to look at you or the cursor), 30 % of the time, at most once every 6 s.",
+   "variants": [
+    "bird-tweet-1",
+    "bird-tweet-2",
+    "bird-tweet-3"
+   ],
+   "files": {
+    "bird-tweet-1": {
+     "webm": "bird-tweet-1.webm",
+     "m4a": "bird-tweet-1.m4a",
+     "duration": 0.359,
+     "peakDb": -22.0
+    },
+    "bird-tweet-2": {
+     "webm": "bird-tweet-2.webm",
+     "m4a": "bird-tweet-2.m4a",
+     "duration": 0.388,
+     "peakDb": -22.0
+    },
+    "bird-tweet-3": {
+     "webm": "bird-tweet-3.webm",
+     "m4a": "bird-tweet-3.m4a",
+     "duration": 0.417,
+     "peakDb": -23.0
+    }
+   }
+  },
+  "bird-pip": {
+   "category": "bird",
+   "when": "sleep frame 7 (wakes with a start).",
+   "variants": [
+    "bird-pip"
+   ],
+   "files": {
+    "bird-pip": {
+     "webm": "bird-pip.webm",
+     "m4a": "bird-pip.m4a",
+     "duration": 0.338,
+     "peakDb": -23.0
+    }
+   }
+  },
+  "bird-flinch": {
+   "category": "bird",
+   "when": "annoyed frame 2, and startled frame 2.",
+   "variants": [
+    "bird-flinch"
+   ],
+   "files": {
+    "bird-flinch": {
+     "webm": "bird-flinch.webm",
+     "m4a": "bird-flinch.m4a",
+     "duration": 0.318,
+     "peakDb": -19.0
+    }
+   }
+  },
+  "bird-squawk": {
+   "category": "bird",
+   "when": "annoyed frame 3 (burstFrame), with feather-poof.",
+   "variants": [
+    "bird-squawk"
+   ],
+   "files": {
+    "bird-squawk": {
+     "webm": "bird-squawk.webm",
+     "m4a": "bird-squawk.m4a",
+     "duration": 0.431,
+     "peakDb": -16.0
+    }
+   }
+  },
+  "bird-scold": {
+   "category": "bird",
+   "when": "annoyed frame 5.",
+   "variants": [
+    "bird-scold"
+   ],
+   "files": {
+    "bird-scold": {
+     "webm": "bird-scold.webm",
+     "m4a": "bird-scold.m4a",
+     "duration": 0.557,
+     "peakDb": -19.0
+    }
+   }
+  },
+  "bird-huff": {
+   "category": "bird",
+   "when": "annoyed frame 6.",
+   "variants": [
+    "bird-huff"
+   ],
+   "files": {
+    "bird-huff": {
+     "webm": "bird-huff.webm",
+     "m4a": "bird-huff.m4a",
+     "duration": 0.42,
+     "peakDb": -26.0
+    }
+   }
+  },
+  "touch-tap": {
+   "category": "bird",
+   "when": "the instant the cursor or a finger touches the bird (before the flinch). A warm wooden tap made for DenDon.",
+   "variants": [
+    "touch-tap"
+   ],
+   "files": {
+    "touch-tap": {
+     "webm": "touch-tap.webm",
+     "m4a": "touch-tap.m4a",
+     "duration": 0.147,
+     "peakDb": -18.0
+    }
+   }
+  },
+  "feather-poof": {
+   "category": "bird",
+   "when": "annoyed frame 3, as the feathers burst.",
+   "variants": [
+    "feather-poof"
+   ],
+   "files": {
+    "feather-poof": {
+     "webm": "feather-poof.webm",
+     "m4a": "feather-poof.m4a",
+     "duration": 0.62,
+     "peakDb": -21.0
+    }
+   }
+  },
+  "feather-rustle": {
+   "category": "bird",
+   "when": "preen frame 7, the first fluff frame 4, scratch frame 3 at -6 dB.",
+   "variants": [
+    "feather-rustle"
+   ],
+   "files": {
+    "feather-rustle": {
+     "webm": "feather-rustle.webm",
+     "m4a": "feather-rustle.m4a",
+     "duration": 0.448,
+     "peakDb": -29.0
+    }
+   }
+  },
+  "wing-flap": {
+   "category": "bird",
+   "when": "each new wingbeat: flap order frame 1 (twice a second), hover frame 1 at -4 dB, stretch frame 6 at -4 dB, startled frame 4. Random variant, -3 to 0 dB. Never within 120 ms of the last one.",
+   "variants": [
+    "wing-flap-1",
+    "wing-flap-2",
+    "wing-flap-3"
+   ],
+   "files": {
+    "wing-flap-1": {
+     "webm": "wing-flap-1.webm",
+     "m4a": "wing-flap-1.m4a",
+     "duration": 0.287,
+     "peakDb": -24.0
+    },
+    "wing-flap-2": {
+     "webm": "wing-flap-2.webm",
+     "m4a": "wing-flap-2.m4a",
+     "duration": 0.289,
+     "peakDb": -24.0
+    },
+    "wing-flap-3": {
+     "webm": "wing-flap-3.webm",
+     "m4a": "wing-flap-3.m4a",
+     "duration": 0.289,
+     "peakDb": -24.0
+    }
+   }
+  },
+  "wing-takeoff": {
+   "category": "bird",
+   "when": "takeoff frame 3.",
+   "variants": [
+    "wing-takeoff"
+   ],
+   "files": {
+    "wing-takeoff": {
+     "webm": "wing-takeoff.webm",
+     "m4a": "wing-takeoff.m4a",
+     "duration": 0.662,
+     "peakDb": -22.0
+    }
+   }
+  },
+  "wing-landing": {
+   "category": "bird",
+   "when": "landing frame 1.",
+   "variants": [
+    "wing-landing"
+   ],
+   "files": {
+    "wing-landing": {
+     "webm": "wing-landing.webm",
+     "m4a": "wing-landing.m4a",
+     "duration": 0.477,
+     "peakDb": -25.0
+    }
+   }
+  },
+  "wing-swoop": {
+   "category": "bird",
+   "when": "when a swoop stretch starts.",
+   "variants": [
+    "wing-swoop"
+   ],
+   "files": {
+    "wing-swoop": {
+     "webm": "wing-swoop.webm",
+     "m4a": "wing-swoop.m4a",
+     "duration": 0.749,
+     "peakDb": -27.0
+    }
+   }
+  },
+  "feet": {
+   "category": "bird",
+   "when": "landing frame 4 and hop frame 7: feet-letter on the headline, feet-sand on the island ground; palm-rustle instead on a palm crown. turn frame 6 at -6 dB.",
+   "variants": [
+    "feet-letter",
+    "feet-sand"
+   ],
+   "files": {
+    "feet-letter": {
+     "webm": "feet-letter.webm",
+     "m4a": "feet-letter.m4a",
+     "duration": 0.219,
+     "peakDb": -22.0
+    },
+    "feet-sand": {
+     "webm": "feet-sand.webm",
+     "m4a": "feet-sand.m4a",
+     "duration": 0.225,
+     "peakDb": -24.0
+    }
+   }
+  },
+  "peck": {
+   "category": "bird",
+   "when": "peck frames 3 and 5, one tap each (the bird's existing peck hooks), letter or sand by the perch.",
+   "variants": [
+    "peck-letter",
+    "peck-sand"
+   ],
+   "files": {
+    "peck-letter": {
+     "webm": "peck-letter.webm",
+     "m4a": "peck-letter.m4a",
+     "duration": 0.212,
+     "peakDb": -21.0
+    },
+    "peck-sand": {
+     "webm": "peck-sand.webm",
+     "m4a": "peck-sand.m4a",
+     "duration": 0.225,
+     "peakDb": -22.0
+    }
+   }
+  },
+  "palm-rustle": {
+   "category": "bird",
+   "when": "landing on a palm crown (landing frame 4), and leaving one (takeoff frame 4) at -4 dB.",
+   "variants": [
+    "palm-rustle"
+   ],
+   "files": {
+    "palm-rustle": {
+     "webm": "palm-rustle.webm",
+     "m4a": "palm-rustle.m4a",
+     "duration": 0.861,
+     "peakDb": -22.0
+    }
+   }
+  },
+  "die-knock": {
+   "category": "island",
+   "when": "each of the die's DIE_IMPACTS in dieThrow.ts, gain 20*log10(strength / 0.1) dB, random variant.",
+   "variants": [
+    "die-knock-1",
+    "die-knock-2",
+    "die-knock-3"
+   ],
+   "files": {
+    "die-knock-1": {
+     "webm": "die-knock-1.webm",
+     "m4a": "die-knock-1.m4a",
+     "duration": 0.299,
+     "peakDb": -26.0
+    },
+    "die-knock-2": {
+     "webm": "die-knock-2.webm",
+     "m4a": "die-knock-2.m4a",
+     "duration": 0.284,
+     "peakDb": -26.0
+    },
+    "die-knock-3": {
+     "webm": "die-knock-3.webm",
+     "m4a": "die-knock-3.m4a",
+     "duration": 0.288,
+     "peakDb": -26.0
+    }
+   }
+  },
+  "pawn-tap": {
+   "category": "island",
+   "when": "a pawn lands at the end of its hop (hopT reaches 1).",
+   "variants": [
+    "pawn-tap-1",
+    "pawn-tap-2"
+   ],
+   "files": {
+    "pawn-tap-1": {
+     "webm": "pawn-tap-1.webm",
+     "m4a": "pawn-tap-1.m4a",
+     "duration": 0.214,
+     "peakDb": -25.0
+    },
+    "pawn-tap-2": {
+     "webm": "pawn-tap-2.webm",
+     "m4a": "pawn-tap-2.m4a",
+     "duration": 0.229,
+     "peakDb": -25.0
+    }
+   }
+  },
+  "ui-sound-on": {
+   "category": "ui",
+   "when": "once, when the visitor turns sound on (a soft pop made for DenDon).",
+   "variants": [
+    "ui-sound-on"
+   ],
+   "files": {
+    "ui-sound-on": {
+     "webm": "ui-sound-on.webm",
+     "m4a": "ui-sound-on.m4a",
+     "duration": 0.26,
+     "peakDb": -24.0
+    }
+   }
+  }
+ }
+}

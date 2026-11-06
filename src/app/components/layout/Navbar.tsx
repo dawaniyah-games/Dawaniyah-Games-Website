@@ -8,6 +8,7 @@ import logoWordAr from '../../../assets/brand/logo-word-ar.webp';
 import { EASE_SMOOTH } from '../../motion/presets';
 import { scrollToSection } from '../../utils/sectionPreload';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { SoundToggle } from './SoundToggle';
 
 const mobileMenuVariants = {
   closed: { opacity: 0, scaleY: 0.98, transition: { duration: 0.18, ease: EASE_SMOOTH } },
@@ -71,14 +72,18 @@ export function Navbar() {
               {link.name}
             </a>
           ))}
-          <LanguageSwitcher />
+          <div className="flex items-center gap-2">
+            <SoundToggle />
+            <LanguageSwitcher />
+          </div>
         </div>
 
         <button type="button" className="hidden xl:inline-flex btn btn-night t-button t-upper ms-8 min-[1400px]:ms-[90px] shrink-0" onClick={() => goTo('#contact')}>
           {t('nav.getStarted')}
         </button>
 
-        <div className="xl:hidden flex items-center gap-4">
+        <div className="xl:hidden flex items-center gap-2">
+          <SoundToggle />
           <LanguageSwitcher />
           <button
             type="button"
