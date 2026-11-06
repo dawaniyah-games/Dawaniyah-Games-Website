@@ -13,7 +13,7 @@ export type Stretch = { end: number; kind: FlightKind }; // end: px along the pa
 export const TICK_S = 1 / 24;
 export const TAKEOFF_SPEED = 260;
 export const LANDING_SPEED = 220;
-const CRUISE = 380;
+export const CRUISE = 380;
 const PACE: Record<FlightKind, number> = { flap: 1, glide: 1.1, swoop: 1.45, hover: 0.22 };
 const PACE_SMOOTH_PX = 60;
 const ACCEL_LIMIT = 450;
@@ -157,7 +157,7 @@ export class FlightTiming {
   private distances: number[] = [];
   private times: number[] = [0];
 
-  constructor(path: PathCurve, plan: Stretch[], v0: number, v1: number) {
+  constructor(path: PathCurve, plan: Stretch[], v0: number, v1: number, cruise: number) {
     const L = path.length;
     const count = clamp(Math.ceil(L / 2), 40, 800);
     const paces: number[] = [];
@@ -165,7 +165,7 @@ export class FlightTiming {
       const s = (L * i) / count;
       this.distances.push(s);
       const kind = (plan.find((stretch) => s <= stretch.end) ?? plan[plan.length - 1]).kind;
-      paces.push(CRUISE * PACE[kind]);
+      paces.push(cruise * PACE[kind]);
     }
     // Smooth the pace along the path, then cap it by how hard the bird can speed up and brake.
     const window = Math.max(1, Math.round(PACE_SMOOTH_PX / (L / count)));
@@ -243,10 +243,11 @@ export class FlightRun {
     public kTo: number,
     v0 = TAKEOFF_SPEED,
     v1 = LANDING_SPEED,
+    cruise = CRUISE,
   ) {
     this.plan = plan;
     this.flip = flip;
-    this.timing = new FlightTiming(path, plan, v0, v1);
+    this.timing = new FlightTiming(path, plan, v0, v1, cruise);
   }
 
   get done() {

@@ -206,6 +206,12 @@ export interface IslandFrame {
   still: boolean;
 }
 
+/** What the island tells the sound. It knows nothing about audio. */
+export interface IslandSoundSink {
+  die(strength: number, x: number): void; // x in viewport pixels
+  pawn(x: number): void;
+}
+
 export class IslandEngine {
   private lite = false;
   private stones = scene.board.stones;
@@ -249,6 +255,7 @@ export class IslandEngine {
     private die: DieElements,
     private reduced: boolean,
     private stage: IslandStage,
+    private sounds?: IslandSoundSink,
   ) {
     const stoneIndex = (id: string) => this.stones.findIndex((stone) => stone.id === id);
     this.tokens = scene.loop.tokenOrder.map((id) => {
@@ -446,6 +453,7 @@ export class IslandEngine {
         if (token.hopT >= 1) {
           token.hopT = -1;
           token.pos = token.hopTo;
+          this.sounds?.pawn(this.screenX(token.pos[0], token.pos[1]));
           this.hopsLeft -= 1;
           if (this.hopsLeft > 0 || !this.collide(token)) {
             token.landedAt = this.time;
@@ -484,12 +492,18 @@ export class IslandEngine {
     this.stepOrbit(dt);
   }
 
+  /** Where a point of the art is across the window, for panning a sound to it. */
+  private screenX(x: number, y: number) {
+    return this.canvas.getBoundingClientRect().left + this.stage.project(x, y).x;
+  }
+
   private stepRoll(ms: number) {
     const [cx, cy] = scene.board.die.center;
     while (this.dieImpact < DIE_IMPACTS.length && ms >= DIE_IMPACTS[this.dieImpact].ms) {
       const impact = DIE_IMPACTS[this.dieImpact];
       const { x, z } = throwPosition(impact.ms, this.dieAngle);
       this.spawnPuff(cx + x * DIE_ART_PER_UNIT, cy + scene.board.die.foot + z * DIE_ART_PER_UNIT * GROUND_SLANT, impact.puff);
+      this.sounds?.die(impact.strength, this.screenX(cx, cy));
       this.dieImpact += 1;
     }
     if (ms >= DIE_LAND_MS && !this.dieLanded) {
@@ -692,12 +706,12 @@ export class IslandEngine {
     }
   }
 
-  /** A critically damped spring towards the pointer. Phones have no pointer, so theirs stays at rest. */
+  /** A critically damped spring towards the pointer, or on a phone towards how it is being held. */
   private stepOrbit(dt: number) {
     const omega = 4.7 / ORBIT_SETTLE_S;
     const { orbit, pointer } = this;
-    const targetX = this.lite ? 0 : pointer.x;
-    const targetY = this.lite ? 0 : pointer.y;
+    const targetX = pointer.x;
+    const targetY = pointer.y;
     const seconds = dt / 1000 / 2;
     for (let i = 0; i < 2; i += 1) {
       orbit.vx += (omega * omega * (targetX - orbit.x) - 2 * omega * orbit.vx) * seconds;

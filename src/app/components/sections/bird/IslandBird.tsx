@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { birdSounds } from '../../../audio/birdSounds';
+import { SoundPrompt } from '../../layout/SoundPrompt';
 import type { BirdEngine } from './birdEngine';
 
 /**
@@ -17,7 +19,7 @@ export function IslandBird() {
     let disposed = false;
     void import('./birdEngine').then(({ BirdEngine }) => {
       if (disposed) return;
-      const engine = new BirdEngine(canvas);
+      const engine = new BirdEngine(canvas, birdSounds);
       engineRef.current = engine;
       engine.start().catch(() => {
         // The hero is complete without the bird.
@@ -34,5 +36,10 @@ export function IslandBird() {
     engineRef.current?.remeasure();
   }, [i18n.language]);
 
-  return <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 size-full" />;
+  return (
+    <>
+      <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 size-full" />
+      <SoundPrompt />
+    </>
+  );
 }

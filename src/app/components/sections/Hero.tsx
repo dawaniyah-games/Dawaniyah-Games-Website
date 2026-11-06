@@ -27,7 +27,7 @@ export function Hero() {
             <div className="lg:w-[min(41.67vw,600px)]">
               <h1 className="t-display t-upper">
                 <span className="sr-only">
-                  Dawaniyah Games (دوانية الألعاب): game development studio in Riyadh, Saudi Arabia, serving the UAE, Kuwait and Qatar.
+                  Dawaniyah Games (ديوانية الألعاب): game development studio in Riyadh, Saudi Arabia, serving the UAE, Kuwait and Qatar.
                 </span>
                 <HeadlineLine text={t('hero.titleTop')} rtl={rtl} />
                 <HeadlineLine text={t('hero.titleBottom')} rtl={rtl} />
@@ -38,7 +38,7 @@ export function Hero() {
                 <p>{t('hero.descriptionLine2')}</p>
               </div>
 
-              <div data-bird-nofly="" className="flex flex-wrap items-center gap-4 mt-9">
+              <div data-bird-nofly="row" className="flex flex-wrap items-center gap-4 mt-9">
                 <button type="button" className="btn btn-saffron t-button t-upper" onClick={() => scrollToId('contact')}>
                   {t('hero.ctaServices')}
                 </button>
@@ -49,8 +49,8 @@ export function Hero() {
             </div>
           </div>
 
-          {/* The page mirrors on /ar/; the island itself does not. */}
-          <IslandScene className="mt-10 mb-6 w-[112%] -ms-[6%] lg:mt-0 lg:mb-0 lg:ms-0 lg:absolute lg:w-[min(50vw,720px)] lg:top-[min(15.6vw,225px)] lg:end-[max(-2.8vw,-40px)]" />
+          {/* The page mirrors on /ar/; the island itself does not. On a phone, room for the bird on a palm under the buttons. */}
+          <IslandScene className="mt-[max(40px,19vw)] mb-6 w-[112%] -ms-[6%] lg:mt-0 lg:mb-0 lg:ms-0 lg:absolute lg:w-[min(50vw,720px)] lg:top-[min(15.6vw,225px)] lg:end-[max(-2.8vw,-40px)]" />
           <IslandBird />
         </div>
       </section>

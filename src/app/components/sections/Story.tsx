@@ -779,7 +779,8 @@ function StoryWithCard() {
       }
       setFlyer('visibility', flyerOnScreen ? 'visible' : 'hidden');
 
-      if (flip || onStage || softerY !== scrollY) request();
+      // Off the deck the island keeps moving under the card, so it has to keep up without a scroll.
+      if (flip || onStage || softerY !== scrollY || (flying && leg === 0)) request();
     };
 
     function request() {
