@@ -293,8 +293,6 @@ const ar = {
     viewRepos: "عرض المستودعات",
       phoneKSA: "+966 55 119 4463",
       phoneLabelKSA: "اتصل بنا (السعودية)",
-      phoneDE: "+49 1522 9018095",
-      phoneLabelDE: "اتصل بنا (ألمانيا)",
       form: {
       name: "الاسم",
       email: "البريد الإلكتروني",

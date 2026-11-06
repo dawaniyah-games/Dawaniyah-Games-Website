@@ -5,7 +5,7 @@
  * Saudi number +966 0551194463 → drop the leading local 0 → 966551194463
  */
 export const WHATSAPP_CONFIG = {
-  phoneNumber: '4915229018095',
+  phoneNumber: '16048036135',
 } as const;
 
 /**

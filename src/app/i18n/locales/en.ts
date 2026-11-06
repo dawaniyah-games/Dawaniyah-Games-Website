@@ -296,8 +296,6 @@ const en = {
     viewRepos: "View Repositories",
       phoneKSA: "+966 55 119 4463",
       phoneLabelKSA: "Call Us (KSA)",
-      phoneDE: "+49 1522 9018095",
-      phoneLabelDE: "Call Us (Germany)",
       form: {
       name: "Name",
       email: "Email",
