@@ -35,7 +35,7 @@ const SEO_COPY = {
       'Unity and Unreal game studio in Riyadh, serving Saudi Arabia, the UAE, Kuwait and Qatar. We build mobile and PC games for clients, and open-source tools for Unity developers.',
   },
   ar: {
-    title: 'شركة تطوير ألعاب في السعودية والخليج | دوانية الألعاب',
+    title: 'شركة تطوير ألعاب في السعودية والخليج | ديوانية الألعاب',
     description:
       'استوديو تطوير ألعاب في الرياض بمحركي Unity وUnreal، نخدم السعودية والإمارات والكويت وقطر. نطوّر ألعاب الجوال والكمبيوتر لعملائنا، وننشر أدوات مفتوحة المصدر لمطوري Unity.',
   },

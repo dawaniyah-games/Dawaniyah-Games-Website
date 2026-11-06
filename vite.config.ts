@@ -10,7 +10,7 @@ import ar from './src/app/i18n/locales/ar'
 import { buildStaticContent } from './scripts/static-seo-content'
 
 const AR_META = {
-  title: 'شركة تطوير ألعاب في السعودية والخليج | دوانية الألعاب',
+  title: 'شركة تطوير ألعاب في السعودية والخليج | ديوانية الألعاب',
   description:
     'استوديو تطوير ألعاب في الرياض بمحركي Unity وUnreal، نخدم السعودية والإمارات والكويت وقطر. نطوّر ألعاب الجوال والكمبيوتر لعملائنا، وننشر أدوات مفتوحة المصدر لمطوري Unity.',
 };

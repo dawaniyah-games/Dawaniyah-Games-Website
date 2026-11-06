@@ -1,9 +1,13 @@
 import { motionViewportHeight } from '../../../utils/motionViewport';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Smartphone } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { islandSounds, watchIslandSound } from '../../../audio/islandSounds';
 import { prefersReducedMotion } from '../../../hooks/useReducedMotion';
 import { ISLAND_PERCHES, setBirdPerchReader, type BirdIslandView } from './birdPerches';
 import { setDeckCardReader } from './deckCard';
 import { ARTBOARD, IslandEngine, VIEW, loadIslandImages } from './engine';
+import { askForTilt, tiltAccess, watchTilt } from './tiltInput';
 import { setWaterfallReader } from './waterfallEnd';
 import { WATERFALL } from './waterfallFx';
 import scene from './scene.json';
@@ -21,6 +25,9 @@ export function IslandScene({ className = '' }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const chipRef = useRef<HTMLSpanElement>(null);
+  const startTiltRef = useRef<(() => void) | null>(null);
+  const [offerTilt, setOfferTilt] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -56,7 +63,7 @@ export function IslandScene({ className = '' }: { className?: string }) {
         return;
       }
       cleanups.push(() => stage.dispose());
-      engine = new IslandEngine(canvas, { host, chip }, reduced, stage);
+      engine = new IslandEngine(canvas, { host, chip }, reduced, stage, islandSounds);
 
       // Where the story card starts: the top card of the deck on the island.
       const deckCorners = scene.loop.deckCard.corners;
@@ -86,6 +93,14 @@ export function IslandScene({ className = '' }: { className?: string }) {
         };
       });
       cleanups.push(() => setWaterfallReader(null));
+
+      const hero = root.closest('section') ?? root;
+      cleanups.push(
+        watchIslandSound(root, hero, () => {
+          const point = stage.project((fallTop.x[0] + fallTop.x[1]) / 2, fallTop.y);
+          return canvas.getBoundingClientRect().left + point.x;
+        }),
+      );
 
       // Where the bird can stand. The camera moves, so it asks again every frame.
       setBirdPerchReader({
@@ -142,6 +157,20 @@ export function IslandScene({ className = '' }: { className?: string }) {
         };
         window.addEventListener('pointermove', onPointer, { passive: true });
         cleanups.push(() => window.removeEventListener('pointermove', onPointer));
+      } else if (!reduced) {
+        // On a phone, the orbit follows how it is held.
+        startTiltRef.current = () => {
+          cleanups.push(
+            watchTilt((x, y) => {
+              if (visible) engine?.setPointer(x, y);
+            }),
+          );
+        };
+        void tiltAccess().then((access) => {
+          if (disposed) return;
+          if (access === 'granted') startTiltRef.current?.();
+          else if (access === 'needs-tap') setOfferTilt(true);
+        });
       }
 
       sync();
@@ -154,14 +183,25 @@ export function IslandScene({ className = '' }: { className?: string }) {
     };
   }, []);
 
+  const onAskTilt = async () => {
+    setOfferTilt(false);
+    if (await askForTilt()) startTiltRef.current?.();
+  };
+
   return (
-    <div ref={rootRef} aria-hidden="true" data-bird-island="" className={`relative pointer-events-none ${className}`} style={{ aspectRatio: `${ARTBOARD.w} / ${ARTBOARD.h}` }}>
-      <div className="absolute" style={canvasBox}>
+    <div ref={rootRef} data-bird-island="" className={`relative pointer-events-none ${className}`} style={{ aspectRatio: `${ARTBOARD.w} / ${ARTBOARD.h}` }}>
+      <div aria-hidden="true" className="absolute" style={canvasBox}>
         <canvas ref={canvasRef} className="absolute inset-0 size-full" />
         <div ref={hostRef} className="island-die">
           <span ref={chipRef} className="island-die-chip" style={{ opacity: 0 }} />
         </div>
       </div>
+      {offerTilt && (
+        <button type="button" className="island-tilt" onClick={onAskTilt}>
+          <Smartphone aria-hidden="true" size={16} />
+          {t('hero.tilt')}
+        </button>
+      )}
     </div>
   );
 }

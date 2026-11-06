@@ -10,7 +10,7 @@ import type { Facing } from './perches';
 import { worldOf } from './sprite';
 import { Follow, clamp, lowPass, smoothstep } from './springs';
 
-export type Home = 'headline' | 'island';
+export type Home = 'headline' | 'island' | 'prompt'; // the sound popup, for as long as it is open
 
 export interface Perch {
   id: string;
@@ -26,6 +26,13 @@ export interface Perch {
 }
 
 export type Reaction = 'land' | 'leave' | 'peck' | 'note' | 'flinch';
+export type BirdSurface = 'letter' | 'ground' | 'palm' | 'air';
+
+/** How far the way round the island reaches, top to bottom. It stays under what the bird cannot cross. */
+export interface Circuit {
+  top: number;
+  bottom: number;
+}
 
 /** Everything the flights need to know about the page, read fresh from the live layout. */
 export interface Sky {
@@ -33,6 +40,9 @@ export interface Sky {
   right: number;
   top: number; // nothing flies higher than this
   noFly: Rect[];
+  under: Rect[]; // where these stand, it flies below them: a ceiling that steps with the text
+  circuit: Circuit | null; // with one home, the way round it
+  cruise: number;
   corridorX: number | null; // between the two homes
   side: 1 | -1; // from the headline towards the island
   lineTop: number | null; // the top of the headline's first line
@@ -69,6 +79,8 @@ export interface BirdPose {
   fixed: boolean; // pinned on the feet and staying there
   slow: boolean; // cross-fades take their time (reduced motion)
   perch: string | null;
+  surface: BirdSurface;
+  clip: number; // which run of a clip this frame belongs to; 0 at rest and in flight
 }
 
 // ---------------------------------------------------------------------- the weights
@@ -78,8 +90,11 @@ type IdleName = keyof typeof IDLE_WEIGHTS | 'look-back';
 const LOOK_BACK_WEIGHT = 14; // at a word's end, instead of a turn towards the cursor
 
 const MOVE_WEIGHTS = { hop: 40, home: 35, other: 25 };
+// With only the island to live on, it uses all of it, and sooner: a phone does not stay here for long.
+const ONE_HOME_WEIGHTS = { hop: 15, home: 55, lap: 30 };
 const REST_S: [number, number] = [2, 5];
 const IDLES_BEFORE_MOVE: [number, number] = [3, 5];
+const ONE_HOME_IDLES_BEFORE_MOVE: [number, number] = [1, 2];
 const SLEEP_AFTER_S = 60;
 const SHY_S = 10;
 const SHY_PX = 200;
@@ -91,6 +106,11 @@ const HOVER_CHANCE = 0.5;
 const SWOOP_CHANCE = 0.5;
 const STILL_OFFENDED_TICKS = 16;
 const HOVER_HALF_PX = 90; // the pace is smoothed over 60 px, so this comes to 1 to 1.5 s
+const LAP_POINTS = 6;
+const LAP_TURN = 1.85 * Math.PI; // nearly all the way round: the landing closes the circle
+const RETRIES = 4;
+const LEVEL_OFF = 0.22; // of its height: a curve overshoots by about this where it levels out under the ceiling
+const SAME_POINT_PX = 10; // closer than this, two points of a route only put a kink in it
 
 function pick<T extends string>(weights: [T, number][], random: () => number): T | null {
   const total = weights.reduce((sum, [, weight]) => sum + weight, 0);
@@ -121,6 +141,8 @@ interface ClipOptions {
 
 /** One animation played on the 24 fps clock: `sequence` and `hold` flattened to one frame per tick. */
 class Clip {
+  private static count = 0;
+  readonly id = (Clip.count += 1);
   time = 0;
   private ticks: number[] = [];
   private fired = new Set<number>();
@@ -187,6 +209,8 @@ interface FlyOptions {
   fromFrame?: number;
   hover?: boolean;
   visit?: boolean; // over the headline and back, when the headline has nowhere to land
+  free?: boolean; // the page is dimmed behind the popup: straight there, over whatever is in the way
+  lap?: boolean; // once round the island on the way
 }
 
 interface Route {
@@ -265,15 +289,16 @@ export class BirdBrain {
     if (this.sleeping && this.wakeAt === Infinity) this.wakeAt = this.time + WAKE_AFTER_S;
   }
 
+  /** Whether it took any notice: in the air, or already annoyed, it does not. */
   touched(point: Point) {
     const { atlas, world } = this;
     if (this.reduced) {
-      if (this.clip?.anim === 'annoyed') return;
+      if (this.clip?.anim === 'annoyed') return false;
       world.burst(world.at(this.perch), this.facing, this.height());
       this.play(new Clip('annoyed', [[4, 24]], { locked: true }), () => this.reducedLoop());
-      return;
+      return true;
     }
-    if (this.flight || this.clip?.options.locked) return;
+    if (this.flight || this.clip?.options.locked) return false;
     const again = this.time - this.touchedAt < SHY_S;
     this.touchedAt = this.time;
     this.shyOf = point;
@@ -292,6 +317,7 @@ export class BirdBrain {
       }),
       () => this.leaveAfterTouch(point),
     );
+    return true;
   }
 
   /** A fright without contact. */
@@ -305,6 +331,36 @@ export class BirdBrain {
       const near = this.perches().sort((a, b) => Number(b.home === this.perch.home) - Number(a.home === this.perch.home) || this.random() - 0.5);
       if (!near.some((dest) => this.fly(dest, { urgent: true, fromFrame: 2 }))) this.rest();
     });
+  }
+
+  /** Stands on the sound popup, whatever it was doing, facing the way it will leave. */
+  sitOnCard(card: Perch, facing: 1 | -1) {
+    this.flight = null;
+    this.dest = null;
+    this.landingBank = null;
+    this.sleeping = false;
+    this.wakeAt = Infinity;
+    this.placeOn(card);
+    this.facing = facing;
+    this.compose();
+  }
+
+  /** Off the popup and down to the island. */
+  leaveCard(island: Perch) {
+    if (this.perch.home !== 'prompt') return;
+    this.clip = null;
+    this.then = null;
+    if (!this.fly(island, { free: true })) this.placeOn(island);
+  }
+
+  /** With nobody watching there is nothing to fly past. */
+  placeOn(perch: Perch) {
+    this.clip = null;
+    this.then = null;
+    this.perch = perch;
+    this.k = this.targetK(perch);
+    this.gaze = 0;
+    this.rest();
   }
 
   /** The perch or the page changed under it. It never snaps: it moves on from where it stands. */
@@ -380,6 +436,12 @@ export class BirdBrain {
   }
 
   private next() {
+    if (this.perch.home === 'prompt') {
+      const name = this.pickIdle();
+      if (name) this.playIdle(name);
+      else this.rest();
+      return;
+    }
     if (this.perch.gone || this.world.crowded(this.perch)) {
       if (this.relocate()) return;
     }
@@ -399,7 +461,8 @@ export class BirdBrain {
   }
 
   private nextIdleCount() {
-    return Math.round(between(IDLES_BEFORE_MOVE[0], IDLES_BEFORE_MOVE[1], this.random));
+    const [fewest, most] = this.world.twoHomes() ? IDLES_BEFORE_MOVE : ONE_HOME_IDLES_BEFORE_MOVE;
+    return Math.round(between(fewest, most, this.random));
   }
 
   /** Faces out from a word's end; anywhere else, towards the middle of the composition. */
@@ -414,7 +477,7 @@ export class BirdBrain {
     const { sheets } = this.world;
     const entries = (Object.entries(IDLE_WEIGHTS) as [keyof typeof IDLE_WEIGHTS, number][]).filter(([name]) => {
       if (name === this.lastIdle) return false;
-      if (name === 'sleep') return this.world.sinceCursorNear() >= SLEEP_AFTER_S;
+      if (name === 'sleep') return this.perch.home !== 'prompt' && this.world.sinceCursorNear() >= SLEEP_AFTER_S;
       return sheets.has(name);
     });
     const options: [IdleName, number][] = entries;
@@ -527,13 +590,24 @@ export class BirdBrain {
     const twoHomes = world.twoHomes();
     const canVisit = twoHomes && perch.home === 'island' && !other.length && world.sky().lineTop !== null;
     const hopTo = this.neighbours();
-    const weights: ['hop' | 'home' | 'other', number][] = [
-      ['hop', hopTo.length ? MOVE_WEIGHTS.hop : 0],
-      ['home', same.length ? MOVE_WEIGHTS.home : 0],
-      ['other', twoHomes && (other.length || canVisit) ? MOVE_WEIGHTS.other : 0],
-    ];
+    const canLap = world.sky().circuit !== null;
+    const weights: ['hop' | 'home' | 'other' | 'lap', number][] = twoHomes
+      ? [
+          ['hop', hopTo.length ? MOVE_WEIGHTS.hop : 0],
+          ['home', same.length ? MOVE_WEIGHTS.home : 0],
+          ['other', other.length || canVisit ? MOVE_WEIGHTS.other : 0],
+        ]
+      : [
+          ['hop', hopTo.length ? ONE_HOME_WEIGHTS.hop : 0],
+          ['home', same.length ? ONE_HOME_WEIGHTS.home : 0],
+          ['lap', same.length && canLap ? ONE_HOME_WEIGHTS.lap : 0],
+        ];
     const choice = only ?? pick(weights, this.random);
     if (choice === 'hop') return this.hop(hopTo[Math.floor(this.random() * hopTo.length)]);
+    if (choice === 'lap') {
+      const dest = this.choosePerch(same);
+      return dest ? this.fly(dest, { lap: true }) : false;
+    }
     if (choice === 'home') {
       const dest = this.choosePerch(same);
       return dest ? this.fly(dest, {}) : false;
@@ -611,7 +685,7 @@ export class BirdBrain {
   private fly(dest: Perch, options: FlyOptions): boolean {
     const here = this.world.at(this.perch);
     const direction = this.world.at(dest).x >= here.x ? 1 : -1;
-    if (!options.urgent && !options.visit && direction !== this.facing && this.perch.facing === 'any') {
+    if (!options.urgent && !options.visit && !options.lap && direction !== this.facing && this.perch.facing === 'any') {
       this.turn(direction, () => {
         if (!this.fly(dest, options)) this.rest();
       });
@@ -690,21 +764,86 @@ export class BirdBrain {
       return { dir, entry, lead: { x: entry.x - dir.x * leadLength, y: entry.y - dir.y * leadLength } };
     };
     const wanted = build((degrees * Math.PI) / 180);
-    if (wanted.lead.y >= sky.top) return wanted;
-    // Under the navbar there may not be room: come in flatter rather than fly under it.
-    const sine = clamp((wanted.entry.y - sky.top) / leadLength, 0.08, 1);
+    const destHeight = this.atlas.referenceHeight * kTo;
+    const margin = this.clearance(destHeight) + this.levelOff(destHeight);
+    const ceiling = Math.max(this.ceilingAt(sky, wanted.lead.x, margin), this.ceilingAt(sky, wanted.entry.x, margin));
+    if (wanted.lead.y >= ceiling) return wanted;
+    // Under the navbar there may not be room: come in flatter rather than fly under it. Under the
+    // buttons there may be none at all: it comes in from a little below, and flares up onto the crown.
+    const sine = clamp((wanted.entry.y - ceiling) / leadLength, sky.under.length ? -0.15 : 0.08, 1);
     return build(Math.asin(sine));
+  }
+
+  /** How far from anything it must not fly into. */
+  private clearance(destHeight: number) {
+    return 0.35 * Math.max(this.height(), destHeight);
+  }
+
+  private levelOff(destHeight: number) {
+    return LEVEL_OFF * Math.max(this.height(), destHeight);
+  }
+
+  /** How high it can fly at this x. */
+  private ceilingAt(sky: Sky, x: number, margin: number) {
+    return sky.under.reduce((top, r) => (x > r.left - margin && x < r.right + margin ? Math.max(top, r.bottom + margin) : top), sky.top);
+  }
+
+  /** Straight lines cut the corners of what it flies under: this adds the corner to go round instead. */
+  private roundCorners(points: Point[], sky: Sky, margin: number, spare: number) {
+    const out = points.slice(0, 1);
+    const add = (p: Point) => {
+      const last = out[out.length - 1];
+      if (Math.hypot(p.x - last.x, p.y - last.y) > SAME_POINT_PX) out.push(p);
+    };
+    for (const to of points.slice(1)) {
+      for (const r of sky.under) {
+        const from = out[out.length - 1];
+        const cuts = (u: number) => {
+          const x = from.x + (to.x - from.x) * u;
+          const y = from.y + (to.y - from.y) * u;
+          return x > r.left - margin && x < r.right + margin && y > r.top - margin && y < r.bottom + margin;
+        };
+        if (![...Array(25).keys()].some((i) => cuts(i / 24))) continue;
+        const high = from.y < to.y ? from : to; // the end that is up beside it
+        const leftSide = high.x - r.left < r.right - high.x;
+        add({ x: clamp(leftSide ? r.left - margin - spare : r.right + margin + spare, sky.left, sky.right), y: r.bottom + margin + spare });
+      }
+      add(to);
+    }
+    return out;
+  }
+
+  /** Once round the island from where it took off, the way it is already going. */
+  private lapFrom(start: Point, sky: Sky, circuit: Circuit, size: number) {
+    const cx = (sky.left + sky.right) / 2;
+    const cy = (circuit.top + circuit.bottom) / 2;
+    const rx = (size * (sky.right - sky.left)) / 2;
+    const ry = (size * (circuit.bottom - circuit.top)) / 2;
+    const from = Math.atan2((start.y - cy) / ry, (start.x - cx) / rx);
+    const way = -Math.sin(from) * this.facing >= 0 ? 1 : -1;
+    const points: Point[] = [];
+    for (let i = 1; i <= LAP_POINTS; i += 1) {
+      const angle = from + (way * i * LAP_TURN) / LAP_POINTS;
+      points.push({ x: cx + rx * Math.cos(angle), y: cy + ry * Math.sin(angle) });
+    }
+    return points;
   }
 
   private routeTo(dest: Perch, options: FlyOptions, from?: { eye: Point; speed: number; flip: boolean }): Route | null {
     const { world, atlas } = this;
-    const sky = world.sky();
+    const live = world.sky();
+    const sky = options.free ? { ...live, top: 0, noFly: [], under: [] } : live;
     const here = this.perch;
     const height = this.height();
     const kTo = this.targetK(dest);
     const destHeight = atlas.referenceHeight * kTo;
     const atDest = world.at(dest);
-    const keep = (p: Point) => ({ x: clamp(p.x, sky.left, sky.right), y: Math.max(p.y, sky.top) });
+    const margin = this.clearance(destHeight);
+    const levelOff = this.levelOff(destHeight);
+    const keep = (p: Point, spare = levelOff) => {
+      const x = clamp(p.x, sky.left, sky.right);
+      return { x, y: Math.max(p.y, this.ceilingAt(sky, x, margin + spare)) };
+    };
 
     let eye0: Point;
     let first: Point;
@@ -718,8 +857,9 @@ export class BirdBrain {
       const animation = atlas.animations.takeoff;
       const eye8 = worldOf(this.handover('takeoff'), animation.anchor, world.at(here), flip, this.k);
       // Leaving against the way it faces, it climbs steeply, so the turn in the air is a curve, not a cusp.
-      backwards = (atDest.x - eye8.x) * this.facing < -height;
-      first = keep({ x: eye8.x + this.facing * (backwards ? 0.8 : 1.4) * height, y: eye8.y - (backwards ? 1 : 0.8) * height });
+      backwards = !options.lap && (atDest.x - eye8.x) * this.facing < -height;
+      // Under a ceiling it levels off and may dive straight after, which is where a curve bulges most.
+      first = keep({ x: eye8.x + this.facing * (backwards ? 0.8 : 1.4) * height, y: eye8.y - (backwards ? 1 : 0.8) * height }, 3 * levelOff);
       const dx = first.x - eye8.x;
       const dy = first.y - eye8.y;
       const length = Math.max(1, Math.hypot(dx, dy));
@@ -729,11 +869,14 @@ export class BirdBrain {
       if (length < carried + 12) first = keep({ x: eye0.x + takeoffDir.x * 40, y: eye0.y + takeoffDir.y * 40 });
     }
 
-    const crossing = here.home !== dest.home;
+    const crossing = here.home !== dest.home && here.home !== 'prompt';
     const skyY = Math.max(sky.top, (sky.lineTop ?? atDest.y) - 0.95 * height);
-    for (let attempt = 0; attempt < 4; attempt += 1) {
+    for (let attempt = 0; attempt < RETRIES; attempt += 1) {
       const via: Point[] = [];
       let hoverOver: Point | null = null;
+      // Each try is a little tighter; the last is the plain way there, which has the least to run into.
+      const lapping = options.lap && sky.circuit && attempt < RETRIES - 1;
+      if (lapping) via.push(...this.lapFrom(first, sky, sky.circuit!, 1 - 0.12 * attempt).map(keep));
       if (backwards) via.push(keep({ x: first.x + this.facing * 0.1 * height, y: first.y - 0.5 * height }));
       const cx = sky.corridorX === null ? null : sky.corridorX + sky.side * attempt * 0.8 * height;
       if ((crossing || options.visit) && cx !== null) {
@@ -754,12 +897,14 @@ export class BirdBrain {
       const facing: 1 | -1 = dest.facing === 'left' ? -1 : dest.facing === 'right' ? 1 : atDest.x >= fromX ? 1 : -1;
       const { dir, entry, lead } = this.approachTo(dest, facing, sky, kTo);
 
-      if (!crossing && !options.visit) {
+      if (!crossing && !options.visit && !lapping) {
         // A hop in the air: over the top, in an arc that clears what is in between.
         const span = Math.hypot(lead.x - first.x, lead.y - first.y);
         if (span > 2.2 * destHeight) {
-          const lift = between(0.6, 1.5, this.random) * height;
-          via.push(keep({ x: (first.x + lead.x) / 2 + between(-0.4, 0.4, this.random) * height, y: Math.min(first.y, lead.y) - lift }));
+          const lift = (between(0.6, 1.5, this.random) * height * (RETRIES - 1 - attempt)) / (RETRIES - 1);
+          const top = { x: (first.x + lead.x) / 2 + between(-0.4, 0.4, this.random) * height, y: Math.min(first.y, lead.y) - lift };
+          // Pressed flat under the buttons it would be no arc, only a kink.
+          if (!sky.under.length || keep(top).y <= top.y) via.push(keep(top));
         }
       }
       // Coming from the wrong side: fly past, turn in the air and come back to land facing out.
@@ -769,16 +914,16 @@ export class BirdBrain {
       }
 
       const start = [eye0, ...(from ? [] : [first])];
-      let path = new PathCurve([...start, ...via, lead, entry]);
+      let path = new PathCurve([...this.roundCorners([...start, ...via, lead], sky, margin, levelOff), entry]);
       // The curve can bulge above its points: bring the middle of the route down under the navbar.
       const above = sky.top - path.highest;
       if (above > 2 && via.length) path = new PathCurve([...start, ...via.map((p) => ({ x: p.x, y: p.y + above + 2 })), lead, entry]);
-      if (path.hits(sky.noFly, 0.35 * Math.max(height, destHeight))) continue;
+      if (path.hits(sky.noFly, margin)) continue;
       const canHover = world.sheets.has('hover') && path.length > 300;
       const canSwoop = world.sheets.has('swoop') && crossing && this.random() < SWOOP_CHANCE;
       let plan = planStretches(path, { hover: Boolean(options.hover) && canHover, swoop: canSwoop });
       if (hoverOver && canHover) plan = this.hoverAt(path, plan, hoverOver);
-      const flight = new FlightRun(path, plan, this.flightSprites(), from?.flip ?? this.facing < 0, this.k, kTo, from?.speed);
+      const flight = new FlightRun(path, plan, this.flightSprites(), from?.flip ?? this.facing < 0, this.k, kTo, from?.speed, undefined, sky.cruise);
       return { run: flight, approach: dir, takeoffDir };
     }
     return null;
@@ -831,6 +976,8 @@ export class BirdBrain {
       fixed: false,
       slow: false,
       perch: null,
+      surface: 'air',
+      clip: 0,
     };
     if (flight.done) this.beginLanding(flight);
   }
@@ -902,6 +1049,8 @@ export class BirdBrain {
       fixed: true,
       slow: false,
       perch: this.perch.id,
+      surface: this.perch.el ? 'letter' : this.perch.palm ? 'palm' : 'ground',
+      clip: this.clip?.id ?? 0,
     };
   }
 

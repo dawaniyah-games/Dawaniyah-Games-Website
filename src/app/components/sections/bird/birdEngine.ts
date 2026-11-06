@@ -5,12 +5,13 @@
 import { prefersReducedMotion } from '../../../hooks/useReducedMotion';
 import { isTouchScreen } from '../../../utils/motionViewport';
 import { ISLAND_BIRD_HEIGHT, ISLAND_PERCHES, leanBirdPalm, readBirdPerches, whenBirdPerchesReady, type IslandPerchId, type PalmCrownId } from '../island/birdPerches';
-import { BirdBrain, type BirdWorld, type Perch, type Reaction, type Sky } from './behaviour';
-import { CORE_SHEETS, laterSheets, loadBirdAtlas, type BirdSheets } from './birdAtlas';
+import { BirdBrain, type BirdSurface, type BirdWorld, type Circuit, type Perch, type Reaction, type Sky } from './behaviour';
+import { CORE_SHEETS, laterSheets, loadBirdAtlas, type BirdAnim, type BirdSheets } from './birdAtlas';
 import { DEBUG_KEYS, debugOn, drawDebug, overlayOn } from './debug';
 import { FeatherBurst } from './feathers';
-import { TICK_S, type Point, type Rect } from './flight';
+import { CRUISE, TICK_S, type Point, type Rect } from './flight';
 import { headlinePerches, restoreKerning, type RejectedRun } from './perches';
+import { setBirdOnPrompt, watchPrompt } from './birdPrompt';
 import { Bounce, clamp, lowPass } from './springs';
 import { drawSprite, worldOf } from './sprite';
 import type { BirdPose } from './behaviour';
@@ -31,6 +32,10 @@ const FINGER_REACH_PX = 24;
 const TAP_SLOP_PX = 10;
 const TAP_MS = 350;
 const CLEAR_OF_UI_PX = 60;
+// A small bird on a small island: at the desktop's pace it would cross the screen in a blink.
+const ISLAND_CRUISE_HEIGHTS = 7; // a second's flight, in bird heights
+const ISLAND_CRUISE_MIN = 260; // what it leaves the perch at: slower than this it would stall
+const CIRCUIT_MIN_HEIGHTS = 4;
 const HIT_INSET = 0.9;
 
 const FADES_BETWEEN = [0.6, 0.35, 0.15];
@@ -48,6 +53,9 @@ const PALM_KICK = 19; // deg/s
 const PALM_POP = -11;
 
 const headlineHeight = () => clamp(window.innerWidth * 0.0472, 40, 68);
+const promptHeight = () => clamp(window.innerWidth * 0.08, 72, 96);
+/** Above the popup's dimmed page, for as long as the bird is part of it. */
+const OVER_PROMPT_Z = '61';
 
 interface Ghost {
   pose: BirdPose;
@@ -68,6 +76,14 @@ const toRect = (r: DOMRect | Rect, origin: { left: number; top: number }): Rect 
   right: r.right - origin.left,
   bottom: r.bottom - origin.top,
 });
+
+export type { BirdSurface };
+
+/** What the bird tells the sound. It knows nothing about audio. */
+export interface BirdSoundSink {
+  touched(x: number): void; // x in viewport pixels
+  frame(anim: BirdAnim, frame: number, info: { surface: BirdSurface; x: number; firstInClip: boolean }): void;
+}
 
 export class BirdEngine implements BirdWorld {
   sheets!: BirdSheets;
@@ -106,6 +122,8 @@ export class BirdEngine implements BirdWorld {
   private lastNear = 0;
   private press: { x: number; y: number; time: number } | null = null;
 
+  private heard: { anim: BirdAnim | null; frame: number; clip: number } = { anim: null, frame: 0, clip: 0 };
+  private heardFrames = new Set<string>();
   private ghosts: Ghost[] = [];
   private shown: BirdPose | null = null;
   private breath = 0;
@@ -114,7 +132,10 @@ export class BirdEngine implements BirdWorld {
   private trace: Record<string, unknown>[] | null = null;
   private watchIslandOnScreen: IntersectionObserver | null = null;
 
-  constructor(private canvas: HTMLCanvasElement) {
+  constructor(
+    private canvas: HTMLCanvasElement,
+    private sounds?: BirdSoundSink,
+  ) {
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('No 2D canvas');
     this.ctx = ctx;
@@ -136,6 +157,8 @@ export class BirdEngine implements BirdWorld {
     const home = this.island.find((perch) => perch.id === 'sand-by-bridge')!;
     this.brain = new BirdBrain(this, home, reduced);
     this.listen();
+    // With reduced motion it stays on the sand, and the popup keeps its still picture.
+    if (!reduced) this.cleanups.push(watchPrompt({ arrive: (card) => this.standOnPrompt(card), leave: () => this.leavePrompt() }));
     await this.measureHeadline();
     if (this.disposed) return;
     this.watchIsland();
@@ -204,6 +227,8 @@ export class BirdEngine implements BirdWorld {
   }
 
   private islandScale = 0;
+  private promptCard: HTMLElement | null = null;
+  private promptPerch: Perch | null = null;
 
   private async measureHeadline() {
     void this.composition.offsetHeight; // lays the page out, so any font it needs has started loading
@@ -226,6 +251,43 @@ export class BirdEngine implements BirdWorld {
     for (const perch of this.headline) if (!next.includes(perch)) perch.gone = true;
     this.headline = next;
     this.brain?.layoutChanged();
+  }
+
+  private standOnPrompt(card: HTMLElement) {
+    const sand = this.island.find((perch) => perch.id === 'sand-by-bridge')!;
+    this.promptCard = card;
+    this.promptPerch = { id: 'prompt', home: 'prompt', x: 0, y: 0, facing: 'any', width: 0 };
+    this.readPrompt();
+    this.ghosts = [];
+    this.shown = null;
+    this.brain?.sitOnCard(this.promptPerch, sand.x >= this.promptPerch.x ? 1 : -1);
+    this.canvas.style.zIndex = OVER_PROMPT_Z;
+    setBirdOnPrompt(true);
+  }
+
+  private leavePrompt() {
+    const { brain } = this;
+    const sand = this.island.find((perch) => perch.id === 'sand-by-bridge')!;
+    this.promptCard = null;
+    if (!brain || !this.promptPerch) return;
+    if (this.running) brain.leaveCard(sand);
+    else brain.placeOn(sand);
+  }
+
+  private readPrompt() {
+    const { promptCard, promptPerch } = this;
+    if (!promptCard || !promptPerch) return;
+    const box = promptCard.getBoundingClientRect();
+    promptPerch.x = box.left - this.origin.left;
+    promptPerch.y = box.top - this.origin.top;
+  }
+
+  /** Back under the page once it has landed. */
+  private settleAfterPrompt(pose: BirdPose) {
+    if (!this.promptPerch || this.promptCard || this.brain?.flying || !pose.fixed || pose.perch === 'prompt') return;
+    this.promptPerch = null;
+    this.canvas.style.zIndex = '';
+    setBirdOnPrompt(false);
   }
 
   /** Wakes it the first time at least 40 % of the island is on screen. */
@@ -258,6 +320,7 @@ export class BirdEngine implements BirdWorld {
   }
 
   heightOn(perch: Perch) {
+    if (perch.home === 'prompt') return promptHeight();
     return perch.home === 'headline' ? headlineHeight() : ISLAND_BIRD_HEIGHT * this.islandScale;
   }
 
@@ -301,7 +364,10 @@ export class BirdEngine implements BirdWorld {
   /** What the bird must never cover, relative to the composition. */
   private textRects() {
     const origin = this.composition.getBoundingClientRect();
-    return [...this.composition.querySelectorAll('[data-bird-nofly]')].map((el) => toRect(el.getBoundingClientRect(), origin));
+    const blocks = [...this.composition.querySelectorAll<HTMLElement>('[data-bird-nofly]')];
+    // With the island right under them, only the buttons count: the row is far wider than they are.
+    const parts = this.twoHomes() ? blocks : blocks.flatMap((el) => (el.dataset.birdNofly === 'row' ? [...el.children] : [el]));
+    return parts.map((el) => toRect(el.getBoundingClientRect(), origin));
   }
 
   usable(perch: Perch) {
@@ -335,19 +401,33 @@ export class BirdEngine implements BirdWorld {
     const side: 1 | -1 = island && (island.left + island.right) / 2 < (textLeft + textRight) / 2 ? -1 : 1;
     const twoHomes = this.twoHomes();
     const height = headlineHeight();
-    // On a phone the island lies under the text, and its palm crowns stand up towards the buttons.
-    const textBottom = Math.max(0, ...noFly.filter((r) => !island || r.top < island.top).map((r) => r.bottom));
-    const underText = textBottom + 0.4 * ISLAND_BIRD_HEIGHT * this.islandScale;
+    const islandBird = ISLAND_BIRD_HEIGHT * this.islandScale;
     return {
       left: twoHomes || !island ? 24 : Math.max(24, island.left),
       right: this.cssWidth - 24,
-      top: Math.max(navBottom - origin.top + (twoHomes ? 0.55 * height : 0), twoHomes ? 0 : underText),
+      top: twoHomes ? Math.max(navBottom - origin.top + 0.55 * height, 0) : navBottom - origin.top,
       noFly: [...noFly, ...avoid],
+      // On a phone the island lies under the text, and its palm crowns stand up beside the buttons.
+      under: twoHomes ? [] : noFly,
+      circuit: twoHomes ? null : this.circuit(islandBird, avoid),
+      cruise: twoHomes ? CRUISE : clamp(ISLAND_CRUISE_HEIGHTS * islandBird, ISLAND_CRUISE_MIN, CRUISE),
       corridorX: twoHomes ? (side > 0 ? textRight + 0.8 * height : textLeft - 0.8 * height) : null,
       side,
       lineTop: firstLine?.top ?? null,
       lineMiddle: firstLine?.middle ?? null,
     };
+  }
+
+  /** The way round the island: over the palms and back past its foot, on screen and clear of the fixed buttons. */
+  private circuit(bird: number, avoid: Rect[]): Circuit | null {
+    const island = this.islandBox;
+    if (!island) return null;
+    const crowns = this.island.filter((perch) => perch.palm).map((perch) => perch.y);
+    const top = Math.min(...crowns) - 0.9 * bird;
+    const middle = (island.top + island.bottom) / 2;
+    const belowUi = avoid.filter((r) => r.top > middle).map((r) => r.top - 0.5 * bird);
+    const bottom = Math.min(island.bottom, window.innerHeight - this.origin.top - bird, ...belowUi);
+    return bottom - top < CIRCUIT_MIN_HEIGHTS * bird ? null : { top, bottom };
   }
 
   private firstLine(headline: DOMRect) {
@@ -479,7 +559,7 @@ export class BirdEngine implements BirdWorld {
     this.cursorAt = point;
     this.cursorTime = now;
     if (this.inBody(point)) {
-      brain.touched(point);
+      this.touch(point);
       return;
     }
     if (!previous || elapsed < FLICK_MIN_MS) return;
@@ -499,7 +579,7 @@ export class BirdEngine implements BirdWorld {
       return;
     }
     if (this.inBody(point)) {
-      brain.touched(point);
+      this.touch(point);
       return;
     }
     const centre = this.birdCentre(brain.pose);
@@ -515,7 +595,11 @@ export class BirdEngine implements BirdWorld {
     if (moved > TAP_SLOP_PX || event.timeStamp - press.time > TAP_MS) return;
     this.readOrigin();
     const point = this.local(event);
-    if (this.inBody(point, FINGER_REACH_PX)) brain.touched(point);
+    if (this.inBody(point, FINGER_REACH_PX)) this.touch(point);
+  }
+
+  private touch(point: Point) {
+    if (this.brain?.touched(point)) this.sounds?.touched(point.x + this.origin.left);
   }
 
   // -------------------------------------------------------------------- the loop
@@ -556,15 +640,29 @@ export class BirdEngine implements BirdWorld {
     this.clock += dt;
     this.readOrigin();
     this.readIsland();
+    this.readPrompt();
     if (this.cursor()) this.lastNear = this.clock;
     this.stepSprings(dt);
     brain.step(dt);
     this.feathers.step(dt);
     const pose = brain.pose;
+    this.announce(pose);
+    this.settleAfterPrompt(pose);
     this.updateFades(pose, dt);
     this.breath = lowPass(this.breath, pose.breathe ? 1 : 0, 0.25, dt);
     this.draw(pose);
     this.record(pose);
+  }
+
+  /** Tells the sound each time the drawn frame changes. */
+  private announce(pose: BirdPose) {
+    if (!this.sounds || (pose.anim === this.heard.anim && pose.frame === this.heard.frame)) return;
+    if (pose.clip !== this.heard.clip) this.heardFrames.clear();
+    const key = `${pose.anim} ${pose.frame}`;
+    const firstInClip = !this.heardFrames.has(key);
+    this.heardFrames.add(key);
+    this.heard = { anim: pose.anim, frame: pose.frame, clip: pose.clip };
+    this.sounds.frame(pose.anim, pose.frame, { surface: pose.surface, x: pose.x + this.origin.left, firstInClip });
   }
 
   private stepSprings(dt: number) {
