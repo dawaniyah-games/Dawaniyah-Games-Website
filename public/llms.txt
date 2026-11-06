@@ -10,7 +10,7 @@
 - Original games in development for Gulf players: Dendon Games (social board games) and Khuzama Games (puzzle and strategy)
 - Open-source tools: UI Framework for Unity
 - Founder and tech director: Mohamed Moghazi, game engineer with 15 years on large productions, including XCOM and Angry Birds Evolution (past roles)
-- Contact: info@dawaniyahgames.com, +966 55 119 4463 (Saudi Arabia), +49 1522 9018095 (Germany)
+- Contact: info@dawaniyahgames.com, +966 55 119 4463 (Saudi Arabia)
 
 ## Unity tools
 
