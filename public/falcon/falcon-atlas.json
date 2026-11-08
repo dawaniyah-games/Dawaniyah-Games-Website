@@ -1,0 +1,951 @@
+{
+ "version": 1,
+ "scale": 0.58,
+ "referenceHeight": 241.9,
+ "note": "referenceHeight: the standing falcon, ledge to crown, in sheet px. Draw scale = target height in CSS px / referenceHeight. Everything faces RIGHT; mirror about the anchor to face left.",
+ "heightCss": {
+  "desktop": 121,
+  "phone": 76
+ },
+ "animations": {
+  "walk": {
+   "file": "falcon-walk.webp",
+   "fallback": "falcon-walk.png",
+   "frames": 8,
+   "frameSize": [
+    276,
+    370
+   ],
+   "anchor": [
+    167,
+    304
+   ],
+   "anchorIs": "feet on the line",
+   "fps": 10,
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "loop": true,
+   "use": "Reference only: it steps in place. Walking is drawn with the walker rig (see walker).",
+   "frameInfo": [
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    }
+   ]
+  },
+  "peek": {
+   "file": "falcon-peek.webp",
+   "fallback": "falcon-peek.png",
+   "frames": 8,
+   "frameSize": [
+    229,
+    305
+   ],
+   "anchor": [
+    118,
+    258
+   ],
+   "anchorIs": "feet on the line",
+   "fps": 8,
+   "order": [
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    4,
+    5,
+    5,
+    5,
+    6,
+    7,
+    7,
+    7,
+    8
+   ],
+   "loop": false,
+   "use": "Entering: stand just outside the screen edge so only the head and chest show, play this, then walk in.",
+   "frameInfo": [
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    }
+   ]
+  },
+  "look-around": {
+   "file": "falcon-look-around.webp",
+   "fallback": "falcon-look-around.png",
+   "frames": 8,
+   "frameSize": [
+    225,
+    301
+   ],
+   "anchor": [
+    132,
+    267
+   ],
+   "anchorIs": "feet on the line",
+   "fps": 6,
+   "order": [
+    1,
+    1,
+    2,
+    3,
+    3,
+    3,
+    4,
+    3,
+    5,
+    5,
+    6,
+    7,
+    7,
+    8,
+    8
+   ],
+   "loop": false,
+   "use": "Proud idle after landing.",
+   "frameInfo": [
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    }
+   ]
+  },
+  "turn": {
+   "file": "falcon-turn.webp",
+   "fallback": "falcon-turn.png",
+   "frames": 8,
+   "frameSize": [
+    222,
+    302
+   ],
+   "anchor": [
+    95,
+    263
+   ],
+   "anchorIs": "feet on the line",
+   "fps": 10,
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "loop": false,
+   "use": "Side right -> front (frame 4) -> side left. Play 1-4 to face the viewer, 4-8 or 4-1 to face a side.",
+   "frameInfo": [
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    }
+   ]
+  },
+  "soaked": {
+   "file": "falcon-soaked.webp",
+   "fallback": "falcon-soaked.png",
+   "frames": 8,
+   "frameSize": [
+    225,
+    304
+   ],
+   "anchor": [
+    124,
+    260
+   ],
+   "anchorIs": "feet on the line",
+   "fps": 9,
+   "order": [
+    2,
+    3,
+    3,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    6
+   ],
+   "loop": false,
+   "use": "Under the waterfall: water from frame 2. Then the wet walker dashes out (walker, bodyWet), then frame 8 held 3 ticks before the shake.",
+   "frameInfo": [
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    }
+   ]
+  },
+  "shake": {
+   "file": "falcon-shake.webp",
+   "fallback": "falcon-shake.png",
+   "frames": 8,
+   "frameSize": [
+    216,
+    288
+   ],
+   "anchor": [
+    125,
+    258
+   ],
+   "anchorIs": "feet on the line",
+   "fps": 12,
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    4,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "loop": false,
+   "use": "Rouse: shakes the water off. Spray water drops on frames 3-5.",
+   "frameInfo": [
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    }
+   ]
+  },
+  "screech": {
+   "file": "falcon-screech.webp",
+   "fallback": "falcon-screech.png",
+   "frames": 8,
+   "frameSize": [
+    238,
+    322
+   ],
+   "anchor": [
+    124,
+    276
+   ],
+   "anchorIs": "feet on the line",
+   "fps": 10,
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    4,
+    5,
+    5,
+    6,
+    7,
+    8,
+    8
+   ],
+   "loop": false,
+   "use": "Annoyed call, after the shake.",
+   "frameInfo": [
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    }
+   ]
+  },
+  "knock": {
+   "file": "falcon-knock.webp",
+   "fallback": "falcon-knock.png",
+   "frames": 8,
+   "frameSize": [
+    214,
+    286
+   ],
+   "anchor": [
+    107,
+    258
+   ],
+   "anchorIs": "feet on the line",
+   "fps": 11,
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    4,
+    5,
+    6,
+    7,
+    7,
+    8,
+    8,
+    8
+   ],
+   "loop": false,
+   "use": "Touched: knocks on the screen. Crack 1 on the first frame 4, crack 2 on the first frame 7 (at hits[].beak).",
+   "frameInfo": [
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true,
+     "beak": [
+      104.8,
+      219.4
+     ]
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true,
+     "beak": [
+      104.2,
+      228.2
+     ]
+    },
+    {
+     "grounded": true
+    }
+   ],
+   "hits": [
+    {
+     "frame": 4,
+     "crack": 1,
+     "beak": [
+      104.8,
+      219.4
+     ]
+    },
+    {
+     "frame": 7,
+     "crack": 2,
+     "beak": [
+      104.2,
+      228.2
+     ]
+    }
+   ]
+  },
+  "takeoff": {
+   "file": "falcon-takeoff.webp",
+   "fallback": "falcon-takeoff.png",
+   "frames": 8,
+   "frameSize": [
+    285,
+    381
+   ],
+   "anchor": [
+    153,
+    333
+   ],
+   "anchorIs": "feet on the line",
+   "fps": 12,
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "loop": false,
+   "use": "Frames 1-4 on the line (pinned on the feet); frames 5-8 are the first 0.33 s of the flight, pinned on the eye along the flight path (handoverEye = frame 4 eye, where the path starts).",
+   "frameInfo": [
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true,
+     "eye": [
+      240.7,
+      170.9
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      237.7,
+      84.8
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      245.1,
+      102.4
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      244.3,
+      148.9
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      242.1,
+      39.1
+     ]
+    }
+   ],
+   "handoverEye": [
+    240.7,
+    170.9
+   ]
+  },
+  "landing": {
+   "file": "falcon-landing.webp",
+   "fallback": "falcon-landing.png",
+   "frames": 8,
+   "frameSize": [
+    335,
+    458
+   ],
+   "anchor": [
+    186,
+    399
+   ],
+   "anchorIs": "feet on the line",
+   "fps": 12,
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "loop": false,
+   "use": "Frames 1-4 are the last 0.33 s of the flight, pinned on the eye along the path; frames 5-8 on the line (feet). handoverEye = frame 5 eye, where the path ends.",
+   "frameInfo": [
+    {
+     "grounded": false,
+     "eye": [
+      239.8,
+      131.9
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      202.4,
+      132.1
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      216.7,
+      191.3
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      217.6,
+      226.0
+     ]
+    },
+    {
+     "grounded": true,
+     "eye": [
+      245.4,
+      235.6
+     ]
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    },
+    {
+     "grounded": true
+    }
+   ],
+   "handoverEye": [
+    245.4,
+    235.6
+   ]
+  },
+  "flap": {
+   "file": "falcon-flap.webp",
+   "fallback": "falcon-flap.png",
+   "frames": 8,
+   "frameSize": [
+    334,
+    444
+   ],
+   "anchor": [
+    275,
+    218
+   ],
+   "anchorIs": "the eye",
+   "fps": 14,
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "loop": true,
+   "use": "Level flight loop. Pinned on the eye.",
+   "frameInfo": [
+    {
+     "grounded": false,
+     "eye": [
+      275.0,
+      218.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      275.0,
+      218.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      275.0,
+      218.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      275.0,
+      218.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      275.0,
+      218.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      275.0,
+      218.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      275.0,
+      218.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      275.0,
+      218.0
+     ]
+    }
+   ]
+  },
+  "glide": {
+   "file": "falcon-glide.webp",
+   "fallback": "falcon-glide.png",
+   "frames": 8,
+   "frameSize": [
+    464,
+    619
+   ],
+   "anchor": [
+    338,
+    259
+   ],
+   "anchorIs": "the eye",
+   "fps": 8,
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "loop": true,
+   "use": "Gliding and banking. Pinned on the eye.",
+   "frameInfo": [
+    {
+     "grounded": false,
+     "eye": [
+      338.0,
+      259.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      338.0,
+      259.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      338.0,
+      259.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      338.0,
+      259.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      338.0,
+      259.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      338.0,
+      259.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      338.0,
+      259.0
+     ]
+    },
+    {
+     "grounded": false,
+     "eye": [
+      338.0,
+      259.0
+     ]
+    }
+   ]
+  }
+ },
+ "fx": {
+  "glassCrack": {
+   "files": [
+    "glass-crack-1.png",
+    "glass-crack-2.png"
+   ],
+   "size": 1024,
+   "centre": [
+    512,
+    512
+   ],
+   "note": "crack-1 after the first beak hit, crack-2 (contains crack-1) after the second. Draw centred on the beak tip, at 0.55 x the shorter viewport side."
+  },
+  "glassShards": {
+   "file": "glass-shards.png",
+   "cell": 96,
+   "count": 8
+  },
+  "waterDrops": {
+   "file": "water-drops.png",
+   "cell": 48,
+   "count": 8,
+   "round": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "falling": [
+    4,
+    5,
+    6,
+    7
+   ]
+  }
+ },
+ "walker": {
+  "file": "falcon-walker.webp",
+  "parts": {
+   "bodyDry": {
+    "rect": [
+     0,
+     0,
+     274,
+     365
+    ],
+    "anchor": [
+     165.7,
+     301.8
+    ]
+   },
+   "legRear": {
+    "rect": [
+     278,
+     0,
+     73,
+     54
+    ],
+    "pivot": [
+     34.2,
+     4.3
+    ],
+    "foot": [
+     37.8,
+     50.7
+    ]
+   },
+   "legFront": {
+    "rect": [
+     355,
+     0,
+     77,
+     54
+    ],
+    "pivot": [
+     21.4,
+     4.3
+    ],
+    "foot": [
+     28.5,
+     50.7
+    ]
+   },
+   "legLifted": {
+    "rect": [
+     436,
+     0,
+     80,
+     47
+    ],
+    "pivot": [
+     12.8,
+     4.3
+    ],
+    "foot": [
+     45.7,
+     27.1
+    ]
+   },
+   "bodyWet": {
+    "rect": [
+     520,
+     0,
+     223,
+     297
+    ],
+    "anchor": [
+     122.6,
+     254.6
+    ]
+   }
+  },
+  "hips": {
+   "rear": [
+    -40.1,
+    -47.1
+   ],
+   "front": [
+    18.4,
+    -47.1
+   ]
+  },
+  "legLength": 47.1,
+  "gait": {
+   "cycle": 0.62,
+   "speed": 0.62,
+   "duty": 0.6,
+   "lift": 0.07,
+   "bob": 0.012,
+   "rock": 1.2,
+   "dashCycle": 0.36,
+   "dashSpeed": 1.7,
+   "easeIn": 0.35,
+   "easeOut": 0.35
+  },
+  "note": "Draw order: far leg (rear), near leg (front), then the body over both (its trousers hide the hips). Speeds and lengths in gait are in standing heights (x the falcon height in CSS px), times in seconds."
+ }
+}

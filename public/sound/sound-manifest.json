@@ -420,6 +420,236 @@
      "peakDb": -24.0
     }
    }
+  },
+  "falcon-screech": {
+   "category": "bird",
+   "when": "screech frame 3 (the first screech after the soak, at the waterfall).",
+   "variants": [
+    "falcon-screech-1",
+    "falcon-screech-2"
+   ],
+   "files": {
+    "falcon-screech-1": {
+     "webm": "falcon-screech-1.webm",
+     "m4a": "falcon-screech-1.m4a",
+     "duration": 1.005,
+     "peakDb": -18
+    },
+    "falcon-screech-2": {
+     "webm": "falcon-screech-2.webm",
+     "m4a": "falcon-screech-2.m4a",
+     "duration": 0.729,
+     "peakDb": -18
+    }
+   }
+  },
+  "falcon-kek": {
+   "category": "bird",
+   "when": "screech frame 3 when it is the second screech of a visit (after the knock), or a touch during the cool-down.",
+   "variants": [
+    "falcon-kek"
+   ],
+   "files": {
+    "falcon-kek": {
+     "webm": "falcon-kek.webm",
+     "m4a": "falcon-kek.m4a",
+     "duration": 0.747,
+     "peakDb": -21
+    }
+   }
+  },
+  "falcon-step": {
+   "category": "bird",
+   "when": "walk frames 1 and 5 (-2 dB), landing frame 5, soaked frames 6 and 7 (-3 dB), turn frames 3 and 6 (-5 dB).",
+   "variants": [
+    "falcon-step-1",
+    "falcon-step-2"
+   ],
+   "files": {
+    "falcon-step-1": {
+     "webm": "falcon-step-1.webm",
+     "m4a": "falcon-step-1.m4a",
+     "duration": 0.25,
+     "peakDb": -31
+    },
+    "falcon-step-2": {
+     "webm": "falcon-step-2.webm",
+     "m4a": "falcon-step-2.m4a",
+     "duration": 0.241,
+     "peakDb": -31
+    }
+   }
+  },
+  "falcon-wing-flap": {
+   "category": "bird",
+   "when": "flap frame 1 of every loop (-1 dB).",
+   "variants": [
+    "falcon-wing-flap-1",
+    "falcon-wing-flap-2",
+    "falcon-wing-flap-3"
+   ],
+   "files": {
+    "falcon-wing-flap-1": {
+     "webm": "falcon-wing-flap-1.webm",
+     "m4a": "falcon-wing-flap-1.m4a",
+     "duration": 0.383,
+     "peakDb": -24
+    },
+    "falcon-wing-flap-2": {
+     "webm": "falcon-wing-flap-2.webm",
+     "m4a": "falcon-wing-flap-2.m4a",
+     "duration": 0.386,
+     "peakDb": -23.9
+    },
+    "falcon-wing-flap-3": {
+     "webm": "falcon-wing-flap-3.webm",
+     "m4a": "falcon-wing-flap-3.m4a",
+     "duration": 0.385,
+     "peakDb": -24
+    }
+   }
+  },
+  "falcon-wing-takeoff": {
+   "category": "bird",
+   "when": "takeoff frame 3.",
+   "variants": [
+    "falcon-wing-takeoff"
+   ],
+   "files": {
+    "falcon-wing-takeoff": {
+     "webm": "falcon-wing-takeoff.webm",
+     "m4a": "falcon-wing-takeoff.m4a",
+     "duration": 0.828,
+     "peakDb": -22
+    }
+   }
+  },
+  "falcon-wing-landing": {
+   "category": "bird",
+   "when": "landing frame 1.",
+   "variants": [
+    "falcon-wing-landing"
+   ],
+   "files": {
+    "falcon-wing-landing": {
+     "webm": "falcon-wing-landing.webm",
+     "m4a": "falcon-wing-landing.m4a",
+     "duration": 0.597,
+     "peakDb": -25
+    }
+   }
+  },
+  "falcon-wing-swoop": {
+   "category": "bird",
+   "when": "the first glide frame of a flight (-2 dB).",
+   "variants": [
+    "falcon-wing-swoop"
+   ],
+   "files": {
+    "falcon-wing-swoop": {
+     "webm": "falcon-wing-swoop.webm",
+     "m4a": "falcon-wing-swoop.m4a",
+     "duration": 0.881,
+     "peakDb": -27
+    }
+   }
+  },
+  "water-on-falcon": {
+   "category": "bird",
+   "when": "soaked frame 2 (0 dB) and soaked frame 4 (-5 dB), panned to the waterfall.",
+   "variants": [
+    "water-on-falcon"
+   ],
+   "files": {
+    "water-on-falcon": {
+     "webm": "water-on-falcon.webm",
+     "m4a": "water-on-falcon.m4a",
+     "duration": 1.09,
+     "peakDb": -24
+    }
+   }
+  },
+  "falcon-shake": {
+   "category": "bird",
+   "when": "shake frame 2 (once per shake).",
+   "variants": [
+    "falcon-shake"
+   ],
+   "files": {
+    "falcon-shake": {
+     "webm": "falcon-shake.webm",
+     "m4a": "falcon-shake.m4a",
+     "duration": 0.928,
+     "peakDb": -24
+    }
+   }
+  },
+  "glass-knock": {
+   "category": "ui",
+   "when": "knock hit 1 (first frame 4) and hit 2 (first frame 7), at the beak.",
+   "variants": [
+    "glass-knock-1",
+    "glass-knock-2"
+   ],
+   "files": {
+    "glass-knock-1": {
+     "webm": "glass-knock-1.webm",
+     "m4a": "glass-knock-1.m4a",
+     "duration": 0.53,
+     "peakDb": -16
+    },
+    "glass-knock-2": {
+     "webm": "glass-knock-2.webm",
+     "m4a": "glass-knock-2.m4a",
+     "duration": 0.57,
+     "peakDb": -15
+    }
+   }
+  },
+  "glass-crack": {
+   "category": "ui",
+   "when": "30 ms after each knock (-1 dB on hit 1).",
+   "variants": [
+    "glass-crack"
+   ],
+   "files": {
+    "glass-crack": {
+     "webm": "glass-crack.webm",
+     "m4a": "glass-crack.m4a",
+     "duration": 0.592,
+     "peakDb": -17
+    }
+   }
+  },
+  "glass-tinkle": {
+   "category": "ui",
+   "when": "100 ms after each knock, while the shards fall.",
+   "variants": [
+    "glass-tinkle"
+   ],
+   "files": {
+    "glass-tinkle": {
+     "webm": "glass-tinkle.webm",
+     "m4a": "glass-tinkle.m4a",
+     "duration": 1.092,
+     "peakDb": -27
+    }
+   }
+  },
+  "glass-fade": {
+   "category": "ui",
+   "when": "when the crack starts to fade (1.4 s after hit 2).",
+   "variants": [
+    "glass-fade"
+   ],
+   "files": {
+    "glass-fade": {
+     "webm": "glass-fade.webm",
+     "m4a": "glass-fade.m4a",
+     "duration": 1.294,
+     "peakDb": -36
+    }
+   }
   }
  }
 }

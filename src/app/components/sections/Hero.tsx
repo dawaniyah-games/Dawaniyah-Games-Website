@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { PixelTwinkle } from '../brand/PixelTwinkle';
 import { HeadlineLine } from './bird/HeadlineLine';
 import { IslandBird } from './bird/IslandBird';
+import { FalconLine } from './falcon/FalconLine';
 import { IslandScene } from './island/IslandScene';
 import { WaterfallEdge } from './island/WaterfallEdge';
 import { scrollToSection } from '../../utils/sectionPreload';
@@ -55,6 +56,7 @@ export function Hero() {
         </div>
       </section>
       <WaterfallEdge heroRef={heroRef} />
+      <FalconLine heroRef={heroRef} />
     </div>
   );
 }
