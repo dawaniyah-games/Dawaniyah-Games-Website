@@ -6,6 +6,7 @@
  */
 import { isTouchScreen } from '../../../utils/motionViewport';
 import type { WaterfallEnds, WaterfallPoint } from './waterfallEnd';
+import { readFallBlock, type FallBlock, type FallFoot } from './waterfallFoot';
 
 export const WATERFALL = {
   handoff: { fadeFrom: 1660, fadeTo: 1806, top: { y: 1660, x: [371, 514] }, bottom: { y: 1793, x: [368, 498] } },
@@ -166,6 +167,8 @@ export class WaterfallEdgeFx {
   private squares: Square[] = [];
   private drips: Drip[] = [];
   private budget: Record<string, number> = {};
+  /** The falcon standing in the fall, read once a frame. */
+  private block: FallBlock | null = null;
   private running = false;
   private raf = 0;
 
@@ -269,7 +272,25 @@ export class WaterfallEdgeFx {
     }
   }
 
-  private hitEdge(g: Geometry, lite: number, x: number, speed: number) {
+  /** Where the water stops at x (art px): on whatever stands in the fall, else on the edge. */
+  private stopAt(g: Geometry, x: number) {
+    const b = this.block;
+    if (!b) return g.yEdge;
+    const i = Math.floor((g.cx + x * g.s - b.x0) / b.step);
+    if (i < 0 || i >= b.rise.length || !(b.rise[i] > 0)) return g.yEdge;
+    return g.yEdge - b.rise[i] / g.s;
+  }
+
+  /** How much of the fall's width lands on something before the edge, 0 to 1. */
+  private blocked() {
+    const b = this.block;
+    if (!b || !b.rise.length) return 0;
+    let n = 0;
+    for (const r of b.rise) if (r > 0) n += 1;
+    return n / b.rise.length;
+  }
+
+  private hitEdge(g: Geometry, lite: number, x: number, speed: number, y = g.yEdge) {
     if (Math.random() > C.splash.chance) return;
     const n = Math.round(rnd(C.splash.perHit));
     for (let i = 0; i < n && this.splash.length < C.splash.cap * lite; i += 1) {
@@ -278,7 +299,7 @@ export class WaterfallEdgeFx {
       const boost = Math.random() < C.splash.boostChance ? C.splash.boost : 1;
       this.splash.push({
         x: x + (Math.random() - 0.5) * 6,
-        y: g.yEdge - 1,
+        y: y - 1,
         vx: out * rnd(C.splash.vx) + (Math.random() - 0.5) * 2 * C.splash.vxJitter,
         vy: -rnd(C.splash.vy) * boost * Math.min(1, speed / 1200 + 0.35),
         r: rnd(C.splash.r),
@@ -314,8 +335,9 @@ export class WaterfallEdgeFx {
       s.x += Math.sin(this.time * 6 + s.phase) * 3 * dt;
     }
     this.streaks = this.streaks.filter((s) => {
-      if (s.y < g.yEdge) return true;
-      this.hitEdge(g, lite, s.x, s.vy);
+      const stop = this.stopAt(g, s.x);
+      if (s.y < stop) return true;
+      this.hitEdge(g, lite, s.x, s.vy, stop);
       return false;
     });
 
@@ -356,16 +378,19 @@ export class WaterfallEdgeFx {
     });
 
     // Fine spray right above the impact.
-    this.spawn('spray', C.spray, this.spray, dt, lite, () => ({
-      x: (Math.random() - 0.5) * g.wBottom * 1.1,
-      y: g.yEdge - 1,
-      vx: (Math.random() - 0.5) * 2 * C.spray.vx,
-      vy: -rnd(C.spray.vy),
-      r: rnd(C.spray.r),
-      age: 0,
-      life: rnd(C.spray.life),
-      tone: pickTone(),
-    }));
+    this.spawn('spray', C.spray, this.spray, dt, lite, () => {
+      const x = (Math.random() - 0.5) * g.wBottom * 1.1;
+      return {
+        x,
+        y: this.stopAt(g, x) - 1,
+        vx: (Math.random() - 0.5) * 2 * C.spray.vx,
+        vy: -rnd(C.spray.vy),
+        r: rnd(C.spray.r),
+        age: 0,
+        life: rnd(C.spray.life),
+        tone: pickTone(),
+      };
+    });
     for (const d of this.spray) {
       d.age += dt;
       d.vy += C.splash.gravity * dt;
@@ -386,15 +411,18 @@ export class WaterfallEdgeFx {
     }
     this.sheets = this.sheets.filter((s) => s.age < s.life);
 
-    this.spawn('mist', C.mist, this.mist, dt, lite, () => ({
-      x: (Math.random() - 0.5) * g.wBottom,
-      y: g.yEdge - rnd([0, 20]),
-      vx: (Math.random() - 0.5) * 2 * C.mist.drift,
-      vy: -rnd(C.mist.rise),
-      age: 0,
-      life: rnd(C.mist.life),
-      tone: Math.random() < 0.5 ? 'pale' : 'white',
-    }));
+    this.spawn('mist', C.mist, this.mist, dt, lite, () => {
+      const x = (Math.random() - 0.5) * g.wBottom;
+      return {
+        x,
+        y: this.stopAt(g, x) - rnd([0, 20]),
+        vx: (Math.random() - 0.5) * 2 * C.mist.drift,
+        vy: -rnd(C.mist.rise),
+        age: 0,
+        life: rnd(C.mist.life),
+        tone: Math.random() < 0.5 ? 'pale' : 'white',
+      };
+    });
     for (const m of this.mist) {
       m.age += dt;
       m.x += m.vx * dt;
@@ -405,9 +433,10 @@ export class WaterfallEdgeFx {
     this.spawn('squares', C.squares, this.squares, dt, lite, () => {
       const side = Math.random() < 0.5 ? -1 : 1;
       const tones: Tinted[] = ['white', 'pale', 'lavender'];
+      const x = side * rnd([0, 0.4]) * g.wBottom;
       return {
-        x: side * rnd([0, 0.4]) * g.wBottom,
-        y: g.yEdge - 2,
+        x,
+        y: this.stopAt(g, x) - 2,
         vx: side * rnd(C.squares.vx),
         vy: -rnd(C.squares.vy),
         size: rnd(C.squares.size),
@@ -597,7 +626,16 @@ export class WaterfallEdgeFx {
     // 4. The column, and 5. the streaks and side drops: all cut off exactly at the edge.
     ctx.save();
     ctx.beginPath();
-    ctx.rect(0, 0, box.width, edgeCanvasY);
+    // Where the falcon stands in the fall, the water stops on it, slice by slice.
+    const b = this.block;
+    if (!b) ctx.rect(0, 0, box.width, edgeCanvasY);
+    else {
+      const left = b.x0 - box.left;
+      const right = left + b.rise.length * b.step;
+      ctx.rect(0, 0, Math.max(0, left), edgeCanvasY);
+      ctx.rect(right, 0, Math.max(0, box.width - right), edgeCanvasY);
+      b.rise.forEach((rise, i) => ctx.rect(left + i * b.step, 0, b.step + 0.5, edgeCanvasY - rise));
+    }
     ctx.clip();
     this.drawColumn(g, X, Y, edgeCanvasY);
     for (const st of this.streaks) {
@@ -624,9 +662,11 @@ export class WaterfallEdgeFx {
     // 6. Foam where it lands, half on the sky and half on the night.
     const fw = C.foam.width * g.wBottom * (1 + C.column.widenAtEdge) * (1 + C.foam.pulse * Math.sin((TAU * t) / C.foam.period)) * s;
     const fh = C.foam.height * g.wBottom * (1 + 0.1 * Math.sin((TAU * t) / 0.7 + 1)) * s;
-    ctx.globalAlpha = C.foam.alpha;
+    // Less water reaches the edge while the falcon takes it on its back.
+    const reaching = 1 - 0.75 * this.blocked();
+    ctx.globalAlpha = C.foam.alpha * reaching;
     ctx.drawImage(sprites.foam, X(0) - fw / 2, edgeCanvasY - fh / 2, fw, fh);
-    ctx.globalAlpha = C.foam.alpha * 0.6;
+    ctx.globalAlpha = C.foam.alpha * 0.6 * reaching;
     ctx.drawImage(sprites.foam, X(0) - fw * 0.36, edgeCanvasY - fh * 0.42, fw * 0.72, fh * 0.6);
 
     // 7. Splash drops: a short arc back along each drop's own curve, fainter towards its tail.
@@ -688,10 +728,21 @@ export class WaterfallEdgeFx {
     ctx.globalAlpha = 1;
   }
 
+  /** Where the fall meets the edge, in viewport pixels, or null when there is no running water there. */
+  foot(): FallFoot | null {
+    if (this.reduced) return null;
+    const g = this.frameGeometry();
+    if (!g || g.yEdge < C.minEdge) return null;
+    const x = g.cx + this.host.getBoundingClientRect().left;
+    if (x < 0 || x > window.innerWidth) return null;
+    return { x, width: g.wBottom * (1 + C.column.widenAtEdge) * g.s };
+  }
+
   /** One frame. With dt 0 it only redraws, which is all reduced motion needs. */
   tick(dt: number) {
     const g = this.frameGeometry();
     this.canvas.style.visibility = g ? 'visible' : 'hidden';
+    this.block = this.reduced ? null : readFallBlock();
     if (!g) return;
     this.place(g);
     if (!this.reduced) this.step(dt, g);

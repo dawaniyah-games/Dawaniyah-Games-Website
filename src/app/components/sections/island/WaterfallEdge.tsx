@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, type RefObject } from 'react';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { readWaterfall, whenWaterfallReady } from './waterfallEnd';
+import { setFallFootReader } from './waterfallFoot';
 import { WaterfallEdgeFx, type WaterfallSprites } from './waterfallFx';
 
 const BASE = `${import.meta.env.BASE_URL}island/`;
@@ -69,7 +70,9 @@ export function WaterfallEdge({ heroRef }: { heroRef: RefObject<HTMLElement> }) 
       void loadSprites()
         .then((sprites) => {
           if (disposed) return;
-          fx = new WaterfallEdgeFx({ canvas, host, read, edge, sprites, reduced });
+          const made = new WaterfallEdgeFx({ canvas, host, read, edge, sprites, reduced });
+          fx = made;
+          setFallFootReader(() => made.foot());
           sync();
         })
         .catch(() => {
@@ -103,6 +106,7 @@ export function WaterfallEdge({ heroRef }: { heroRef: RefObject<HTMLElement> }) 
       stopWaiting();
       cancelAnimationFrame(redraw);
       fx?.stop();
+      setFallFootReader(null);
       intersection.disconnect();
       resize.disconnect();
       document.removeEventListener('visibilitychange', sync);
