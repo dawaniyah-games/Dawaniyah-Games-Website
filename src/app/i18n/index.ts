@@ -32,6 +32,10 @@ function isArabicPath(pathname: string): boolean {
   return pathname === ARABIC_PATH || pathname === ARABIC_PATH.slice(0, -1) || pathname === `${ARABIC_PATH}index.html`;
 }
 
+function isEnglishHomePath(pathname: string): boolean {
+  return pathname === BASE_PATH || pathname === `${BASE_PATH}index.html`;
+}
+
 function getLanguageFromUrl(): SupportedLanguage | null {
   if (typeof window === "undefined") return null;
   try {
@@ -39,7 +43,11 @@ function getLanguageFromUrl(): SupportedLanguage | null {
     // ?lang= still wins so old links keep working; /ar/ is the indexable Arabic URL.
     const fromQuery = normalizeSupportedLanguage(url.searchParams.get("lang"));
     if (fromQuery) return fromQuery;
-    return isArabicPath(url.pathname) ? "ar" : null;
+    // The URL decides the language: the home page is always English and /ar/ always Arabic,
+    // so a saved choice or the browser language never moves a visitor (or Google) to another URL.
+    if (isArabicPath(url.pathname)) return "ar";
+    if (isEnglishHomePath(url.pathname)) return "en";
+    return null;
   } catch {
     return null;
   }
